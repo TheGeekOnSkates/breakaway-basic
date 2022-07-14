@@ -1,16 +1,26 @@
 #include "main.h"
 
+extern char** currentProgram;
+
 int main(int argc, const char** argv) {
 	char buffer[INPUT_BUFFER_SIZE];
+	currentProgram = CreateProgram();
+	if (currentProgram == NULL) {
+		perror("CreateProgram failed");
+		return 0;
+	}
 	
 	printf("BREAKAWAY BASIC 2022.07.14");
-	NewLine(); NewLine();
+	NewLine();
 	
 	while(true) {
-		printf("READY."); NewLine();
+		NewLine();
+		printf("READY.");
+		NewLine();
 		memset(buffer, 0, INPUT_BUFFER_SIZE);
 		fgets(buffer, 255, stdin);
 		Interpret(buffer);
 	}
+	FreeProgram(currentProgram);
 	return 0;
 }

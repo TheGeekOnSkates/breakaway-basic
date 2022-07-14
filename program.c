@@ -2,6 +2,8 @@
 
 uint8_t lastError;
 
+/************************************************************************/
+
 char** CreateProgram(void) {
 	/* Declare variables */
 	char** result;
@@ -17,7 +19,7 @@ char** CreateProgram(void) {
 	return result;
 }
 
-
+/************************************************************************/
 
 void FreeProgram(char** program) {
 	size_t i;
@@ -29,7 +31,7 @@ void FreeProgram(char** program) {
 	free(program);
 }
 
-
+/************************************************************************/
 
 bool AddToProgram(char** program, char* line) {
 	/* Declare variables */
@@ -71,9 +73,13 @@ bool AddToProgram(char** program, char* line) {
 	
 	/* Copy the line into the program and we're done */
 	strncpy(program[lineNumber], line, INPUT_BUFFER_SIZE);
+	#ifdef DEBUG_MODE
 	printf("line %d is \"%s\"\n", lineNumber, program[lineNumber]);
+	#endif
 	return true;
 }
+
+/************************************************************************/
 
 void ListProgram(char** program, char* instruction) {
 	/* Variables */
@@ -86,7 +92,7 @@ void ListProgram(char** program, char* instruction) {
 	while (instruction[0] != 0 && instruction[0] == ' ')
 		instruction++;
 	
-	/* Run a basic syntax-check */
+	/* Run a syntax-check */
 	pastDash = false;
 	for (i=0; i<INPUT_BUFFER_SIZE; i++) {
 		if (instruction[i] == '\n') break;
