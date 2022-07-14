@@ -64,4 +64,11 @@ void NewLine(void);
  */
 void Interpret(char* buffer);
 
+/**
+ * Checks if every "(" character has a closing ")"
+ * @param[in] The user's code
+ * @returns True if so, false if not
+ */
+bool ParensMatch(char* string);
+
 #endif
