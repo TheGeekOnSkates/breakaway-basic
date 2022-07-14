@@ -1,3 +1,19 @@
+# TO-DO's
+
+* As I create/change BASIC commands, document them.
+* Do some designing.  For example, SYS works, but should it be SYS or sys?  All-caps may look nice in cool-retro term, and make scripting a lot easier, but it would be nice to be able to do i.e. SYS CD /SOME/PATH without having to be hitting Caps Lock.  On the other hand, all-caps for keywords might be a good idea... we'll see.
+
+# KNOWN ISSUES
+
+# FEATURES TO BE ADDED
+
+* Program vs. direct mode (line numbers)
+* Branching (IF, GOTO, GOSUB)
+* Support for ANSI graphics
+* All the math stuff from my old calculator program
+
+---------------------------------------------------------------------------------------------------------
+
 # Breakaway BASIC
 
 ## The problem
