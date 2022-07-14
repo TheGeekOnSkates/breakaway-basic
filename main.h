@@ -35,10 +35,20 @@
  */
 #define STRING_EQUALS(a, b) (strcmp(a, b) == 0)
 
+/**
+ * Checks if the first string starts with the second string
+ * @param[in] The first string
+ * @param[in] The second string
+ * @returns True if it does, false if it doesn't
+ */
 #define STRING_STARTS_WITH(a, b) (strstr(a, b) == a)
 
+/** Max size of a BASIC program (1K of pointers * 256 bytes max per line = about 15 MB) */
 #define PROGRAM_MAX 65536
+
+#define NO_ERROR     0
 #define SYNTAX_ERROR 1
+#define MEMORY_ERROR 2
 
 
 /************************************************************************/
@@ -115,6 +125,15 @@ void NewLine(void);
  * @remarks called in the main event loop
  */
 void Interpret(char* buffer);
+
+/** Runs or continues the current program */
+void RunOrContinue(void);
+
+/** Prints "?SYNTAX ERROR" (and the line number if running)  on the screen */
+void SyntaxError(void);
+
+/** Prints "?MEMORY ERROR" (and the line number if running)  on the screen */
+void MemoryError(void);
 
 /**
  * Checks if every "(" character has a closing ")"

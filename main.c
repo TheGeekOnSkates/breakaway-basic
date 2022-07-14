@@ -9,6 +9,7 @@ int main(int argc, const char** argv) {
 		perror("CreateProgram failed");
 		return 0;
 	}
+	srand(time(NULL));
 	
 	printf("BREAKAWAY BASIC 2022.07.14");
 	NewLine();

@@ -42,7 +42,7 @@ bool AddToProgram(char** program, char* line) {
 	/* Get the line number and make sure it's valid */
 	lineNumber = atol(line);
 	if (lineNumber < 0 || lineNumber > PROGRAM_MAX) {
-		printf("?SYNTAX ERROR\n");
+		lastError = SYNTAX_ERROR;
 		return false;
 	}
 	
@@ -58,7 +58,7 @@ bool AddToProgram(char** program, char* line) {
 	if (program[lineNumber] == NULL) {
 		temp = realloc(program[lineNumber], INPUT_BUFFER_SIZE);
 		if (temp == NULL) {
-			printf("?MEMORY ERROR\n");
+			lastError = MEMORY_ERROR;
 			return false;
 		}
 		program[lineNumber] = temp;
@@ -66,7 +66,7 @@ bool AddToProgram(char** program, char* line) {
 	else {
 		program[lineNumber] = calloc(INPUT_BUFFER_SIZE, sizeof(char));
 		if (program[lineNumber] == NULL) {
-			printf("?MEMORY ERROR\n");
+			lastError = MEMORY_ERROR;
 			return false;
 		}
 	}
