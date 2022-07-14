@@ -1,5 +1,9 @@
 #include "main.h"
 
+char** currentProgram = NULL;
+
+/************************************************************************/
+
 bool ParensMatch(char* string) {
         size_t i, length, extras;
 	length = strlen(string);
@@ -13,8 +17,20 @@ bool ParensMatch(char* string) {
 
 /************************************************************************/
 
+bool IsUnsignedInt(char* string) {
+	size_t i=0, length = strlen(string);
+	for(; i<length; i++) {
+		if (string[i] == '\n' && i + 1 == length) return true;
+		if (string[i] < '0' || string[i] > '9') return false;
+	}
+	return true;
+}
+
+/************************************************************************/
+
 void Interpret(char* buffer) {
 	char* token = NULL;
+	
 	/* Call strtok, using spaces as a delimiter. */
 	
 	if (STRING_EQUALS(buffer, "EXIT\n")) exit(0);
@@ -23,8 +39,16 @@ void Interpret(char* buffer) {
 		system((const char*)token);
 		return;
 	}
-	printf("ParensMatch: %s\n", ParensMatch(buffer) ? "true" : "false");
-	printf("Left off on interpreter.c");
+	token = strtok(buffer, " ");
+	if (IsUnsignedInt(token)) {
+		AddToProgram(currentProgram, buffer);
+		return;
+	}
+	if (STRING_EQUALS(token, "LIST")) {
+		ListProgram(currentProgram, buffer);
+		return;
+	}
+	
 	NewLine();
 }
 

@@ -37,6 +37,58 @@
 
 #define STRING_STARTS_WITH(a, b) (strstr(a, b) == a)
 
+#define PROGRAM_MAX 65536
+#define SYNTAX_ERROR 1
+
+
+/************************************************************************/
+/* DATA STRUCTURES                                                      */
+/************************************************************************/
+
+
+
+
+/************************************************************************/
+/* PROGRAM MEMORY MANAGEMENT FUNCTIONS (defined in Program.c)           */
+/************************************************************************/
+
+/**
+ * Sets up memory for PROGRAM_MAX lines of BASIC code
+ * @returns An array of NULL pointers, or NULL if malloc fails
+ */
+char** CreateProgram(void);
+
+/**
+ * Frees memory used by a program, including users' code
+ * @param[in] The program
+ */
+void FreeProgram(char** program);
+
+/**
+ * Adds a line of code to the user's program
+ * @param[in] The program
+ * @param[in] The code
+ * @returns True if it works, false if it doesn't
+ * @remarks If it fails, it will print an error message
+ */
+bool AddToProgram(char** program, char* line);
+
+/**
+ * Runs the LIST command
+ * @param[in] The user's program
+ * @param[in] The un-formatted string (in case there's a line number in it)
+ */
+void ListProgram(char** program, char* instruction);
+
+/**
+ * Checks if a line is empty
+ * @param[in] The user's program
+ * @param[in] The line number to check
+ * @returns True if it is, false if it isn't
+ */
+static inline bool IsLineEmpty(char** program, uint16_t lineNumber) {
+	return program[lineNumber] == NULL || program[lineNumber][0] == '\n';
+}
 
 
 
