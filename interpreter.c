@@ -42,6 +42,17 @@ void MemoryError() {
 void RunOrContinue() {
 	programMode = true;
 	for(; currentLine<PROGRAM_MAX; currentLine++) {
+		/* If it's NULL, skip it */
+		if (currentProgram[currentLine] == NULL) continue;
+		
+		/* If it's END, end the program */
+		if (STRING_EQUALS(currentProgram[currentLine], "END\n")) {
+			programMode = false;
+			currentLine = 0;
+			return;
+		}
+		
+		/* Otherwise, interpret the line and handle errors */
 		Interpret(currentProgram[currentLine]);
 		if (lastError == SYNTAX_ERROR) {
 			SyntaxError();
@@ -71,6 +82,12 @@ void Interpret(char* buffer) {
 	wouldn't look the same.  But that's a 2.0 issue when I really
 	care deeply about portability. :D */
 	if (buffer[0] == '\n' || buffer[0] == '\r' || STRING_EQUALS(buffer, "\r\n")) return;
+	
+	/* END (in program mode) is handled by the RunOrContinue function */
+	if (STRING_EQUALS(buffer, "END\n")) {
+		SyntaxError();
+		return;
+	}
 	
 	/* EXIT - exit Breakaway Basic */
 	if (STRING_EQUALS(buffer, "EXIT\n")) {

@@ -6,6 +6,10 @@
 
 Runs the your program from wherever it left off
 
+### END
+
+Tells the interpreter it has reached the end of your program.  I'd like to say it "exits" your program, but that might be confused with EXIT below (which is not the same thing).  I think you get the idea. :)
+
 ### EXIT
 
 Exits Breakaway BASIC.  Unlike Bash, C, and other languages there are no "exit codes."  If it exits with anything other than zero, it's because the OS said so.
