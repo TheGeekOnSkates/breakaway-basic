@@ -8,6 +8,22 @@ extern uint8_t lastError;
 
 /************************************************************************/
 
+void LoadFile(char* name) {
+	char temp[BUFFER_MAX];
+	FILE* file = fopen(name, "r");
+	if (file == NULL) {
+		lastError = FILE_NOT_FOUND;
+		return;
+	}
+	while(!feof(file)) {
+		fgets(temp, BUFFER_MAX, file);
+		AddToProgram(currentProgram, temp);
+	}
+	fclose(file);
+}
+
+/************************************************************************/
+
 void ReplaceWithString(char* line, uint16_t start, uint16_t end, char* replacement) {
 	char temp[BUFFER_MAX];
 	uint16_t i;
@@ -128,16 +144,16 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
-	/* EXIT - exit Breakaway Basic */
-	if (STRING_EQUALS(buffer, "EXIT\n")) {
-		FreeProgram(currentProgram);
-		exit(0);
-	}
-	
 	/* CLEAR or CLS - clear screen */
 	if (STRING_STARTS_WITH(buffer, "CLEAR") || STRING_STARTS_WITH(buffer, "CLS")) {
 		printf("\x1b[2J\x1b[H");
 		return;
+	}
+	
+	/* EXIT - exit Breakaway Basic */
+	if (STRING_EQUALS(buffer, "EXIT\n")) {
+		FreeProgram(currentProgram);
+		exit(0);
 	}
 	
 	/* GOTO line */
@@ -156,6 +172,12 @@ void Interpret(char* buffer) {
 		if (tempInt < 0 || tempInt > PROGRAM_MAX)
 			lastError = SYNTAX_ERROR;
 		else currentLine = tempInt - 1;	/* -1 because the for-loop does a ++ */
+		return;
+	}
+	
+	/* LOAD - Load a file */
+	if (STRING_STARTS_WITH(buffer, "LOAD ") || STRING_STARTS_WITH(buffer, "CLS")) {
+		LoadFile(buffer + 5);
 		return;
 	}
 	

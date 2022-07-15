@@ -26,6 +26,26 @@ Lists the contents of your program.  Examples:
 * `LIST 30` shows you just line 30.
 * `LIST 40-70` shows just lines 40-70
 
+### NEW
+
+Clears the contents of the program memory.  For example:
+
+```
+10 REM THIS COMMENT WILL GET ERASED BY "NEW"
+READY.
+LIST
+10 REM THIS COMMENT WILL GET ERASED BY "NEW"
+
+READY.
+
+NEW
+
+READY.
+LIST
+
+READY.
+```
+
 ### REM [comment]
 
 Comments are ignored by the interpreter.  They're a way for you to write notes in your code.

@@ -1,15 +1,13 @@
 # TO-DO's
 
 * As I create/change BASIC commands, keep updating the docs.
-* Keep adding features!  So far, so good! :)
+* Keep working on LOAD and SAVE
 
 
 # KNOWN ISSUES
 
 # FEATURES TO BE ADDED
 
-* NEW (like in Commodore systems)
-* A way to LOAD and SAVE files
 * Branching (IF, GOSUB)
 * Variables & arrays
 * GET and INPUT

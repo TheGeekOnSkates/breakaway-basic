@@ -49,9 +49,10 @@
 /** Max size of a BASIC program (1K of pointers * 256 bytes max per line = about 15 MB) */
 #define PROGRAM_MAX 65536
 
-#define NO_ERROR     0
-#define SYNTAX_ERROR 1
-#define MEMORY_ERROR 2
+#define NO_ERROR         0
+#define SYNTAX_ERROR     1
+#define MEMORY_ERROR     2
+#define FILE_NOT_FOUND   3
 
 
 /************************************************************************/
