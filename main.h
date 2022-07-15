@@ -110,9 +110,17 @@ static inline bool IsLineEmpty(char** program, uint16_t lineNumber) {
 /* Just Linux for now, but eventually might support Windows */
 #define Linux true
 
+/**
+ * Turns blocking getchar on or off
+ * @param[in] True to turn blocking on, false to turn it off
+ * @remarks Used for checking for the Escape key, and probably
+ * in GET (once I've done that)
+ */
+void SetBlocking(bool setting);
+
 /** Prints a new line (\n on Linux, \r\n on Windows/DOS, etc.) */
 void NewLine(void);
-
+void GetKey(int *c);
 
 
 /************************************************************************/

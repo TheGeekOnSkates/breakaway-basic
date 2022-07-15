@@ -41,14 +41,26 @@ void MemoryError() {
 
 void RunOrContinue() {
 	programMode = true;
+	SetBlocking(false);
 	for(; currentLine<PROGRAM_MAX; currentLine++) {
 		/* If it's NULL, skip it */
 		if (currentProgram[currentLine] == NULL) continue;
+		
+		int temp = -1;
+		GetKey(&temp);
+		if (temp == 27) {
+			NewLine();
+			printf("BREAK IN %ld", currentLine);
+			SetBlocking(true);
+			programMode = false;
+			return;
+		}
 		
 		/* If it's END, end the program */
 		if (STRING_EQUALS(currentProgram[currentLine], "END\n")) {
 			programMode = false;
 			currentLine = 0;
+			SetBlocking(true);
 			return;
 		}
 		
@@ -58,17 +70,20 @@ void RunOrContinue() {
 			SyntaxError();
 			NewLine();
 			programMode = false;
+			SetBlocking(true);
 			return;
 		}
 	}
 	programMode = false;
 	currentLine = 0;
+	SetBlocking(true);
 }
 
 /************************************************************************/
 
 void Interpret(char* buffer) {
 	char* token = NULL;
+	int tempInt = 0;
 	
 	/* If it's NULL, do nothing. */
 	if (buffer == NULL) {
@@ -93,6 +108,24 @@ void Interpret(char* buffer) {
 	if (STRING_EQUALS(buffer, "EXIT\n")) {
 		FreeProgram(currentProgram);
 		exit(0);
+	}
+	
+	if (STRING_STARTS_WITH(buffer, "GOTO") || STRING_STARTS_WITH(buffer, "GO TO")) {
+		if (!programMode) {
+			SyntaxError();
+			return;
+		}
+		buffer += 2;	/* past GO */
+		if (buffer[0] == ' ') buffer++;
+		buffer += 2;	/* past TO */
+		
+		/* Then move past the spaces */
+		while(buffer[0] != '\0' && buffer[0] != ' ') buffer++;
+		tempInt = atoi(buffer);
+		if (tempInt < 0 || tempInt > PROGRAM_MAX)
+			lastError = SYNTAX_ERROR;
+		else currentLine = tempInt - 1;	/* -1 because the for-loop does a ++ */
+		return;
 	}
 	
 	/* REM - comment - do nothing */
