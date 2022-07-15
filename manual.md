@@ -2,6 +2,10 @@
 
 ## Command Reference
 
+### CLEAR or CLS
+
+Clears the screen (assuming your terminal supports ANSI escape codes).
+
 ### CONT or CONTINUE
 
 Runs the your program from wherever it left off

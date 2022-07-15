@@ -1,16 +1,25 @@
 # TO-DO's
 
-* As I create/change BASIC commands, document them.
-* Do some designing.  For example, SYS works, but should it be SYS or sys?  All-caps may look nice in cool-retro term, and make scripting a lot easier, but it would be nice to be able to do i.e. SYS CD /SOME/PATH without having to be hitting Caps Lock.  On the other hand, all-caps for keywords might be a good idea... we'll see.
+* As I create/change BASIC commands, keep updating the docs.
+* Keep adding features!  So far, so good! :)
+
 
 # KNOWN ISSUES
 
 # FEATURES TO BE ADDED
 
-* Program vs. direct mode (line numbers)
-* Branching (IF, GOTO, GOSUB)
+* NEW (like in Commodore systems)
+* A way to LOAD and SAVE files
+* Branching (IF, GOSUB)
+* Variables & arrays
+* GET and INPUT
+* Looping (FOR, _maybe_ WHILE)
 * Support for ANSI graphics
 * All the math stuff from my old calculator program
+* With the math stuff done, PRINT (have it eval math, combine strings, and call the echo command which already works kinda like PRINT)
+* Advanced file I/O: OPEN and CLOSE, GET# and INPUT#, PRINT#, CLEAR# etc.
+
+
 
 ---------------------------------------------------------------------------------------------------------
 
