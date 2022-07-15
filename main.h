@@ -120,7 +120,7 @@ void SetBlocking(bool setting);
 
 /** Prints a new line (\n on Linux, \r\n on Windows/DOS, etc.) */
 void NewLine(void);
-void GetKey(int *c);
+
 
 
 /************************************************************************/

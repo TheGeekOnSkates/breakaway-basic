@@ -40,14 +40,16 @@ void MemoryError() {
 /************************************************************************/
 
 void RunOrContinue() {
+	int temp = -1;
+	
 	programMode = true;
 	SetBlocking(false);
 	for(; currentLine<PROGRAM_MAX; currentLine++) {
 		/* If it's NULL, skip it */
 		if (currentProgram[currentLine] == NULL) continue;
 		
-		int temp = -1;
-		GetKey(&temp);
+		/* If the user pressed Escape, we're done. */
+		temp = getchar();
 		if (temp == 27) {
 			NewLine();
 			printf("BREAK IN %ld", currentLine);
@@ -110,6 +112,13 @@ void Interpret(char* buffer) {
 		exit(0);
 	}
 	
+	/* CLEAR or CLS - clear screen */
+	if (STRING_STARTS_WITH(buffer, "CLEAR") || STRING_STARTS_WITH(buffer, "CLS")) {
+		printf("\x1b[2J\x1b[H");
+		return;
+	}
+	
+	/* GOTO line */
 	if (STRING_STARTS_WITH(buffer, "GOTO") || STRING_STARTS_WITH(buffer, "GO TO")) {
 		if (!programMode) {
 			SyntaxError();
