@@ -137,6 +137,16 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
+	/* NEW - clear contents of program */
+	if (STRING_EQUALS(buffer, "NEW\n")) {
+		FreeProgram(currentProgram);
+		currentProgram = NULL;
+		currentProgram = CreateProgram();
+		if (currentProgram == NULL)
+			lastError = MEMORY_ERROR;
+		return;
+	}
+	
 	/* REM - comment - do nothing */
 	if (STRING_STARTS_WITH(buffer, "REM")) return;
 	

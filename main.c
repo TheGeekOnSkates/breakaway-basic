@@ -3,7 +3,7 @@
 extern char** currentProgram;
 
 int main(int argc, const char** argv) {
-	char buffer[INPUT_BUFFER_SIZE];
+	char buffer[INPUT_BUFFER_SIZE * 8];
 	currentProgram = CreateProgram();
 	if (currentProgram == NULL) {
 		perror("CreateProgram failed");
