@@ -8,6 +8,28 @@ extern uint8_t lastError;
 
 /************************************************************************/
 
+void ReplaceWithString(char* line, uint16_t start, uint16_t end, char* replacement) {
+	char temp[BUFFER_MAX];
+	uint16_t i;
+	
+	for (i=0; i<start; i++) temp[i] = line[i];
+	snprintf(temp + start, BUFFER_MAX - start, "%s%s", replacement, line + end);
+	strncpy(line, temp, BUFFER_MAX);
+}
+
+/************************************************************************/
+
+void ReplaceWithFloat(char* line, uint16_t from, uint16_t to, float value) {
+        size_t i;
+	char temp[BUFFER_MAX];
+        memset(temp, 0, BUFFER_MAX);
+        for (i=0; i<from; i++) temp[i] = line[i];
+        snprintf(temp + from, BUFFER_MAX, "%g%s", value, line + to);
+        strncpy(line, temp, BUFFER_MAX);
+}
+
+/************************************************************************/
+
 bool ParensMatch(char* string) {
         size_t i, length, extras;
 	length = strlen(string);

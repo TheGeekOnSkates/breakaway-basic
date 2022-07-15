@@ -56,7 +56,7 @@ bool AddToProgram(char** program, char* line) {
 	
 	/* Allocate / re-allocate program[lineNumber] */
 	if (program[lineNumber] == NULL) {
-		temp = realloc(program[lineNumber], INPUT_BUFFER_SIZE);
+		temp = realloc(program[lineNumber], BUFFER_MAX);
 		if (temp == NULL) {
 			lastError = MEMORY_ERROR;
 			return false;
@@ -64,7 +64,7 @@ bool AddToProgram(char** program, char* line) {
 		program[lineNumber] = temp;
 	}
 	else {
-		program[lineNumber] = calloc(INPUT_BUFFER_SIZE, sizeof(char));
+		program[lineNumber] = calloc(BUFFER_MAX, sizeof(char));
 		if (program[lineNumber] == NULL) {
 			lastError = MEMORY_ERROR;
 			return false;
@@ -72,7 +72,7 @@ bool AddToProgram(char** program, char* line) {
 	}
 	
 	/* Copy the line into the program and we're done */
-	strncpy(program[lineNumber], line, INPUT_BUFFER_SIZE);
+	strncpy(program[lineNumber], line, BUFFER_MAX);
 	#ifdef DEBUG_MODE
 	printf("line %d is \"%s\"\n", lineNumber, program[lineNumber]);
 	#endif
@@ -94,7 +94,7 @@ void ListProgram(char** program, char* instruction) {
 	
 	/* Run a syntax-check */
 	pastDash = false;
-	for (i=0; i<INPUT_BUFFER_SIZE; i++) {
+	for (i=0; i<BUFFER_MAX; i++) {
 		if (instruction[i] == '\n') break;
 		if (instruction[i] == ' ')
 			continue;

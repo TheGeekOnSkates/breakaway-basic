@@ -25,7 +25,10 @@
  * the user's terminal has as its max buffer size.
  * I know Windows has one; Linux...?
  */
-#define INPUT_BUFFER_SIZE 256
+#define INPUT_BUFFER_SIZE 128
+
+/** The actual size of the input buffer, 2 KB (8 times the size of INPUT_BUFFER_SIZE) */
+#define BUFFER_MAX 1024
 
 /**
  * Checks if two strings contain the same text
@@ -61,6 +64,28 @@
 /************************************************************************/
 /* PROGRAM MEMORY MANAGEMENT FUNCTIONS (defined in Program.c)           */
 /************************************************************************/
+
+/**
+ * Replaces part of a string (like a find-&-replace)
+ * @param[in, out] The string to be edited
+ * @pparam[in] Position of the beginning of the string to be replaced
+ * @pparam[in] Position of the end of the string to be replaced
+ * @pparam[in] The string to put there instead
+ */
+void ReplaceWithString(char* line, uint16_t start, uint16_t end, char* replacement);
+
+/**
+ * Replaces part of a string with a float (for i.e.
+ * replacing a variable name with its value, or an
+ * equation with its result - i.e. turn "2.7 + 1.3"
+ * into "4").  Note that this BASIC stores all its
+ * numbers as floats, so this is highly reusable.
+ * @param[in, out] The string to be edited
+ * @pparam[in] Position of the beginning of the string to be replaced
+ * @pparam[in] Position of the end of the string to be replaced
+ * @pparam[in] The float to put there instead
+ */
+void ReplaceWithFloat(char* line, uint16_t from, uint16_t to, float value);
 
 /**
  * Sets up memory for PROGRAM_MAX lines of BASIC code
