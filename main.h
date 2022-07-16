@@ -19,6 +19,9 @@
 /* MACROS                                                               */
 /************************************************************************/
 
+/** If true, print debug messages */
+#define DEBUG_MODE 0
+
 /**
  * Max size of user input buffer
  * @todo Find out if there is a way to check what
@@ -49,10 +52,23 @@
 /** Max size of a BASIC program (1K of pointers * 256 bytes max per line = about 15 MB) */
 #define PROGRAM_MAX 65536
 
-#define NO_ERROR         0
-#define SYNTAX_ERROR     1
-#define MEMORY_ERROR     2
-#define FILE_NOT_FOUND   3
+
+
+/************************************************************************/
+/* ENUMERATIONS                                                         */
+/************************************************************************/
+
+/* BASIC error codes */
+enum Errors {
+	NO_ERROR,		/* There was no error */
+	MEMORY_ERROR,		/* malloc/calloc/realloc failed */
+	SYNTAX_ERROR,		/* The user entered invalid BASIC code */
+	TYPE_MISMATCH_ERROR,	/* Code tries to add a string and a number */
+	OVERFLOW_ERROR,		/* Happens in math functions */
+	DIVISION_BY_SERO_ERROR,	/* Can't divide by zero */
+	ILLEGAL_QTY_ERROR,	/* Number is too big or too small */
+};
+
 
 
 /************************************************************************/
@@ -234,33 +250,30 @@ bool ParensMatch(char* string);
 Variable* CreateVariable(char* raw);
 
 /**
- * Frees memory used by a variable
- * @param[in] The variable
- * @param[in] If true, also free all variables linked to it
+ * Frees memory used by variables
+ * @param[in] The first variable in the list
  */
-void FreeVariable(Variable* var, bool freeAll);
+void FreeVariables(Variable* v);
 
 /**
  * Gets the value of a variable
- * @param[in] The first variable in the list
  * @param[in] The name of the variable
  * The variable, or NULL if no match was found
  */
-Variable* GetVariable(Variable* first, char* name);
+Variable* GetVariable(char* name);
 
 /**
  * Sets/resets a variable's value
- * @param[in] The first variable in the program's list of variables
  * @param[in] The raw ("un-parsed") string the user entered
  */
-void SetVariable(Variable * first, char* raw);
+void SetVariable(char* raw);
 
 /**
  * Replaces variables with their values
  * @param[in] The first variable in the program's linked list
  * @param[in] The buffer to receive the replacements
  */
-void ReplaceVariablesWithValues(Variable* first, char* buffer1);
+void ReplaceVariablesWithValues(char* buffer1);
 
 
 #endif

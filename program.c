@@ -72,7 +72,7 @@ bool AddToProgram(char** program, char* line) {
 	
 	/* Copy the line into the program and we're done */
 	strncpy(program[lineNumber], line, BUFFER_MAX);
-	#ifdef DEBUG_MODE
+	#if DEBUG_MODE
 	printf("line %d is \"%s\"\n", lineNumber, program[lineNumber]);
 	#endif
 	return true;

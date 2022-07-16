@@ -6,6 +6,18 @@ size_t currentLine = 0, currentSub = 0;
 bool programMode = false;
 extern uint8_t lastError;
 int64_t subs[PROGRAM_MAX];
+extern Variable* firstVar;
+
+/************************************************************************/
+
+void RunLET(char* line) {
+	//StripSpaces(line);	// Let's see if I need this
+	if (firstVar == NULL) {
+		firstVar = CreateVariable(line);
+		return;
+	}
+	SetVariable(line);
+}
 
 /************************************************************************/
 
@@ -283,6 +295,12 @@ void Interpret(char* buffer) {
 		if (tempInt < 0 || tempInt > PROGRAM_MAX)
 			lastError = SYNTAX_ERROR;
 		else currentLine = tempInt - 1;	/* -1 because the for-loop does a ++ */
+		return;
+	}
+	
+	/* LET var = value */
+	if (STRING_STARTS_WITH(buffer, "LET ")) {
+		RunLET(buffer + 4);
 		return;
 	}
 	

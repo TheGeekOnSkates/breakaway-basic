@@ -2,6 +2,8 @@
 
 extern uint8_t lastError;
 
+Variable* firstVar = NULL;
+
 Variable* CreateVariable(char* raw) {
 	/* Declare variables */
 	Variable* var;
@@ -47,19 +49,19 @@ Variable* CreateVariable(char* raw) {
 	return var;
 }
 
-void FreeVariable(Variable* var, bool freeAll) {
-	if (var == NULL) return;
-	if (freeAll) FreeVariable(var->next, true);
-	if (var->name != NULL) free(var->name);
-	if (var->value != NULL) free(var->value);
-	free(var);
+void FreeVariables(Variable* v) {
+	if (v == NULL) return;
+	FreeVariables(v->next);
+	if (v->name != NULL) free(v->name);
+	if (v->value != NULL) free(v->value);
+	free(v);
 }
 
-Variable* GetVariable(Variable* first, char* name) {
+Variable* GetVariable(char* name) {
 	#if DEBUG_MODE
 	printf("Searching for: \"%s\"\n", name);
 	#endif
-	Variable* current = first;
+	Variable* current = firstVar;
 	while(current != NULL) {
 		#if DEBUG_MODE
 		printf("\"%s\" = \"%s\"\n", current->name, current->value);
@@ -71,7 +73,7 @@ Variable* GetVariable(Variable* first, char* name) {
 	return NULL;
 }
 
-void SetVariable(Variable * first, char* raw) {
+void SetVariable(char* raw) {
 	Variable* current = NULL;
 	char* equals, * name;
 	size_t i, length;
@@ -95,7 +97,7 @@ void SetVariable(Variable * first, char* raw) {
 	
 	/* Check if a variable named name already exists;
 	if so, reset its value. */
-	current = GetVariable(first, name);
+	current = GetVariable(name);
 		if (current != NULL) {
 		if (current->value != NULL) {
 			free(current->value);
@@ -111,7 +113,7 @@ void SetVariable(Variable * first, char* raw) {
 	}
 	
 	/* If it gets here, create a new variable */
-	current = first;
+	current = firstVar;
 	while(current != NULL && current->next != NULL) {
 		current = current->next;
 	}
@@ -121,7 +123,7 @@ void SetVariable(Variable * first, char* raw) {
 	free(name);
 }
 
-void ReplaceVariablesWithValues(Variable* first, char* line) {
+void ReplaceVariablesWithValues(char* line) {
 	/* Declare variables */
 	Variable* current;
 	char* position;
@@ -129,7 +131,7 @@ void ReplaceVariablesWithValues(Variable* first, char* line) {
 	size_t i;
 	
 	/* Loop through all the variables, looking for each */
-	current = first;
+	current = firstVar;
 	while(current != NULL) {
 		#if DEBUG_MODE
 		printf("Looking for \"%s\"\n", current->name);
