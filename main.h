@@ -59,6 +59,18 @@
 /* DATA STRUCTURES                                                      */
 /************************************************************************/
 
+/* Stores a list of variables in memory */
+typedef struct _var {
+	
+	/* The name of the variable */
+	char* name;
+	
+	/* The value of the variable */
+	char* value;
+	
+	/* Next one in the list */
+	struct _var* next;
+} Variable;
 
 
 
@@ -208,5 +220,47 @@ void SaveFile(char* name);
  * @returns True if so, false if not
  */
 bool ParensMatch(char* string);
+
+
+
+/***********************************************************************/
+/* VARIABLES (defined in vars.c)                                       */
+/***********************************************************************/
+
+/**
+ * Creates a variable in memory
+ * @param[in] The un-parsed string (i.e. "test=123"
+ */
+Variable* CreateVariable(char* raw);
+
+/**
+ * Frees memory used by a variable
+ * @param[in] The variable
+ * @param[in] If true, also free all variables linked to it
+ */
+void FreeVariable(Variable* var, bool freeAll);
+
+/**
+ * Gets the value of a variable
+ * @param[in] The first variable in the list
+ * @param[in] The name of the variable
+ * The variable, or NULL if no match was found
+ */
+Variable* GetVariable(Variable* first, char* name);
+
+/**
+ * Sets/resets a variable's value
+ * @param[in] The first variable in the program's list of variables
+ * @param[in] The raw ("un-parsed") string the user entered
+ */
+void SetVariable(Variable * first, char* raw);
+
+/**
+ * Replaces variables with their values
+ * @param[in] The first variable in the program's linked list
+ * @param[in] The buffer to receive the replacements
+ */
+void ReplaceVariablesWithValues(Variable* first, char* buffer1);
+
 
 #endif
