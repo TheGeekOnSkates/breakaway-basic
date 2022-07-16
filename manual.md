@@ -18,6 +18,15 @@ Runs the your program from wherever it left off
 
 Tells the interpreter it has reached the end of your program.  I'd like to say it "exits" your program, but that might be confused with EXIT below (which is not the same thing).  I think you get the idea. :)
 
+### ESC string
+
+Since escape codes vary from one terminal to the other, this prints the escape character (0x1B in hex, 27 decimal, or "\033" in... octal?) followed by whatever you type.  So for example, you could do:
+
+`ESC [34m`
+
+To make the text blue.  Of course we do include some more user-friendly ways to do stuff (i.e. BG, FG, REVERSE, BLINK, and MOVE), but if there's one I didn't add (or yours works different from mine) you can use ESC to print it.
+
+
 ### EXIT
 
 Exits Breakaway BASIC.  Unlike Bash, C, and other languages there are no "exit codes."  If it exits with anything other than zero, it's because the OS said so.

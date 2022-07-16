@@ -169,6 +169,7 @@ void RunOrContinue() {
 /************************************************************************/
 
 void Interpret(char* buffer) {
+	lastError = NO_ERROR;
 	char* token = NULL;
 	int tempInt = 0, x = -1, y = -1, x2 = -1, y2 = -1;
 	size_t i = 0;
