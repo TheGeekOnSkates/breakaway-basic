@@ -46,7 +46,7 @@ void LoadFile(char* name) {
 	FILE* file = fopen((const char*)name, "r");
 	if (file == NULL) {
 		//lastError = FILE_NOT_FOUND;
-		printf("?FILE NOT FOUND");
+		printw("?FILE NOT FOUND");
 		NewLine();
 		return;
 	}
@@ -68,7 +68,7 @@ void SaveFile(char* name) {
 	
 	file = fopen((const char*)name, "w");
 	if (file == NULL) {
-		printf("?FILE WRITE ERROR");
+		printw("?FILE WRITE ERROR");
 		NewLine();
 		return;
 	}
@@ -118,18 +118,18 @@ bool ParensMatch(char* string) {
 /************************************************************************/
 
 void SyntaxError() {
-	printf("?SYNTAX ERROR");
+	printw("?SYNTAX ERROR");
 	if (programMode)
-		printf(" IN LINE %ld", currentLine);
+		printw(" IN LINE %ld", currentLine);
 	NewLine();
 }
 
 /************************************************************************/
 
 void MemoryError() {
-	printf("?MEMORY ERROR");
+	printw("?MEMORY ERROR");
 	if (programMode)
-		printf(" IN LINE %ld", currentLine);
+		printw(" IN LINE %ld", currentLine);
 	NewLine();
 }
 
@@ -148,7 +148,7 @@ void RunOrContinue() {
 		temp = getchar();
 		if (temp == 27) {
 			NewLine();
-			printf("BREAK IN %ld", currentLine);
+			printw("BREAK IN %ld", currentLine);
 			NewLine();
 			SetBlocking(true);
 			programMode = false;
@@ -156,7 +156,7 @@ void RunOrContinue() {
 		}
 		
 		/* If it's END, end the program */
-		if (STRING_EQUALS(currentProgram[currentLine], "END\n")) {
+		if (STRING_EQUALS(currentProgram[currentLine], "END")) {
 			programMode = false;
 			currentLine = 0;
 			SetBlocking(true);
@@ -204,38 +204,28 @@ void Interpret(char* buffer) {
 		if (buffer[0] < '0' || buffer[0] > '9')
 			lastError = SYNTAX_ERROR;
 		else {
-			printf("\033[4%dm", atoi(buffer));
+			printw("\033[4%dm", atoi(buffer));
 		}
 		return;
 	}
 	
-	/* BLINK - text blink mode on */
-	if (STRING_EQUALS(buffer, "BLINK\n")) {
-		printf("\033[6m");
-		return;
-	}
-	
 	/* END (in program mode) is handled by the RunOrContinue function */
-	if (STRING_EQUALS(buffer, "END\n")) {
+	if (STRING_EQUALS(buffer, "END")) {
 		SyntaxError();
-		return;
-	}
-	
-	/* ESC string - ANSI escape code */
-	if (STRING_STARTS_WITH(buffer, "ESC ")) {
-		printf("\033%s", buffer + 4);
 		return;
 	}
 	
 	/* CLEAR or CLS - clear screen */
 	if (STRING_STARTS_WITH(buffer, "CLEAR") || STRING_STARTS_WITH(buffer, "CLS")) {
-		printf("\033[H\033[J");
+		clear();
 		return;
 	}
 	
 	/* EXIT - exit Breakaway Basic */
-	if (STRING_EQUALS(buffer, "EXIT\n")) {
+	if (STRING_EQUALS(buffer, "EXIT")) {
 		FreeProgram(currentProgram);
+		FreeVariables(firstVar);
+		endwin();
 		exit(0);
 	}
 	
@@ -245,7 +235,7 @@ void Interpret(char* buffer) {
 		if (buffer[0] < '0' || buffer[0] > '9')
 			lastError = SYNTAX_ERROR;
 		else {
-			printf("\033[3%dm", atoi(buffer));
+			printw("\033[3%dm", atoi(buffer));
 		}
 		return;
 	}
@@ -329,12 +319,12 @@ void Interpret(char* buffer) {
 		GetScreenSize(&x2, &y2);
 		if (tempInt != 2 || x < 0 || y < 0 || x > x2 || y > y2)
 			lastError = SYNTAX_ERROR;
-		else printf("\033[%d;%dH", y, x);
+		else printw("\033[%d;%dH", y, x);
 		return;
 	}
 	
 	/* NEW - clear contents of program */
-	if (STRING_EQUALS(buffer, "NEW\n")) {
+	if (STRING_EQUALS(buffer, "NEW")) {
 		New();
 		return;
 	}
@@ -343,26 +333,30 @@ void Interpret(char* buffer) {
 	if (STRING_STARTS_WITH(buffer, "REM")) return;
 	
 	/* RUN - self-explanatory :) */
-	if (STRING_EQUALS(buffer, "RUN\n")) {
+	if (STRING_EQUALS(buffer, "RUN")) {
 		currentLine = 0;
 		RunOrContinue();
 		return;
 	}
 	
 	/* CONT or CONTINUE - continue program */
-	if (STRING_EQUALS(buffer, "CONT\n") || STRING_EQUALS(buffer, "CONTINUE\n")) {
+	if (STRING_EQUALS(buffer, "CONT") || STRING_EQUALS(buffer, "CONTINUE")) {
 		RunOrContinue();
 		return;
 	}
 	
-	/* RESET - reset the terminal settings */
-	if (STRING_EQUALS(buffer, "RESET\n")) {
-		printf("\033[0m");
+	if (STRING_STARTS_WITH(buffer, "POKE ")) {
+		sprintf(buffer + 5, "%d %d %d", x, y, tempInt);
+		if (tempInt == -1 || x == -1 || y == -1) {
+			lastError = SYNTAX_ERROR;
+			return;
+		}
+		poke(x, y, tempInt);
 		return;
 	}
-
+	
 	/* RETURN - return from subrouting */
-	if (STRING_EQUALS(buffer, "RETURN\n")) {
+	if (STRING_EQUALS(buffer, "RETURN")) {
 		/*
 		Here we go +1 because otherwise we get
 		an infinite loop.  For example:
@@ -372,7 +366,7 @@ void Interpret(char* buffer) {
 		If RETURN goes back to 10, GOSUB 100 is called again.
 		*/
 		if (currentSub == 0 && subs[0] + 1 == -1) {
-			printf("Bingo\n");
+			printw("Bingo\n");
 			return;
 		}
 		tempInt = subs[currentSub] + 1;
@@ -384,8 +378,8 @@ void Interpret(char* buffer) {
 	}
 	
 	/* REVERSE - text reverse mode on */
-	if (STRING_EQUALS(buffer, "REVERSE\n")) {
-		printf("\033[27m");
+	if (STRING_EQUALS(buffer, "REVERSE")) {
+		printw("\033[27m");
 		return;
 	}
 	

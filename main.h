@@ -2,6 +2,15 @@
 #define _MAIN_H
 
 /************************************************************************/
+/* BUILD TARGETS                                                        */
+/************************************************************************/
+
+/* Just Linux for now, but eventually might support Windows */
+#define Linux true
+
+
+
+/************************************************************************/
 /* DEPENDENCIES                                                         */
 /************************************************************************/
 
@@ -13,7 +22,16 @@
 #include <time.h>
 #include <math.h>
 
+#ifdef Linux
 
+#include <unistd.h>
+#include <fcntl.h>
+#include <termios.h>
+#include <sys/resource.h>
+#include <sys/ioctl.h>
+#include <ncurses.h>
+
+#endif
 
 /************************************************************************/
 /* MACROS                                                               */
@@ -161,9 +179,6 @@ static inline bool IsLineEmpty(char** program, uint16_t lineNumber) {
 /* Note that OS-dependent headers (i.e. Windows.h) are included there.  */
 /************************************************************************/
 
-/* Just Linux for now, but eventually might support Windows */
-#define Linux true
-
 /**
  * Gets the screen size
  * @param[out] The number of rows, in characters
@@ -274,6 +289,15 @@ void SetVariable(char* raw);
  * @param[in] The buffer to receive the replacements
  */
 void ReplaceVariablesWithValues(char* buffer1);
+
+
+
+/************************************************************************/
+/* PEEK / POKE (defined in peekpoke.c)                                  */
+/************************************************************************/
+
+int peek(int x, int y);
+bool poke(int x, int y, int value);
 
 
 #endif

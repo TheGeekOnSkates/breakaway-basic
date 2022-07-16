@@ -9,8 +9,8 @@ void PrintCentered(const char* string) {
 	
 	GetScreenSize(&rows, &columns);
 	length = (columns / 2) - strlen(string) / 2;
-	for (i=0; i<length; i++) printf(" ");
-	printf("%s", string);
+	for (i=0; i<length; i++) addch(' ');
+	printw("%s", string);
 }
 
 int main(int argc, const char** argv) {
@@ -31,8 +31,11 @@ int main(int argc, const char** argv) {
 		subs[i] = -1;
 	}
 	
+	/* Load ncurses */
+	initscr();
+	
 	/* Show the title message */
-	printf("\033[H\033[J");
+	clear();
 	PrintCentered("** BREAKAWAY BASIC 2022.07.15 **");
 	NewLine();
 	sprintf(buffer, "%lu BYTES FREE", GetBytesFree());
@@ -42,12 +45,12 @@ int main(int argc, const char** argv) {
 	/* Main event loop */
 	while(true) {
 		/* Let the user know we're ready for input */
-		printf("READY.");
+		printw("READY.");
 		NewLine();
 		
 		/* Actually prompt the user for input */
 		memset(buffer, 0, INPUT_BUFFER_SIZE);
-		fgets(buffer, INPUT_BUFFER_SIZE, stdin);
+		getnstr(buffer, INPUT_BUFFER_SIZE);
 		
 		/* And interpret that input */
 		Interpret(buffer);
@@ -55,5 +58,6 @@ int main(int argc, const char** argv) {
 	
 	/* If it gets here (which it actually shouldn't, we're done. */
 	FreeProgram(currentProgram);
+	endwin();
 	return 0;
 }
