@@ -6,6 +6,14 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <sys/resource.h>
+#include <sys/ioctl.h>
+
+void GetScreenSize(int* rows, int* columns) {
+	static struct winsize w;
+	ioctl(0, TIOCGWINSZ, &w);
+	*rows = w.ws_row;
+	*columns = w.ws_col;
+}
 
 uint64_t GetBytesFree() {
 	return sysconf(_SC_PHYS_PAGES) * sysconf(_SC_PAGE_SIZE);

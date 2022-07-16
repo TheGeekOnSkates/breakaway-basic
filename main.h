@@ -136,7 +136,22 @@ static inline bool IsLineEmpty(char** program, uint16_t lineNumber) {
 /* Just Linux for now, but eventually might support Windows */
 #define Linux true
 
+/**
+ * Gets the screen size
+ * @param[out] The number of rows, in characters
+ * @param[out] The number of columns, in characters
+ */
+void GetScreenSize(int* rows, int* columns);
 
+/**
+ * Gets the total free memory on the system
+ * @returns The total bytes free (like on Commodore stuff)
+ * @remarks This is just for laughs, of course; the PET, VIC, C64 etc.
+ * all had memory in the KB, so this was a much bigger deal back then.
+ * And today there's virtual memory, disk space vs. RAM, etc.  I have
+ * long since forgotten what those system calls are getting, but I
+ * think it's the RAM (cuz that's what it was on most 8-bit computers) :)
+ */
 uint64_t GetBytesFree(void);
 
 /**

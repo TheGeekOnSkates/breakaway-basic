@@ -1,7 +1,8 @@
 # TO-DO's
 
 * As I create/change BASIC commands, keep updating the docs.
-* Try nesting GOSUB calls to make sure that works
+* Keep working on multiple GOSUBs, nested GOSUBs etc.  Not quite right yet.
+* I just realized that LOAD should also call NEW, cuz otherwise... :D
 
 # KNOWN ISSUES
 

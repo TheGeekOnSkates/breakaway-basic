@@ -36,7 +36,6 @@ void FreeProgram(char** program) {
 bool AddToProgram(char** program, char* line) {
 	/* Declare variables */
 	uint32_t lineNumber;
-	uint8_t i;
 	char* temp;
 	
 	/* Get the line number and make sure it's valid */

@@ -18,6 +18,14 @@ Tells the interpreter it has reached the end of your program.  I'd like to say i
 
 Exits Breakaway BASIC.  Unlike Bash, C, and other languages there are no "exit codes."  If it exits with anything other than zero, it's because the OS said so.
 
+### GOTO line or GO TO line
+
+Goes to a line number, like most BASICs have
+
+### GOSUB line or GO SUB line
+
+Similar to GOTO except that it when it finds a RETURN, it picks up where it left off.  Again, most BASICs have this.  See RETURN for more info.
+
 ### LIST [line number [ - line number]]
 
 Lists the contents of your program.  Examples:
@@ -53,6 +61,20 @@ READY.
 ### REM [comment]
 
 Comments are ignored by the interpreter.  They're a way for you to write notes in your code.
+
+### RETURN
+
+Moves the program just past where it was last time GOSUB was called.  For example:
+
+```
+10 GOSUB 100
+20 SYS echo "Done."
+99 END
+100 CLEAR
+110 RETURN
+```
+
+GOSUB will move it to line 100, which will clear the screen.  Then line 110 will tell it to go back to where it was before (so line 11).  Then it hits line 20 and prints "Done."
 
 ### RUN
 

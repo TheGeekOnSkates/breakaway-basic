@@ -177,7 +177,7 @@ void Interpret(char* buffer) {
 	
 	/* CLEAR or CLS - clear screen */
 	if (STRING_STARTS_WITH(buffer, "CLEAR") || STRING_STARTS_WITH(buffer, "CLS")) {
-		printf("\x1b[2J\x1b[H");
+		printf("\033[H\033[J");
 		return;
 	}
 	
