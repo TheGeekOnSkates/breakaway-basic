@@ -46,6 +46,10 @@ Lists the contents of your program.  Examples:
 
 Loads a file.  Unlike other BASICs, there's no need to use quotes.  So you can just do i.e. `LOAD myfile.bas` or `LOAD ../path/to/my/file.bas`.
 
+### MOVE x y
+
+Moves the cursor to column x, row y.  This is different from other terminal control systems you may have used (which usually do it as row, then column, or y then x).  This is on purpose - as fun and retro as it is to have it backwards like that, more programmers today are familiar with x-y coordinates.
+
 ### NEW
 
 Clears the contents of the program memory.  For example:

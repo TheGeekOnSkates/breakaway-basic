@@ -3,7 +3,10 @@
 * As I create/change BASIC commands, keep updating the docs.
 * Keep working on multiple GOSUBs, nested GOSUBs etc - almost there!
 * Fix REVERSE
-* Add i.e. MOVE x y to move the cursor, PUT x y character, COLOR x y color...
+* Add PUT x y character
+* Add COLOR x y color...
+* Start on aliases
+* Import my old variables setup
 
 # KNOWN ISSUES
 
@@ -13,7 +16,7 @@
 
 # FEATURES TO BE ADDED
 
-* IF
+* IF (here's where that "RC" variable will come in handy, and the string-replacing stuff I wrote, etc.)
 * Playing with the idea of aliases.  For example:
 
 	ALIAS CD SYS cd

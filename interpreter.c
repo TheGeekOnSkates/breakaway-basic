@@ -170,7 +170,7 @@ void RunOrContinue() {
 
 void Interpret(char* buffer) {
 	char* token = NULL;
-	int tempInt = 0;
+	int tempInt = 0, x = -1, y = -1, x2 = -1, y2 = -1;
 	size_t i = 0;
 	
 	/* If it's NULL, do nothing. */
@@ -280,9 +280,32 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
+	/* LIST [line numbers] - List the contents of the program */
+	if (STRING_STARTS_WITH(buffer, "LIST")) {
+		ListProgram(currentProgram, buffer + 4);
+		switch (lastError) {
+			case SYNTAX_ERROR:
+				SyntaxError(); break;
+			case MEMORY_ERROR:
+				MemoryError(); break;
+		}
+		return;
+	}
+	
 	/* LOAD - Load a file */
 	if (STRING_STARTS_WITH(buffer, "LOAD ")) {
 		LoadFile(buffer + 5);
+		return;
+	}
+	
+	/* MOVE x y - Move the cursor */
+	if (STRING_STARTS_WITH(buffer, "MOVE ")) {
+		buffer += 5;
+		tempInt = sscanf(buffer, "%d %d", &x, &y);
+		GetScreenSize(&x2, &y2);
+		if (tempInt != 2 || x < 0 || y < 0 || x > x2 || y > y2)
+			SyntaxError();
+		else printf("\033[%d;%dH", y, x);
 		return;
 	}
 	
@@ -360,26 +383,6 @@ void Interpret(char* buffer) {
 		AddToProgram(currentProgram, buffer);
 		return;
 	}
-	
-	/* LIST [line numbers] - List the contents of the program */
-	if (STRING_STARTS_WITH(buffer, "LIST")) {
-		ListProgram(currentProgram, buffer + 4);
-		switch (lastError) {
-			case SYNTAX_ERROR:
-				SyntaxError(); break;
-			case MEMORY_ERROR:
-				MemoryError(); break;
-		}
-		return;
-	}
-	
-	/* Do I need this?  Maybe in another function 
-	token = strstr(buffer, " ");
-	if (token == NULL) {
-		lastError = SYNTAX_ERROR;
-		return;
-	}
-	*/
 	
 	/* And if it gets here, the user goofed */
 	SyntaxError();
