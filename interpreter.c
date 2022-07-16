@@ -209,6 +209,12 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
+	/* ESC string - ANSI escape code */
+	if (STRING_STARTS_WITH(buffer, "ESC ")) {
+		printf("\033%s", buffer + 4);
+		return;
+	}
+	
 	/* CLEAR or CLS - clear screen */
 	if (STRING_STARTS_WITH(buffer, "CLEAR") || STRING_STARTS_WITH(buffer, "CLS")) {
 		printf("\033[H\033[J");
@@ -304,7 +310,7 @@ void Interpret(char* buffer) {
 		tempInt = sscanf(buffer, "%d %d", &x, &y);
 		GetScreenSize(&x2, &y2);
 		if (tempInt != 2 || x < 0 || y < 0 || x > x2 || y > y2)
-			SyntaxError();
+			lastError = SYNTAX_ERROR;
 		else printf("\033[%d;%dH", y, x);
 		return;
 	}
