@@ -5,6 +5,11 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <termios.h>
+#include <sys/resource.h>
+
+uint64_t GetBytesFree() {
+	return sysconf(_SC_PHYS_PAGES) * sysconf(_SC_PAGE_SIZE);
+}
 
 /* See https://gist.github.com/dagon666/8194870 */
 void SetBlocking(bool setting) {
@@ -23,7 +28,7 @@ void SetBlocking(bool setting) {
 	tcsetattr(STDIN_FILENO, TCSANOW, &t);
 }
 
-void NewLine() {
+inline void NewLine() {
 	printf("\n");
 }
 

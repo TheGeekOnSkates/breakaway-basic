@@ -136,6 +136,9 @@ static inline bool IsLineEmpty(char** program, uint16_t lineNumber) {
 /* Just Linux for now, but eventually might support Windows */
 #define Linux true
 
+
+uint64_t GetBytesFree(void);
+
 /**
  * Turns blocking getchar on or off
  * @param[in] True to turn blocking on, false to turn it off
@@ -168,6 +171,18 @@ void SyntaxError(void);
 
 /** Prints "?MEMORY ERROR" (and the line number if running)  on the screen */
 void MemoryError(void);
+
+/**
+ * Loads a file into memory
+ * @param[in] The file to load
+ */
+void LoadFile(char* name);
+
+/**
+ * Saves program memory to a file
+ * @param[in] The file to save
+ */
+void SaveFile(char* name);
 
 /**
  * Checks if every "(" character has a closing ")"

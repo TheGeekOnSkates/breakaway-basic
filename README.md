@@ -1,14 +1,13 @@
 # TO-DO's
 
 * As I create/change BASIC commands, keep updating the docs.
-* Keep working on LOAD and SAVE
-
+* Try nesting GOSUB calls to make sure that works
 
 # KNOWN ISSUES
 
 # FEATURES TO BE ADDED
 
-* Branching (IF, GOSUB)
+* IF
 * Variables & arrays
 * GET and INPUT
 * Looping (FOR, _maybe_ WHILE)

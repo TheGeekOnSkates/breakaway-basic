@@ -2,9 +2,10 @@
 
 char** currentProgram = NULL;
 int RC = 0;
-size_t currentLine = 0;
+size_t currentLine = 0, currentSub = 0;
 bool programMode = false;
 extern uint8_t lastError;
+int64_t subs[PROGRAM_MAX];
 
 /************************************************************************/
 
@@ -153,6 +154,7 @@ void RunOrContinue() {
 void Interpret(char* buffer) {
 	char* token = NULL;
 	int tempInt = 0;
+	size_t i = 0;
 	
 	/* If it's NULL, do nothing. */
 	if (buffer == NULL) {
@@ -185,6 +187,34 @@ void Interpret(char* buffer) {
 		exit(0);
 	}
 	
+	/* GOSUB line number */
+	if (STRING_STARTS_WITH(buffer, "GOSUB") || STRING_STARTS_WITH(buffer, "GO SUB")) {
+		if (!programMode) {
+			SyntaxError();
+			return;
+		}
+		buffer += 2;	/* past GO */
+		if (buffer[0] == ' ') buffer++;
+		buffer += 3;	/* past SUB */
+		
+		/* Then move past the spaces */
+		while(buffer[0] == ' ') buffer++;
+		
+		tempInt = atoi(buffer);
+		if (tempInt < 0 || tempInt > PROGRAM_MAX)
+			lastError = SYNTAX_ERROR;
+		else {
+			if (currentSub == PROGRAM_MAX) {
+				lastError = MEMORY_ERROR;
+				return;
+			}
+			subs[currentSub] = currentLine;
+			currentLine = tempInt;
+			currentSub++;
+		}
+		return;
+	}
+	
 	/* GOTO line */
 	if (STRING_STARTS_WITH(buffer, "GOTO") || STRING_STARTS_WITH(buffer, "GO TO")) {
 		if (!programMode) {
@@ -196,7 +226,8 @@ void Interpret(char* buffer) {
 		buffer += 2;	/* past TO */
 		
 		/* Then move past the spaces */
-		while(buffer[0] != '\0' && buffer[0] != ' ') buffer++;
+		while(buffer[0] == ' ') buffer++;
+		
 		tempInt = atoi(buffer);
 		if (tempInt < 0 || tempInt > PROGRAM_MAX)
 			lastError = SYNTAX_ERROR;
@@ -233,6 +264,28 @@ void Interpret(char* buffer) {
 	/* CONT or CONTINUE - continue program */
 	if (STRING_EQUALS(buffer, "CONT\n") || STRING_EQUALS(buffer, "CONTINUE\n")) {
 		RunOrContinue();
+		return;
+	}
+	
+	/* RETURN - return from subrouting */
+	if (STRING_EQUALS(buffer, "RETURN\n")) {
+		for (i=0; i<PROGRAM_MAX - 1; i++) {
+			
+			/* Find top of the stack */
+			if (subs[i + 1] != -1) continue;
+			
+			/*
+			Here we go +1 because otherwise we get
+			an infinite loop.  For example:
+			10 GOSUB 100
+			...
+			100 RETURN
+			If RETURN goes back to 10, GOSUB 100 is called again.
+			*/
+			currentLine = subs[i] + 1;
+			subs[i] = -1;
+			break;
+		}
 		return;
 	}
 	
