@@ -9,11 +9,27 @@ int64_t subs[PROGRAM_MAX];
 
 /************************************************************************/
 
+void New() {
+	/* Clear the program memory */
+	FreeProgram(currentProgram);
+	currentProgram = NULL;
+	currentProgram = CreateProgram();
+	if (currentProgram == NULL)
+		lastError = MEMORY_ERROR;
+	
+	/* TO-DO: Clear variables */
+}
+
+/************************************************************************/
+
 void LoadFile(char* name) {
 	char temp[BUFFER_MAX];
 	
 	/* Delete the trailing new line character */
 	name[strlen(name) - 1] = '\0';
+	
+	/* Clear whatever old program was in memory */
+	New();
 	
 	FILE* file = fopen((const char*)name, "r");
 	if (file == NULL) {
@@ -121,6 +137,7 @@ void RunOrContinue() {
 		if (temp == 27) {
 			NewLine();
 			printf("BREAK IN %ld", currentLine);
+			NewLine();
 			SetBlocking(true);
 			programMode = false;
 			return;
@@ -169,6 +186,23 @@ void Interpret(char* buffer) {
 	care deeply about portability. :D */
 	if (buffer[0] == '\n' || buffer[0] == '\r' || STRING_EQUALS(buffer, "\r\n")) return;
 	
+	/* BG number - set the background */
+	if (STRING_STARTS_WITH(buffer, "BG ")) {
+		buffer += 3;
+		if (buffer[0] < '0' || buffer[0] > '9')
+			lastError = SYNTAX_ERROR;
+		else {
+			printf("\033[4%dm", atoi(buffer));
+		}
+		return;
+	}
+	
+	/* BLINK - text blink mode on */
+	if (STRING_EQUALS(buffer, "BLINK\n")) {
+		printf("\033[6m");
+		return;
+	}
+	
 	/* END (in program mode) is handled by the RunOrContinue function */
 	if (STRING_EQUALS(buffer, "END\n")) {
 		SyntaxError();
@@ -187,6 +221,17 @@ void Interpret(char* buffer) {
 		exit(0);
 	}
 	
+	/* FG number - set the text foreground color */
+	if (STRING_STARTS_WITH(buffer, "FG ")) {
+		buffer += 3;
+		if (buffer[0] < '0' || buffer[0] > '9')
+			lastError = SYNTAX_ERROR;
+		else {
+			printf("\033[3%dm", atoi(buffer));
+		}
+		return;
+	}
+
 	/* GOSUB line number */
 	if (STRING_STARTS_WITH(buffer, "GOSUB") || STRING_STARTS_WITH(buffer, "GO SUB")) {
 		if (!programMode) {
@@ -209,7 +254,7 @@ void Interpret(char* buffer) {
 				return;
 			}
 			subs[currentSub] = currentLine;
-			currentLine = tempInt;
+			currentLine = tempInt - 1;
 			currentSub++;
 		}
 		return;
@@ -243,11 +288,7 @@ void Interpret(char* buffer) {
 	
 	/* NEW - clear contents of program */
 	if (STRING_EQUALS(buffer, "NEW\n")) {
-		FreeProgram(currentProgram);
-		currentProgram = NULL;
-		currentProgram = CreateProgram();
-		if (currentProgram == NULL)
-			lastError = MEMORY_ERROR;
+		New();
 		return;
 	}
 	
@@ -267,25 +308,37 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
+	/* RESET - reset the terminal settings */
+	if (STRING_EQUALS(buffer, "RESET\n")) {
+		printf("\033[0m");
+		return;
+	}
+
 	/* RETURN - return from subrouting */
 	if (STRING_EQUALS(buffer, "RETURN\n")) {
-		for (i=0; i<PROGRAM_MAX - 1; i++) {
-			
-			/* Find top of the stack */
-			if (subs[i + 1] != -1) continue;
-			
-			/*
-			Here we go +1 because otherwise we get
-			an infinite loop.  For example:
-			10 GOSUB 100
-			...
-			100 RETURN
-			If RETURN goes back to 10, GOSUB 100 is called again.
-			*/
-			currentLine = subs[i] + 1;
-			subs[i] = -1;
-			break;
+		/*
+		Here we go +1 because otherwise we get
+		an infinite loop.  For example:
+		10 GOSUB 100
+		...
+		100 RETURN
+		If RETURN goes back to 10, GOSUB 100 is called again.
+		*/
+		if (currentSub == 0 && subs[0] + 1 == -1) {
+			printf("Bingo\n");
+			return;
 		}
+		tempInt = subs[currentSub] + 1;
+		if (tempInt == 0) return;
+		currentLine = tempInt;
+		subs[currentSub] = -1;
+		if (currentSub > 0) currentSub--;
+		return;
+	}
+	
+	/* REVERSE - text reverse mode on */
+	if (STRING_EQUALS(buffer, "REVERSE\n")) {
+		printf("\033[27m");
 		return;
 	}
 	

@@ -181,6 +181,9 @@ void Interpret(char* buffer);
 /** Runs or continues the current program */
 void RunOrContinue(void);
 
+/** Clears program memory, and also variables */
+void New(void);
+
 /** Prints "?SYNTAX ERROR" (and the line number if running)  on the screen */
 void SyntaxError(void);
 

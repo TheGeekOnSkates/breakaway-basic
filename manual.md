@@ -2,6 +2,10 @@
 
 ## Command Reference
 
+### BG number
+
+Set the text background color.  This varies from one terminal to the next and from one system to the next.
+
 ### CLEAR or CLS
 
 Clears the screen (assuming your terminal supports ANSI escape codes).
@@ -17,6 +21,10 @@ Tells the interpreter it has reached the end of your program.  I'd like to say i
 ### EXIT
 
 Exits Breakaway BASIC.  Unlike Bash, C, and other languages there are no "exit codes."  If it exits with anything other than zero, it's because the OS said so.
+
+### FG number
+
+Set the text foreground color.  This varies from one terminal to the next and from one system to the next.
 
 ### GOTO line or GO TO line
 
@@ -47,20 +55,20 @@ Clears the contents of the program memory.  For example:
 READY.
 LIST
 10 REM THIS COMMENT WILL GET ERASED BY "NEW"
-
 READY.
-
 NEW
-
 READY.
 LIST
-
 READY.
 ```
 
 ### REM [comment]
 
 Comments are ignored by the interpreter.  They're a way for you to write notes in your code.
+
+### RESET
+
+Resets the terminal's color settings to the default
 
 ### RETURN
 
@@ -75,6 +83,10 @@ Moves the program just past where it was last time GOSUB was called.  For exampl
 ```
 
 GOSUB will move it to line 100, which will clear the screen.  Then line 110 will tell it to go back to where it was before (so line 11).  Then it hits line 20 and prints "Done."
+
+### REVERSE
+
+Resets the terminal's "reverse mode" on
 
 ### RUN
 

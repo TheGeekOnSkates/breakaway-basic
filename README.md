@@ -1,23 +1,38 @@
-# TO-DO's
+# TO-DO's (in no particular order)
 
 * As I create/change BASIC commands, keep updating the docs.
-* Keep working on multiple GOSUBs, nested GOSUBs etc.  Not quite right yet.
-* I just realized that LOAD should also call NEW, cuz otherwise... :D
+* Keep working on multiple GOSUBs, nested GOSUBs etc - almost there!
+* Fix REVERSE
+* Add i.e. MOVE x y to move the cursor, PUT x y character, COLOR x y color...
 
 # KNOWN ISSUES
+
+* GOSUB/RETURN - nested GOSUBs seem to work now, but not two GOSUBs back-to-back (see latest test)
+* REVERSE isn't working - not sure why (probably an ID10T error :D)
+
 
 # FEATURES TO BE ADDED
 
 * IF
+* Playing with the idea of aliases.  For example:
+
+	ALIAS CD SYS cd
+	REM THIS IS LIKE A FIND-&-REPLACE, SO...
+	CD /path/to/whatever
+	REM IT WOULD REPLACE "CD " WITH "SYS cd "
+	REM NOTE THE SPACES ABOVE
+
+If I really wanted to get fancy, I could have an auto-run file to set these aliases up automagically - but that's *waaaay* down the road...
+
 * Variables & arrays
 * GET and INPUT
 * Looping (FOR, _maybe_ WHILE)
-* Support for ANSI graphics
 * All the math stuff from my old calculator program
 * With the math stuff done, PRINT (have it eval math, combine strings, and call the echo command which already works kinda like PRINT)
 * Advanced file I/O: OPEN and CLOSE, GET# and INPUT#, PRINT#, CLEAR# etc.
+* __MAYBE__ an auto-run file (kinda like a config file, but not really... think autoexec.bat in DOS :D)
 
-
+And by the time I get here, idk what else I could possibley need/want.  I can write aliases for things like speech (i.e. `ALIAS SAY SYS easpeak `), sound, and things like listing files.  And if I'm using this with a screen reader, the screen reader will automatically speak stuff as I PRINT it anyway... now 3D sound is a bit tricky, but IMO that's a different project entirely.  And if I write that program, I can make aliases for that in Breakaway BASIC too :)
 
 ---------------------------------------------------------------------------------------------------------
 

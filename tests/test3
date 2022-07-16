@@ -6,9 +6,12 @@
 120 RETURN
 200 SYS echo "Sub 2"
 210 GOSUB 300
-220 RETURN
+220 GOSUB 500
+230 RETURN
 300 SYS echo "Sub 3"
 310 GOSUB 400
 320 RETURN
 400 SYS echo "Sub 4.  That's enough :)"
 410 RETURN
+500 SYS echo "Sub 5 - surprise!"
+510 RETURN
