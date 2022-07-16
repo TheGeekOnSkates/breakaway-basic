@@ -11,7 +11,7 @@ int main(int argc, const char** argv) {
 	}
 	srand(time(NULL));
 	
-	printf("BREAKAWAY BASIC 2022.07.14");
+	printf("BREAKAWAY BASIC 2022.07.15");
 	NewLine();
 	
 	while(true) {
@@ -19,7 +19,7 @@ int main(int argc, const char** argv) {
 		printf("READY.");
 		NewLine();
 		memset(buffer, 0, INPUT_BUFFER_SIZE);
-		fgets(buffer, 255, stdin);
+		fgets(buffer, INPUT_BUFFER_SIZE, stdin);
 		Interpret(buffer);
 	}
 	FreeProgram(currentProgram);

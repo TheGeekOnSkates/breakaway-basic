@@ -10,14 +10,43 @@ extern uint8_t lastError;
 
 void LoadFile(char* name) {
 	char temp[BUFFER_MAX];
-	FILE* file = fopen(name, "r");
+	
+	/* Delete the trailing new line character */
+	name[strlen(name) - 1] = '\0';
+	
+	FILE* file = fopen((const char*)name, "r");
 	if (file == NULL) {
-		lastError = FILE_NOT_FOUND;
+		//lastError = FILE_NOT_FOUND;
+		printf("?FILE NOT FOUND");
+		NewLine();
 		return;
 	}
 	while(!feof(file)) {
 		fgets(temp, BUFFER_MAX, file);
 		AddToProgram(currentProgram, temp);
+	}
+	fclose(file);
+}
+
+/************************************************************************/
+
+void SaveFile(char* name) {
+	size_t i = 0;
+	FILE* file = NULL;
+	
+	/* Delete the trailing new line character */
+	name[strlen(name) - 1] = '\0';
+	
+	file = fopen((const char*)name, "w");
+	if (file == NULL) {
+		printf("?FILE WRITE ERROR");
+		NewLine();
+		return;
+	}
+	for (i=0; i<PROGRAM_MAX; i++) {
+		if (currentProgram[i] == NULL) continue;
+		/* Keep in mind, the line already includes a newline */
+		fprintf(file, "%ld %s", i, currentProgram[i]);
 	}
 	fclose(file);
 }
@@ -176,7 +205,7 @@ void Interpret(char* buffer) {
 	}
 	
 	/* LOAD - Load a file */
-	if (STRING_STARTS_WITH(buffer, "LOAD ") || STRING_STARTS_WITH(buffer, "CLS")) {
+	if (STRING_STARTS_WITH(buffer, "LOAD ")) {
 		LoadFile(buffer + 5);
 		return;
 	}
@@ -204,6 +233,12 @@ void Interpret(char* buffer) {
 	/* CONT or CONTINUE - continue program */
 	if (STRING_EQUALS(buffer, "CONT\n") || STRING_EQUALS(buffer, "CONTINUE\n")) {
 		RunOrContinue();
+		return;
+	}
+	
+	/* SAVE - Save a file */
+	if (STRING_STARTS_WITH(buffer, "SAVE ")) {
+		SaveFile(buffer + 5);
 		return;
 	}
 	

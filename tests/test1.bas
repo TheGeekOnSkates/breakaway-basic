@@ -1,1 +1,3 @@
-10 REM IT WORKS!
+10 REM LET'S TRY TO SAVE OVER IT NOW...
+20 CLEAR
+30 SYS echo -n "Yup, still workin'!"
