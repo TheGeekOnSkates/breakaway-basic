@@ -205,6 +205,12 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
+	/* CONT or CONTINUE - continue program */
+	if (STRING_EQUALS(buffer, "CONT\n") || STRING_EQUALS(buffer, "CONTINUE\n")) {
+		RunOrContinue();
+		return;
+	}
+	
 	/* END (in program mode) is handled by the RunOrContinue function */
 	if (STRING_EQUALS(buffer, "END\n")) {
 		SyntaxError();
@@ -326,6 +332,16 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
+	/* HIDDEN ON/OFF - hidden text */
+	if (STRING_EQUALS(buffer, "HIDDEN ON\n")) {
+		printf("\033[8m");
+		return;
+	}
+	if (STRING_EQUALS(buffer, "HIDDEN OFF\n")) {
+		printf("\033[28m");
+		return;
+	}
+	
 	/* ITALIC ON/OFF - italic text */
 	if (STRING_EQUALS(buffer, "ITALIC ON\n")) {
 		printf("\033[3m");
@@ -383,12 +399,6 @@ void Interpret(char* buffer) {
 	/* RUN - self-explanatory :) */
 	if (STRING_EQUALS(buffer, "RUN\n")) {
 		currentLine = 0;
-		RunOrContinue();
-		return;
-	}
-	
-	/* CONT or CONTINUE - continue program */
-	if (STRING_EQUALS(buffer, "CONT\n") || STRING_EQUALS(buffer, "CONTINUE\n")) {
 		RunOrContinue();
 		return;
 	}

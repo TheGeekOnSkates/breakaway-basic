@@ -1,0 +1,7 @@
+5 REM TO-DO: ADD AN IF-STATEMENT
+10 SYS echo -n "Password:   "
+20 HIDDEN ON
+30 INPUT PW
+40 HIDDEN OFF
+50 SYS echo -n "Yup, that's it, "
+60 TEST PW70 SYS echo "!"

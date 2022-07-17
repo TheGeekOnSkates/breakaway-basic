@@ -54,6 +54,10 @@ Goes to a line number, like most BASICs have
 
 Similar to GOTO except that it when it finds a RETURN, it picks up where it left off.  Again, most BASICs have this.  See RETURN for more info.
 
+### HIDDEN ON (or OFF)
+
+Turns hidden text (like you might see for a password) on or off
+
 ### ITALIC ON (or OFF)
 
 Turns text italic mode on or off
