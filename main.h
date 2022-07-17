@@ -268,12 +268,25 @@ Variable* GetVariable(char* name);
  */
 void SetVariable(char* raw);
 
+
+
+/************************************************************************/
+/* STRING MANIPULATION FUNCTIONS (defined in strings.c)                 */
+/************************************************************************/
+
 /**
  * Replaces variables with their values
  * @param[in] The first variable in the program's linked list
  * @param[in] The buffer to receive the replacements
  */
 void ReplaceVariablesWithValues(char* buffer1);
+
+/**
+ * Prints text center-aligneded
+ * @param[in] The string to print
+ */
+void PrintCentered(const char* string);
+
 
 
 #endif

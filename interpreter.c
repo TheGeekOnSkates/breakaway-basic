@@ -11,12 +11,15 @@ extern Variable* firstVar;
 /************************************************************************/
 
 void RunLET(char* line) {
+	char copy[BUFFER_MAX];
+	strcpy(copy, line);
 	//StripSpaces(line);	// Let's see if I need this
 	if (firstVar == NULL) {
-		firstVar = CreateVariable(line);
+		firstVar = CreateVariable(copy);
 		return;
 	}
-	SetVariable(line);
+	printf("LEFT OFF HERE - set it once, it works.  Set it twice...\n");
+	SetVariable(copy);
 }
 
 /************************************************************************/
@@ -78,41 +81,6 @@ void SaveFile(char* name) {
 		fprintf(file, "%ld %s", i, currentProgram[i]);
 	}
 	fclose(file);
-}
-
-/************************************************************************/
-
-void ReplaceWithString(char* line, uint16_t start, uint16_t end, char* replacement) {
-	char temp[BUFFER_MAX];
-	uint16_t i;
-	
-	for (i=0; i<start; i++) temp[i] = line[i];
-	snprintf(temp + start, BUFFER_MAX - start, "%s%s", replacement, line + end);
-	strncpy(line, temp, BUFFER_MAX);
-}
-
-/************************************************************************/
-
-void ReplaceWithFloat(char* line, uint16_t from, uint16_t to, float value) {
-        size_t i;
-	char temp[BUFFER_MAX];
-        memset(temp, 0, BUFFER_MAX);
-        for (i=0; i<from; i++) temp[i] = line[i];
-        snprintf(temp + from, BUFFER_MAX, "%g%s", value, line + to);
-        strncpy(line, temp, BUFFER_MAX);
-}
-
-/************************************************************************/
-
-bool ParensMatch(char* string) {
-        size_t i, length, extras;
-	length = strlen(string);
-	extras = 0;
-        for (i = 0; i<length; i++) {
-                if (string[i] == '(') extras++;
-                else if (string[i] == ')') extras--;
-        }
-        return extras == 0;
 }
 
 /************************************************************************/
@@ -182,7 +150,7 @@ void RunOrContinue() {
 
 void Interpret(char* buffer) {
 	lastError = NO_ERROR;
-	char* token = NULL;
+	char* token = NULL, tempBuffer[BUFFER_MAX];
 	int tempInt = 0, x = -1, y = -1, x2 = -1, y2 = -1;
 	
 	/* If it's NULL, do nothing. */
@@ -298,6 +266,38 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
+	/* INPUT variable */
+	if (STRING_STARTS_WITH(buffer, "INPUT ")) {
+		if (!programMode) {
+			SyntaxError();
+			return;
+		}
+		/* Get the user's input */
+		printf("? ");
+		char input[BUFFER_MAX];
+		memset(input, 0, BUFFER_MAX);
+		SetBlocking(true);
+		fgets(input, BUFFER_MAX - strlen(buffer) + 6, stdin);
+		SetBlocking(false);
+		
+		/* Build the string that will be the variable's value */
+		char varValue[BUFFER_MAX];
+		strcpy(varValue, buffer + 6);
+		token = strstr(varValue, "\n");
+		token[0] = '\0';
+		strcat(varValue, "=");
+		strcat(varValue, input);
+		token = strstr(varValue, "\n");
+		token[0] = '\0';
+		#if DEBUG_MODE
+		printf("\n\"%s\"\n", varValue);
+		#endif
+		
+		/* Then make it a variable */
+		RunLET(varValue);
+		return;
+	}
+	
 	/* LET var = value */
 	if (STRING_STARTS_WITH(buffer, "LET ")) {
 		RunLET(buffer + 4);
@@ -399,6 +399,14 @@ void Interpret(char* buffer) {
 	if (STRING_STARTS_WITH(buffer, "SYS ")) {
 		token = buffer + 4;
 		RC = system((const char*)token);
+		return;
+	}
+	
+	if (STRING_STARTS_WITH(buffer, "TEST ")) {
+		token = strstr(buffer, "\n");
+		token[0] = '\0';
+		Variable* tempVar = GetVariable(buffer + 5);
+		printf("%s", tempVar == NULL ? "0" : tempVar->value);
 		return;
 	}
 	

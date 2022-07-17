@@ -3,16 +3,6 @@
 extern char** currentProgram;
 extern int64_t subs[PROGRAM_MAX];
 
-void PrintCentered(const char* string) {
-	int rows = 48, columns = 25;
-	size_t i = 0, length = 40;
-	
-	GetScreenSize(&rows, &columns);
-	length = (columns / 2) - strlen(string) / 2;
-	for (i=0; i<length; i++) printf(" ");
-	printf("%s", string);
-}
-
 int main(int argc, const char** argv) {
 	/* Declare variables */
 	char buffer[BUFFER_MAX];
@@ -33,7 +23,7 @@ int main(int argc, const char** argv) {
 	
 	/* Show the title message */
 	printf("\033[H\033[J");
-	PrintCentered("** BREAKAWAY BASIC 2022.07.15 **");
+	PrintCentered("**** BREAKAWAY BASIC 2022.07.16 ****");
 	NewLine();
 	sprintf(buffer, "%lu BYTES FREE", GetBytesFree());
 	PrintCentered(buffer);
