@@ -93,23 +93,37 @@ void SetVariable(char* raw) {
 		lastError = MEMORY_ERROR;
 		return;
 	}
-	for (i=0; i<length; i++) name[i] = raw[i];
+	for (i=0; i<length; i++) {
+		name[i] = raw[i];
+		name[i + 1] = '\0';
+	}
+	
+	#if DEBUG_MODE
+	printf("Name = \"%s\"\n", name);
+	#endif
 	
 	/* Check if a variable named name already exists;
 	if so, reset its value. */
 	current = GetVariable(name);
-		if (current != NULL) {
+	if (current != NULL) {
 		if (current->value != NULL) {
 			free(current->value);
 			current->value = NULL;
 		}
 		current->value = calloc(BUFFER_MAX - length + 1, sizeof(char));
 		if (current->value == NULL) {
-			strncpy(raw, "?MEMORY ERROR", BUFFER_MAX);
+			lastError = MEMORY_ERROR;
 			free(name);
 			return;
 		}
+		#if DEBUG_MODE
+		printf("equals + 1 = %s.\n", equals + 1);
+		#endif
 		strncpy(current->value, equals + 1, BUFFER_MAX - length + 1);
+		#if DEBUG_MODE
+		printf("current->value = %s\n", current->value);
+		#endif
+		return;
 	}
 	
 	/* If it gets here, create a new variable */
@@ -120,7 +134,7 @@ void SetVariable(char* raw) {
 	current->next = CreateVariable(raw);
 	if (current->next == NULL)
 		lastError = MEMORY_ERROR;
-	free(name);
+	if (name != NULL) free(name);
 }
 
 void ReplaceVariablesWithValues(char* line) {

@@ -1,22 +1,19 @@
 # TO-DO's (in no particular order)
 
 * As I create/change BASIC commands, keep updating the docs.
-* Keep working on multiple GOSUBs, nested GOSUBs etc - almost there!
-* Fix REVERSE
 * Add PUT x y character
-* Add COLOR x y color...
-* Start on aliases
-* Import my old variables setup
+* Add COLOR x y color, or maybe COLORS x y fg bg
+
 
 # KNOWN ISSUES
 
 * GOSUB/RETURN - nested GOSUBs seem to work now, but not two GOSUBs back-to-back (see latest test)
-* REVERSE isn't working - not sure why (probably an ID10T error :D)
 
 
 # FEATURES TO BE ADDED
 
 * IF (here's where that "RC" variable will come in handy, and the string-replacing stuff I wrote, etc.)
+* RENUMBER (like I think it was the TI 99 4/A had)
 * Playing with the idea of aliases.  For example:
 
 	ALIAS CD SYS cd
@@ -27,8 +24,8 @@
 
 If I really wanted to get fancy, I could have an auto-run file to set these aliases up automagically - but that's *waaaay* down the road...
 
-* Variables & arrays
-* GET and INPUT
+* Arrays
+* GET
 * Looping (FOR, _maybe_ WHILE)
 * All the math stuff from my old calculator program
 * With the math stuff done, PRINT (have it eval math, combine strings, and call the echo command which already works kinda like PRINT)

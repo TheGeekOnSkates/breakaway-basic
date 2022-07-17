@@ -8,6 +8,8 @@ extern uint8_t lastError;
 int64_t subs[PROGRAM_MAX];
 extern Variable* firstVar;
 
+
+
 /************************************************************************/
 
 void RunLET(char* line) {
@@ -18,7 +20,6 @@ void RunLET(char* line) {
 		firstVar = CreateVariable(copy);
 		return;
 	}
-	printf("LEFT OFF HERE - set it once, it works.  Set it twice...\n");
 	SetVariable(copy);
 }
 
@@ -32,7 +33,8 @@ void New() {
 	if (currentProgram == NULL)
 		lastError = MEMORY_ERROR;
 	
-	/* TO-DO: Clear variables */
+	/* Clear variables */
+	FreeVariables(firstVar);
 }
 
 /************************************************************************/
@@ -177,9 +179,29 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
-	/* BLINK - text blink mode on */
-	if (STRING_EQUALS(buffer, "BLINK\n")) {
-		printf("\033[6m");
+	/* BLINK ON/OFF - text blink mode on */
+	if (STRING_EQUALS(buffer, "BLINK ON\n")) {
+		printf("\033[5m");
+		return;
+	}
+	if (STRING_EQUALS(buffer, "BLINK OFF\n")) {
+		printf("\033[25m");
+		return;
+	}
+	
+	/* BOLD ON/OFF - bold text */
+	if (STRING_EQUALS(buffer, "BOLD ON\n")) {
+		printf("\033[1m");
+		return;
+	}
+	if (STRING_EQUALS(buffer, "BOLD OFF\n")) {
+		printf("\033[22m");
+		return;
+	}
+	
+	/* CLEAR or CLS - clear screen */
+	if (STRING_STARTS_WITH(buffer, "CLEAR") || STRING_STARTS_WITH(buffer, "CLS")) {
+		printf("\033[H\033[J");
 		return;
 	}
 	
@@ -195,16 +217,22 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
-	/* CLEAR or CLS - clear screen */
-	if (STRING_STARTS_WITH(buffer, "CLEAR") || STRING_STARTS_WITH(buffer, "CLS")) {
-		printf("\033[H\033[J");
-		return;
-	}
-	
 	/* EXIT - exit Breakaway Basic */
 	if (STRING_EQUALS(buffer, "EXIT\n")) {
+		printf("\033[0m");		/* RESET */
+		printf("\033[H\033[J");		/* CLEAR */
 		FreeProgram(currentProgram);
 		exit(0);
+	}
+	
+	/* FAINT ON/OFF - text dim/faint colors */
+	if (STRING_EQUALS(buffer, "FAINT ON\n")) {
+		printf("\033[2m");
+		return;
+	}
+	if (STRING_EQUALS(buffer, "FAINT OFF\n")) {
+		printf("\033[22m");
+		return;
 	}
 	
 	/* FG number - set the text foreground color */
@@ -383,8 +411,14 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
-	/* REVERSE - text reverse mode on */
-	if (STRING_EQUALS(buffer, "REVERSE\n")) {
+	/* REVERSE ON - text reverse mode on */
+	if (STRING_EQUALS(buffer, "REVERSE ON\n")) {
+		printf("\033[7m");
+		return;
+	}
+	
+	/* REVERSE OFF - text reverse mode off */
+	if (STRING_EQUALS(buffer, "REVERSE OFF\n")) {
 		printf("\033[27m");
 		return;
 	}
@@ -402,11 +436,15 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
+	/* Testing variables */
 	if (STRING_STARTS_WITH(buffer, "TEST ")) {
 		token = strstr(buffer, "\n");
-		token[0] = '\0';
+		if (token != NULL) token[0] = '\0';
+		#if DEBUG_MODE
+		printf("Looking for a variable named \"%s\"\n", buffer + 5);
+		#endif
 		Variable* tempVar = GetVariable(buffer + 5);
-		printf("%s", tempVar == NULL ? "0" : tempVar->value);
+		printf("%s", tempVar == NULL || tempVar->value == NULL ? "0" : tempVar->value);
 		return;
 	}
 	

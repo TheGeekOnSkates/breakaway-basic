@@ -6,6 +6,14 @@
 
 Set the text background color.  This varies from one terminal to the next and from one system to the next.
 
+### BLINK ON (or OFF)
+
+Turns text blinking mode on or off
+
+### BOLD ON (or OFF)
+
+Turns bright/bold color on or off
+
 ### CLEAR or CLS
 
 Clears the screen (assuming your terminal supports ANSI escape codes).
@@ -26,10 +34,13 @@ Since escape codes vary from one terminal to the other, this prints the escape c
 
 To make the text blue.  Of course we do include some more user-friendly ways to do stuff (i.e. BG, FG, REVERSE, BLINK, and MOVE), but if there's one I didn't add (or yours works different from mine) you can use ESC to print it.
 
-
 ### EXIT
 
 Exits Breakaway BASIC.  Unlike Bash, C, and other languages there are no "exit codes."  If it exits with anything other than zero, it's because the OS said so.
+
+### FAINT ON (or OFF)
+
+Turns text "faint mode" on or off.  Note that some terminal documentation may call this "dim", but DIM is planned to be a keyword in this BASIC (as it is in most) so I went with FAINT.
 
 ### FG number
 
@@ -97,9 +108,13 @@ Moves the program just past where it was last time GOSUB was called.  For exampl
 
 GOSUB will move it to line 100, which will clear the screen.  Then line 110 will tell it to go back to where it was before (so line 11).  Then it hits line 20 and prints "Done."
 
-### REVERSE
+### REVERSE ON (or OFF)
 
-Resets the terminal's "reverse mode" on
+Turns the terminal's "reverse mode" on
+
+### RESET
+
+Resets all terminal settings to the default.  Note that it doesn't clear any text (colored, blinking, reversed or otherwise) that was put there before - call CLEAR if you want a "blank slate".
 
 ### RUN
 
