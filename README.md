@@ -1,17 +1,15 @@
 # TO-DO's (in no particular order)
 
 * As I create/change BASIC commands, keep updating the docs.
-* Add PUT x y character
-* Add COLOR x y color, or maybe COLORS x y fg bg
 
 
 # KNOWN ISSUES
 
-* GOSUB/RETURN - nested GOSUBs seem to work now, but not two GOSUBs back-to-back (see latest test)
-
 
 # FEATURES TO BE ADDED
 
+* Add PUT x y character
+* Add COLOR x y color, or maybe COLORS x y fg bg
 * IF (here's where that "RC" variable will come in handy, and the string-replacing stuff I wrote, etc.)
 * RENUMBER (like I think it was the TI 99 4/A had)
 * Playing with the idea of aliases.  For example:

@@ -152,8 +152,9 @@ void RunOrContinue() {
 
 void Interpret(char* buffer) {
 	lastError = NO_ERROR;
-	char* token = NULL, tempBuffer[BUFFER_MAX];
+	char* token = NULL, input[BUFFER_MAX];
 	int tempInt = 0, x = -1, y = -1, x2 = -1, y2 = -1;
+	size_t i=0;
 	
 	/* If it's NULL, do nothing. */
 	if (buffer == NULL) {
@@ -266,17 +267,32 @@ void Interpret(char* buffer) {
 		while(buffer[0] == ' ') buffer++;
 		
 		tempInt = atoi(buffer);
-		if (tempInt < 0 || tempInt > PROGRAM_MAX)
+		#if DEBUG_MODE
+		printf("buffer = \"%s\", tempInt = %d\n", buffer, tempInt);
+		#endif
+		if (tempInt < 0 || tempInt > PROGRAM_MAX) {
 			lastError = SYNTAX_ERROR;
-		else {
-			if (currentSub == PROGRAM_MAX) {
-				lastError = MEMORY_ERROR;
-				return;
-			}
-			subs[currentSub] = currentLine;
-			currentLine = tempInt - 1;
-			currentSub++;
+			return;
 		}
+		if (currentSub == PROGRAM_MAX) {
+			lastError = MEMORY_ERROR;
+			return;
+		}
+		subs[currentSub] = currentLine;
+		currentLine = tempInt - 1;
+		currentSub++;
+
+		#if DEBUG_MODE
+		printf("GOSUB: ");
+		for(i=0; i<PROGRAM_MAX; i++) {
+			if (subs[i] == -1) {
+				printf("\n");
+				break;
+			}
+			printf("%ld ", subs[i]);
+		}
+		printf("Going to line %d\n", tempInt);
+		#endif
 		return;
 	}
 	
@@ -308,7 +324,6 @@ void Interpret(char* buffer) {
 		}
 		/* Get the user's input */
 		printf("? ");
-		char input[BUFFER_MAX];
 		memset(input, 0, BUFFER_MAX);
 		SetBlocking(true);
 		fgets(input, BUFFER_MAX - strlen(buffer) + 6, stdin);
@@ -411,19 +426,18 @@ void Interpret(char* buffer) {
 
 	/* RETURN - return from subrouting */
 	if (STRING_EQUALS(buffer, "RETURN\n")) {
-		/*
-		Here we go +1 because otherwise we get
-		an infinite loop.  For example:
-		10 GOSUB 100
-		...
-		100 RETURN
-		If RETURN goes back to 10, GOSUB 100 is called again.
-		*/
-		if (currentSub == 0 && subs[0] + 1 == -1) {
-			printf("Bingo\n");
-			return;
+		tempInt = subs[currentSub - 1]; //+ 1;
+		#if DEBUG_MODE
+		printf("RETURN: ");
+		for(i=0; i<PROGRAM_MAX; i++) {
+			if (subs[i] == -1) {
+				printf("\n");
+				break;
+			}
+			printf("%ld ", subs[i]);
 		}
-		tempInt = subs[currentSub] + 1;
+		printf("Returning to line %d\n", tempInt);
+		#endif
 		if (tempInt == 0) return;
 		currentLine = tempInt;
 		subs[currentSub] = -1;
