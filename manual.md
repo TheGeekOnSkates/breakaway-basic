@@ -54,6 +54,10 @@ Goes to a line number, like most BASICs have
 
 Similar to GOTO except that it when it finds a RETURN, it picks up where it left off.  Again, most BASICs have this.  See RETURN for more info.
 
+### ITALIC ON (or OFF)
+
+Turns text italic mode on or off
+
 ### LIST [line number [ - line number]]
 
 Lists the contents of your program.  Examples:
@@ -127,3 +131,8 @@ Saves the current program to a file.  Like LOAD, don't use quotes around the fil
 ### SYS
 
 Runs a system command or external program.
+
+### UNDERLINE ON (or OFF)
+
+Turns text underline mode on or off
+

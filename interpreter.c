@@ -326,6 +326,16 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
+	/* ITALIC ON/OFF - italic text */
+	if (STRING_EQUALS(buffer, "ITALIC ON\n")) {
+		printf("\033[3m");
+		return;
+	}
+	if (STRING_EQUALS(buffer, "ITALIC OFF\n")) {
+		printf("\033[23m");
+		return;
+	}
+	
 	/* LET var = value */
 	if (STRING_STARTS_WITH(buffer, "LET ")) {
 		RunLET(buffer + 4);
@@ -445,6 +455,16 @@ void Interpret(char* buffer) {
 		#endif
 		Variable* tempVar = GetVariable(buffer + 5);
 		printf("%s", tempVar == NULL || tempVar->value == NULL ? "0" : tempVar->value);
+		return;
+	}
+	
+	/* UNDERLINE ON/OFF - underlined text */
+	if (STRING_EQUALS(buffer, "UNDERLINE ON\n")) {
+		printf("\033[4m");
+		return;
+	}
+	if (STRING_EQUALS(buffer, "UNDERLINE OFF\n")) {
+		printf("\033[24m");
 		return;
 	}
 	
