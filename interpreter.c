@@ -12,10 +12,17 @@ extern Variable* firstVar, * firstAlias;
 /************************************************************************/
 
 void RunSYS(char* buffer) {
-	char RCasString[32];
+	char code[BUFFER_MAX];
 	int returnCode = system((const char*)buffer);
-	sprintf(RCasString, "RC=%d", returnCode);
-	SetVariable(RCasString, false);
+	sprintf(code, "RC=%d", returnCode);
+	#if DEBUG_MODE
+	printf("code = '%s'\n", code);
+	#endif
+	if (firstVar == NULL) {
+		firstVar = CreateVariable(code);
+		return;
+	}
+	SetVariable(code, false);
 }
 
 /************************************************************************/
@@ -23,7 +30,7 @@ void RunSYS(char* buffer) {
 void RunLET(char* line) {
 	char copy[BUFFER_MAX];
 	strcpy(copy, line);
-	//StripSpaces(line);	// Let's see if I need this
+	StripSpaces(line);
 	if (firstVar == NULL) {
 		firstVar = CreateVariable(copy);
 		return;
@@ -43,6 +50,7 @@ void New() {
 	
 	/* Clear variables */
 	FreeVariables(firstVar);
+	FreeVariables(firstAlias);
 }
 
 /************************************************************************/
@@ -162,6 +170,9 @@ void Interpret(char* buffer) {
 	lastError = NO_ERROR;
 	char* token = NULL, input[BUFFER_MAX];
 	int tempInt = 0, x = -1, y = -1, x2 = -1, y2 = -1;
+	#if DEBUG_MODE
+	size_t i = 0;
+	#endif
 	
 	/* If it's NULL, do nothing. */
 	if (buffer == NULL) {
@@ -178,6 +189,9 @@ void Interpret(char* buffer) {
 	
 	/* Those checks aside, the next step to do is... */
 	ReplaceAliases(buffer);
+	#if DEBUG_MODE
+	printf("After ReplaceAliases:  \"%s\"\n", buffer);
+	#endif
 	
 	/* BG number - set the background */
 	if (STRING_STARTS_WITH(buffer, "BG ")) {
@@ -194,7 +208,6 @@ void Interpret(char* buffer) {
 	if (STRING_STARTS_WITH(buffer, "ALIAS ")) {
 		char copy[BUFFER_MAX - 6];
 		strcpy(copy, buffer + 6);
-		StripSpaces(copy);
 		token = strstr(copy, "\n");
 		if (token != NULL) token[0] = '\0';
 		if (firstAlias == NULL) {
@@ -202,6 +215,7 @@ void Interpret(char* buffer) {
 			return;
 		}
 		SetVariable(copy, true);
+		return;
 	}
 	
 	/* BLINK ON/OFF - text blink mode on */

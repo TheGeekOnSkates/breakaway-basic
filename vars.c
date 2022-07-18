@@ -59,10 +59,25 @@ void FreeVariables(Variable* v) {
 
 Variable* GetVariable(char* name, bool isAlias) {
 	#if DEBUG_MODE
-	printf("Searching for: \"%s\"\n", name);
+	/* Check your inputs */
+	printf("Name = \"%s\" (%s)\n", name, isAlias ? "alias" : "variable");
 	#endif
+	
 	Variable* current = isAlias ? firstAlias : firstVar;
+	
+	#if DEBUG_MODE
+	printf("It gets here.\n");
+	#endif
+	
+	if (current == NULL) return NULL;
+	
+	#if DEBUG_MODE
+	printf("But not here?  Why would simply checking if a thing is NULL make it crash?  Core dumps stink worse than the Sabres. :D\n");
+	#endif
+	
 	while(current != NULL) {
+		if (current->name == NULL)
+			printf("Bingo!\n");
 		#if DEBUG_MODE
 		printf("\"%s\" = \"%s\"\n", current->name, current->value);
 		#endif
@@ -77,6 +92,16 @@ void SetVariable(char* raw, bool isAlias) {
 	Variable* current = NULL;
 	char* equals, * name;
 	size_t i, length;
+	
+	/* If the first was not created yet, create it */
+	if (isAlias && firstVar == NULL) {
+		firstVar = CreateVariable(raw);
+		return;
+	}
+	if (!isAlias && firstAlias == NULL) {
+		firstAlias = CreateVariable(raw);
+		return;
+	}
 	
 	/* Get the position of the equals sign */
 	equals = strchr(raw, '=');
@@ -182,9 +207,7 @@ void ReplaceAliases(char* buffer) {
 	Variable* current = firstAlias;
 	while(current != NULL) {
 		if (STRING_STARTS_WITH(buffer, current->name)) {
-			printf("Found it!\n");
 			ReplaceWithString(buffer, 0, strlen(current->name), current->value);
-			printf("buffer = \"%s\"\n", buffer);
 			return;
 		}
 		current = current->next;

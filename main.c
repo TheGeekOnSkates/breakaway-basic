@@ -2,7 +2,7 @@
 
 extern char** currentProgram;
 extern int64_t subs[PROGRAM_MAX];
-extern Variable* firstVar;
+extern Variable* firstVar, * firstAlias;
 
 int main(int argc, const char** argv) {
 	/* Declare variables */
@@ -24,7 +24,7 @@ int main(int argc, const char** argv) {
 	
 	/* Show the title message */
 	printf("\033[H\033[J");
-	PrintCentered("**** BREAKAWAY BASIC 2022.07.17.2 ****");
+	PrintCentered("**** BREAKAWAY BASIC 2022.07.17.3 ****");
 	NewLine();
 	sprintf(buffer, "%lu BYTES FREE", GetBytesFree());
 	PrintCentered(buffer);
@@ -49,5 +49,6 @@ int main(int argc, const char** argv) {
 	printf("\033[H\033[J");		/* CLEAR */
 	FreeProgram(currentProgram);
 	FreeVariables(firstVar);
+	FreeVariables(firstAlias);
 	return 0;
 }
