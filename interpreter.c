@@ -50,7 +50,7 @@ void New() {
 	
 	/* Clear variables */
 	FreeVariables(firstVar);
-	FreeVariables(firstAlias);
+	/* FreeVariables(firstAlias); */
 }
 
 /************************************************************************/
@@ -193,6 +193,21 @@ void Interpret(char* buffer) {
 	printf("After ReplaceAliases:  \"%s\"\n", buffer);
 	#endif
 	
+	/* ALIAS NAME = value */
+	if (STRING_STARTS_WITH(buffer, "ALIAS ")) {
+		char copy[BUFFER_MAX - 6];
+		strcpy(copy, buffer + 6);
+		token = strstr(copy, "\n");
+		if (token != NULL) token[0] = '\0';
+		if (firstAlias == NULL) {
+			printf("copy = \"%s\"\n", copy);
+			firstAlias = CreateVariable(copy);
+			return;
+		}
+		SetVariable(copy, true);
+		return;
+	}
+	
 	/* BG number - set the background */
 	if (STRING_STARTS_WITH(buffer, "BG ")) {
 		buffer += 3;
@@ -201,20 +216,6 @@ void Interpret(char* buffer) {
 		else {
 			printf("\033[4%dm", atoi(buffer));
 		}
-		return;
-	}
-	
-	/* ALIAS NAME = value */
-	if (STRING_STARTS_WITH(buffer, "ALIAS ")) {
-		char copy[BUFFER_MAX - 6];
-		strcpy(copy, buffer + 6);
-		token = strstr(copy, "\n");
-		if (token != NULL) token[0] = '\0';
-		if (firstAlias == NULL) {
-			firstAlias = CreateVariable(copy);
-			return;
-		}
-		SetVariable(copy, true);
 		return;
 	}
 	
@@ -299,10 +300,6 @@ void Interpret(char* buffer) {
 
 	/* GOSUB line number */
 	if (STRING_STARTS_WITH(buffer, "GOSUB") || STRING_STARTS_WITH(buffer, "GO SUB")) {
-		if (!programMode) {
-			SyntaxError();
-			return;
-		}
 		buffer += 2;	/* past GO */
 		if (buffer[0] == ' ') buffer++;
 		buffer += 3;	/* past SUB */
