@@ -1,67 +1,159 @@
-# TO-DO's (in no particular order)
-
-* As I create/change BASIC commands, keep updating the docs.
-
-
-# KNOWN ISSUES
-
-
-# FEATURES TO BE ADDED
-
-* Add PUT x y character
-* Add COLOR x y color, or maybe COLORS x y fg bg
-* IF (here's where that "RC" variable will come in handy, and the string-replacing stuff I wrote, etc.)
-* RENUMBER (like I think it was the TI 99 4/A had)
-* Playing with the idea of aliases.  For example:
-
-	ALIAS CD SYS cd
-	REM THIS IS LIKE A FIND-&-REPLACE, SO...
-	CD /path/to/whatever
-	REM IT WOULD REPLACE "CD " WITH "SYS cd "
-	REM NOTE THE SPACES ABOVE
-
-If I really wanted to get fancy, I could have an auto-run file to set these aliases up automagically - but that's *waaaay* down the road...
-
-* Arrays
-* GET
-* Looping (FOR, _maybe_ WHILE)
-* All the math stuff from my old calculator program
-* With the math stuff done, PRINT (have it eval math, combine strings, and call the echo command which already works kinda like PRINT)
-* Advanced file I/O: OPEN and CLOSE, GET# and INPUT#, PRINT#, CLEAR# etc.
-* __MAYBE__ an auto-run file (kinda like a config file, but not really... think autoexec.bat in DOS :D)
-
-And by the time I get here, idk what else I could possibley need/want.  I can write aliases for things like speech (i.e. `ALIAS SAY SYS easpeak `), sound, and things like listing files.  And if I'm using this with a screen reader, the screen reader will automatically speak stuff as I PRINT it anyway... now 3D sound is a bit tricky, but IMO that's a different project entirely.  And if I write that program, I can make aliases for that in Breakaway BASIC too :)
-
----------------------------------------------------------------------------------------------------------
-
 # Breakaway BASIC
 
-## The problem
+## Overview
 
-Bash sucks ice.  Its syntax is a nightmare, a bizarre blend of code and... commands?  I think?  And OMGosh the darn thing has so, _SOOOO_ many config files!  /etc/.profile (I think), /etc/.bash_profile, ./.bashrc and I'm probably missing 4 or 5 more and they all vary from distro to distro and... ugh.  Just... no!  Gimme something a single coder can understand.
+This idea started off as a fun experiment; let's see if I can create my own scripting language.  I wanted it to have a bunch of fun tools for creating ANSI graphics, 2D or even 3D sound, and to be fully screen-reader accessible (cuz sometimes I like to work eyes-free, not to mention it would be a great tool for building audio games).  I wanted it to be freed software, easy to pick up and fun for geeks like me who love the retro stuff.  But I also wanted it to be something I could actually use to get sh...tuff done.  It was fun, for awhile, but eventually collected dust as I got other ideas I was more interested in at the time. :)
 
-## The dream
+But then I got to tinkering with something else when I realized, Linux command-line scripting is HARD.  Its syntax is a mess, it's super-config-heavy, and it just... kinda stinks.  But then I discovered the difference between a "shell" and a "terminal"; turns out, there are lots of other shells out there.  There's one in particular that I really like, called "nushell" (they really need to capitalize that S cuz I keep wanting to type "nutshell" lol).  There's also a "cbmbasic" that is very nice, but it has some problems that make it less than ideal as a replacement for Bash.  Then there's zish and fish and lish and a bunch of other funny-sounding ones.  Basically, a shell is the main program that runs when you bring up a terminal/command prompt.  It's what you use to run other programs.
 
-And I think that's the problem that has led to my building so many "fantasy emulators".  On the C64, I know what I'm doing.  On DOS... well DOS has its own jacked-up codemandline-y thingummy ("Batch") but I can still more-or-less keep it to sane languages.  On Linux... not so much.  One-off commands.  Man it would be so awesome to do something like:
+And then it hit me.  My old BASIC, with the right tweaks, would make a great (or at least fun) shell for Linux.  As of right now, my focus is mostly on Linux, but when I notice clearly OS-dependent code, I have a place for it.  It works similar to 8-bit BASICs, with line numbers and all that.
 
-10 clear
-20 if root then 30 else 40
-30 sudo apt-get install whatever
-40 if sudo su then 30 else 50
-50 print "Sorry, gotta be an admin"
+Also, for the curious: The name "Breakaway BASIC" has a double meaning.  For one thing, I'm kind of trying to "break away" from Bash.  But before that, the idea came from hockey.  A breakaway is one of the most exciting things that can happen in a game.  It's when a player gets past the other team's defense, a sort of duel between the player and the goalie.  Mano a mano.  Sometimes with the game on the line.  That's what I want my BASIC to be, like a player on a breakaway: fast, powerful, fun to watch, and just plain awesome. :)
 
-Shoot, even simpler than that, what if I wanted my terminal to just start out with a fully functional scripting language?  Sure there's Python, and Node, and even that "CBM BASIC" someone created (which is really darn close to what I want).  Simple.  No nonsense.
+## Command Reference
 
-Up till now (when Bash drove me to bash my head against the monitor), I thought "shell" meant the same thing as "terminal".  But apparently, people are building new shells all the time (there's "zsh" and "fish" and "nushell" and probably others).  So I asked the Duck about it.  According to Wikipedia, a shell is "a computer program which exposes an operating system's services to a human user or other programs".  That's exactly what I want.  I don't need to build my own OS.  I don't have to build my own "computer" emulated in software.  What I want is a computer I can sit down at and "just know" how it all works.  No bottomless rabbit-holes of config files, weird errors and distro differences.  Shoot, maybe this shell I build could even work on Windows!  Or not. :D
+### BG number
 
-## Brainstorming an actual solution
+Set the text background color.  This varies from one terminal to the next and from one system to the next.
 
-So obviously I got Commodore on the brain tonight, so I'm thinking BASIC.  This means it should have:
+### BLINK ON (or OFF)
 
-* All the essentials like PRINT, INPUT, variables, arrays, branching, etc.
-* A file I/O system (i.e. PRINT#, GET#, LOAD, SAVE)
-* An easy way to run system commands and get their output and their return code
+Turns text blinking mode on or off
 
-If I can do that, I'm good to go.
+### BOLD ON (or OFF)
 
-But there's a problem: dependencies.  If I code it in Node, it's all about npm modules; if I code it in Python, there's v2 vs v3 (and v3 is way better but doesn't have full library support yet) and so oo.  So I think what I might do is just do it in standard C.  If OS-dependent code becomes absolutely necessary, I'll go there, but for now I think that's a solid place to start.
+Turns bright/bold color on or off
+
+### CLEAR or CLS
+
+Clears the screen (assuming your terminal supports ANSI escape codes).
+
+### CONT or CONTINUE
+
+Runs the your program from wherever it left off
+
+### END
+
+Tells the interpreter it has reached the end of your program.  I'd like to say it "exits" your program, but that might be confused with EXIT below (which is not the same thing).  I think you get the idea. :)
+
+### ESC string
+
+Since escape codes vary from one terminal to the other, this prints the escape character (0x1B in hex, 27 decimal, or "\033" in... octal?) followed by whatever you type.  So for example, you could do:
+
+`ESC [34m`
+
+To make the text blue.  Of course we do include some more user-friendly ways to do stuff (i.e. BG, FG, REVERSE, BLINK, and MOVE), but if there's one I didn't add (or yours works different from mine) you can use ESC to print it.
+
+### EXIT
+
+Exits Breakaway BASIC.  Unlike Bash, C, and other languages there are no "exit codes."  If it exits with anything other than zero, it's because the OS said so.
+
+### FAINT ON (or OFF)
+
+Turns text "faint mode" on or off.  Note that some terminal documentation may call this "dim", but DIM is planned to be a keyword in this BASIC (as it is in most) so I went with FAINT.
+
+### FG number
+
+Set the text foreground color.  This varies from one terminal to the next and from one system to the next.
+
+### GOTO line or GO TO line
+
+Goes to a line number, like most BASICs have
+
+### GOSUB line or GO SUB line
+
+Similar to GOTO except that it when it finds a RETURN, it picks up where it left off.  Again, most BASICs have this.  See RETURN for more info.
+
+### HIDDEN ON (or OFF)
+
+Turns hidden text (like you might see for a password) on or off
+
+### ITALIC ON (or OFF)
+
+Turns text italic mode on or off
+
+### LIST [line number [ - line number]]
+
+Lists the contents of your program.  Examples:
+
+* `LIST` shows you your entire program.
+* `LIST 30` shows you just line 30.
+* `LIST 40-70` shows just lines 40-70
+
+### LOAD file
+
+Loads a file.  Unlike other BASICs, there's no need to use quotes.  So you can just do i.e. `LOAD myfile.bas` or `LOAD ../path/to/my/file.bas`.
+
+### MOVE x y
+
+Moves the cursor to column x, row y.  This is different from other terminal control systems you may have used (which usually do it as row, then column, or y then x).  This is on purpose - as fun and retro as it is to have it backwards like that, more programmers today are familiar with x-y coordinates.
+
+### NEW
+
+Clears the contents of the program memory.  For example:
+
+```
+10 REM THIS COMMENT WILL GET ERASED BY "NEW"
+READY.
+LIST
+10 REM THIS COMMENT WILL GET ERASED BY "NEW"
+READY.
+NEW
+READY.
+LIST
+READY.
+```
+
+### REM [comment]
+
+Comments are ignored by the interpreter.  They're a way for you to write notes in your code.
+
+### RESET
+
+Resets the terminal's color settings to the default
+
+### RETURN
+
+Moves the program just past where it was last time GOSUB was called.  For example:
+
+```
+10 GOSUB 100
+20 SYS echo "Done."
+99 END
+100 CLEAR
+110 RETURN
+```
+
+GOSUB will move it to line 100, which will clear the screen.  Then line 110 will tell it to go back to where it was before (so line 11).  Then it hits line 20 and prints "Done."
+
+### REVERSE ON (or OFF)
+
+Turns the terminal's "reverse mode" on
+
+### RESET
+
+Resets all terminal settings to the default.  Note that it doesn't clear any text (colored, blinking, reversed or otherwise) that was put there before - call CLEAR if you want a "blank slate".
+
+### RUN
+
+Runs the your program from the beginning
+
+### SAVE file
+
+Saves the current program to a file.  Like LOAD, don't use quotes around the file name.  Just do i.e. `SAVE myfile.bas` or `SAVE /path/to/my/file.bas` without them.  Note also that the file extension doesn't even have to be ".bas" - it can be ".txt" or anything you like.  Even no extension at all.
+
+### SYS
+
+Runs a system command or external program.  Note that in early versions of Breakaway BASIC (before 2022.07.17.2), all system commands had to start with SYS.  Now, it's mainly in there for these (admittedly minimal) reasons:
+
+* Backwards compatibility - not sure if anyone cloned or forked early versions, but it could have happened.
+* Clarity - kind of like how in some BASICs the "LET" keyword is not required, but anyone who knows BASIC knows what it does).
+* Cuz it's retro - Commodore's SYS command jumped to a place in memory (usually a machine code program), which is exactly what this does (well, it's what C's "system" function does anyway). :)
+
+But Breakaway BASIC 2022.07.17.2 and later will assume any unrecognized command is a system command.  This way if you type "ls" instead of "SYS ls" it'll still work.  Before 2022.07.17.2 it just threw a syntax error.
+
+### UNDERLINE ON (or OFF)
+
+Turns text underline mode on or off
+
+

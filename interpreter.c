@@ -6,7 +6,7 @@ size_t currentLine = 0, currentSub = 0;
 bool programMode = false;
 extern uint8_t lastError;
 int64_t subs[PROGRAM_MAX];
-extern Variable* firstVar;
+extern Variable* firstVar, * firstAlias;
 
 
 
@@ -20,7 +20,7 @@ void RunLET(char* line) {
 		firstVar = CreateVariable(copy);
 		return;
 	}
-	SetVariable(copy);
+	SetVariable(copy, false);
 }
 
 /************************************************************************/
@@ -154,7 +154,6 @@ void Interpret(char* buffer) {
 	lastError = NO_ERROR;
 	char* token = NULL, input[BUFFER_MAX];
 	int tempInt = 0, x = -1, y = -1, x2 = -1, y2 = -1;
-	size_t i=0;
 	
 	/* If it's NULL, do nothing. */
 	if (buffer == NULL) {
@@ -178,6 +177,18 @@ void Interpret(char* buffer) {
 			printf("\033[4%dm", atoi(buffer));
 		}
 		return;
+	}
+	
+	/* BLINK ON/OFF - text blink mode on */
+	if (STRING_STARTS_WITH(buffer, "ALIAS ")) {
+		char copy[BUFFER_MAX];
+		strcpy(copy, buffer);
+		//StripSpaces(line);	// Let's see if I need this
+		if (firstAlias == NULL) {
+			firstAlias = CreateVariable(copy);
+			return;
+		}
+		SetVariable(copy, true);
 	}
 	
 	/* BLINK ON/OFF - text blink mode on */
@@ -477,7 +488,7 @@ void Interpret(char* buffer) {
 		#if DEBUG_MODE
 		printf("Looking for a variable named \"%s\"\n", buffer + 5);
 		#endif
-		Variable* tempVar = GetVariable(buffer + 5);
+		Variable* tempVar = GetVariable(buffer + 5, false);
 		printf("%s", tempVar == NULL || tempVar->value == NULL ? "0" : tempVar->value);
 		return;
 	}
@@ -499,5 +510,6 @@ void Interpret(char* buffer) {
 	}
 	
 	/* And if it gets here, the user goofed */
-	SyntaxError();
+	/* SyntaxError(); - No, let's do this instead... */
+	RC = system((const char*)buffer);
 }

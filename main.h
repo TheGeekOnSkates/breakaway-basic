@@ -258,15 +258,17 @@ void FreeVariables(Variable* v);
 /**
  * Gets the value of a variable
  * @param[in] The name of the variable
+ * @param[in] If true, get an alias instead
  * The variable, or NULL if no match was found
  */
-Variable* GetVariable(char* name);
+Variable* GetVariable(char* name, bool isAlias);
 
 /**
  * Sets/resets a variable's value
  * @param[in] The raw ("un-parsed") string the user entered
+ * @param[in] If true, set an alias instead
  */
-void SetVariable(char* raw);
+void SetVariable(char* raw, bool isAlias);
 
 
 

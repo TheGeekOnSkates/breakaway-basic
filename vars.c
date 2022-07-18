@@ -2,7 +2,7 @@
 
 extern uint8_t lastError;
 
-Variable* firstVar = NULL;
+Variable* firstVar = NULL, * firstAlias = NULL;
 
 Variable* CreateVariable(char* raw) {
 	/* Declare variables */
@@ -57,11 +57,11 @@ void FreeVariables(Variable* v) {
 	free(v);
 }
 
-Variable* GetVariable(char* name) {
+Variable* GetVariable(char* name, bool isAlias) {
 	#if DEBUG_MODE
 	printf("Searching for: \"%s\"\n", name);
 	#endif
-	Variable* current = firstVar;
+	Variable* current = isAlias ? firstAlias : firstVar;
 	while(current != NULL) {
 		#if DEBUG_MODE
 		printf("\"%s\" = \"%s\"\n", current->name, current->value);
@@ -73,7 +73,7 @@ Variable* GetVariable(char* name) {
 	return NULL;
 }
 
-void SetVariable(char* raw) {
+void SetVariable(char* raw, bool isAlias) {
 	Variable* current = NULL;
 	char* equals, * name;
 	size_t i, length;
@@ -104,7 +104,7 @@ void SetVariable(char* raw) {
 	
 	/* Check if a variable named name already exists;
 	if so, reset its value. */
-	current = GetVariable(name);
+	current = GetVariable(name, isAlias);
 	if (current != NULL) {
 		if (current->value != NULL) {
 			free(current->value);
@@ -127,7 +127,7 @@ void SetVariable(char* raw) {
 	}
 	
 	/* If it gets here, create a new variable */
-	current = firstVar;
+	current = isAlias ? firstAlias : firstVar;
 	while(current != NULL && current->next != NULL) {
 		current = current->next;
 	}
