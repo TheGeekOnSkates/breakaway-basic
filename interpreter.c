@@ -1,7 +1,6 @@
 #include "main.h"
 
 char** currentProgram = NULL;
-int RC = 0;
 size_t currentLine = 0, currentSub = 0;
 bool programMode = false;
 extern uint8_t lastError;
@@ -9,6 +8,15 @@ int64_t subs[PROGRAM_MAX];
 extern Variable* firstVar, * firstAlias;
 
 
+
+/************************************************************************/
+
+void RunSYS(char* buffer) {
+	char RCasString[32];
+	int returnCode = system((const char*)buffer);
+	sprintf(RCasString, "RC=%d", returnCode);
+	SetVariable(RCasString, false);
+}
 
 /************************************************************************/
 
@@ -168,6 +176,9 @@ void Interpret(char* buffer) {
 	care deeply about portability. :D */
 	if (buffer[0] == '\n' || buffer[0] == '\r' || STRING_EQUALS(buffer, "\r\n")) return;
 	
+	/* Those checks aside, the next step to do is... */
+	ReplaceAliases(buffer);
+	
 	/* BG number - set the background */
 	if (STRING_STARTS_WITH(buffer, "BG ")) {
 		buffer += 3;
@@ -179,11 +190,13 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
-	/* BLINK ON/OFF - text blink mode on */
+	/* ALIAS NAME = value */
 	if (STRING_STARTS_WITH(buffer, "ALIAS ")) {
-		char copy[BUFFER_MAX];
-		strcpy(copy, buffer);
-		//StripSpaces(line);	// Let's see if I need this
+		char copy[BUFFER_MAX - 6];
+		strcpy(copy, buffer + 6);
+		StripSpaces(copy);
+		token = strstr(copy, "\n");
+		if (token != NULL) token[0] = '\0';
 		if (firstAlias == NULL) {
 			firstAlias = CreateVariable(copy);
 			return;
@@ -477,7 +490,7 @@ void Interpret(char* buffer) {
 	/* SYS - run an external command */
 	if (STRING_STARTS_WITH(buffer, "SYS ")) {
 		token = buffer + 4;
-		RC = system((const char*)token);
+		RunSYS(token);
 		return;
 	}
 	
@@ -511,5 +524,5 @@ void Interpret(char* buffer) {
 	
 	/* And if it gets here, the user goofed */
 	/* SyntaxError(); - No, let's do this instead... */
-	RC = system((const char*)buffer);
+	RunSYS(buffer);
 }

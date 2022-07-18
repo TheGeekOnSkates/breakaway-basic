@@ -206,6 +206,12 @@ void NewLine(void);
  */
 void Interpret(char* buffer);
 
+/**
+ * Replaces an alias with its value
+ * @param[in, out] The user's code
+ */
+void ReplaceAliases(char* buffer);
+
 /** Runs or continues the current program */
 void RunOrContinue(void);
 
@@ -275,6 +281,29 @@ void SetVariable(char* raw, bool isAlias);
 /************************************************************************/
 /* STRING MANIPULATION FUNCTIONS (defined in strings.c)                 */
 /************************************************************************/
+
+/**
+ * Strips spaces from a string (except inside strings)
+ * @param[in, out] The string to be edited
+ */
+void StripSpaces(char* line);
+
+/**
+ * Deletes a character in a string by shifting
+ * everything after it to the left 1 character
+ * @param[in, out] The string to be edited
+ * @param[in] Position of the char to be deleted
+ * @param[in] Length of the string
+ */
+void ShiftLeft(char* string, size_t start, size_t length);
+
+/**
+ * "Adds" (joins) two strings connected by a plus sign
+ * @param[in, out] The string to be edited (make sure
+ * StripSpaces has been called on it first)
+ * @example It turns "Awe"+"some" to "Awesome"
+ */
+void CombineStrings(char* line);
 
 /**
  * Replaces variables with their values

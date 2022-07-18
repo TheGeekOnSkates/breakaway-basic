@@ -177,3 +177,16 @@ void ReplaceVariablesWithValues(char* line) {
 		current = current->next;
 	}
 }
+
+void ReplaceAliases(char* buffer) {
+	Variable* current = firstAlias;
+	while(current != NULL) {
+		if (STRING_STARTS_WITH(buffer, current->name)) {
+			printf("Found it!\n");
+			ReplaceWithString(buffer, 0, strlen(current->name), current->value);
+			printf("buffer = \"%s\"\n", buffer);
+			return;
+		}
+		current = current->next;
+	}
+}

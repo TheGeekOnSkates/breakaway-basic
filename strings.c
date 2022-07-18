@@ -2,6 +2,63 @@
 
 /************************************************************************/
 
+void ShiftLeft(char* string, size_t start, size_t length) {
+        size_t i;
+        for (i = start + 1; i < length; i++) {
+                string[i - 1] = string[i];
+                string[i] = ' ';
+        }
+}
+
+/************************************************************************/
+
+void CombineStrings(char* line) {
+	char* temp;
+	uint16_t i;
+	while(true) {
+		temp = strstr(line, "\"+\"");
+		if (temp == NULL) break;
+		for (i=0; i<3; i++)
+			ShiftLeft(line, temp - line, strlen(line));
+	}
+}
+
+/************************************************************************/
+
+void StripSpaces(char* line) {
+	bool inQuotes;
+	uint8_t i, j, length;
+	
+	inQuotes = false;
+	length = strlen(line);
+	for (i=0; i<length; i++) {
+		
+		/* Skip anything between quotation marks */
+		if (inQuotes) {
+			if (line[i] == '"')
+				inQuotes = false;
+			continue;
+		}
+		if (line[i] == '"') {
+			inQuotes = true;
+			continue;
+		}
+		
+		/* If it gets here, it's no in quotes.
+		So if it's not a space, skip it. */
+		if (line[i] != ' ') continue;
+		
+		/* If it gets here, it's a space to be stripped. */
+		for (j=i; j<length; j++) {
+			line[j] = line[j + 1];
+		}
+		i--;
+	}
+}
+
+
+/************************************************************************/
+
 void PrintCentered(const char* string) {
 	int rows = 48, columns = 25;
 	size_t i = 0, length = 40;
