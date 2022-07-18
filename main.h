@@ -165,6 +165,12 @@ static inline bool IsLineEmpty(char** program, uint16_t lineNumber) {
 #define Linux true
 
 /**
+ * For the "CD" command (which does the same thing as in most other OSes)
+ * @param[in] The folder to go to
+ */
+void GoToFolder(char* folder);
+
+/**
  * Gets the screen size
  * @param[out] The number of rows, in characters
  * @param[out] The number of columns, in characters

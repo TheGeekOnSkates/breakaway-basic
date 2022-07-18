@@ -40,4 +40,13 @@ inline void NewLine() {
 	printf("\n");
 }
 
+inline void GoToFolder(char* folder) {
+	char* newline = strstr(folder, "\n");
+	if (newline != NULL) newline[0] = '\0';
+	#if DEBUG_MODE
+	printf("folder = \"%s\"\n", folder);
+	#endif
+	chdir((const char*)folder);
+}
+
 #endif

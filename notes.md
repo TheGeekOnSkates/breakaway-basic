@@ -2,7 +2,6 @@
 
 Before I have something that I would be willing to use instead of Bash - before I "breakaway" from Bash, there are some features I would really like this BASIC to have:
 
-* CD; turns out, it was hard-coded into Bash, so just running "cd ../" etc. doesn't work - this is a must-have.
 * IF; variables are pretty useless without it.
 * Aliases; they're such a useful feature, and would make adding more commands a lot easier.
 * In SYS calls, a way to insert variables and other stuff.  I'm thinking percent signs - i.e. SYS echo -n %someVariable CHR$(250)%
@@ -12,7 +11,7 @@ Not saying I'll do them all, but this is the goal. :)
 
 # TO-DO'S
 
-* Get on the "CD" command.
+* Start on IF, or the percent-sign thing, whichever sounds more fun at the time. :)
 * A few days (or weeks) from now, wake up with a fresh brain, attack aliases from different angles, and see what hits.  It seems to work a bit more consistently now, still no clue why, but NEW causes the dreaded segmented-demented mindset that is faulty.  :P  Oh and so does setting an alias in program mode - 10 ALIAS anything=BOOM!!!!!!!! :P
 
 # KNOWN ISSUES

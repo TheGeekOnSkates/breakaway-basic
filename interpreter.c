@@ -238,6 +238,12 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
+	/* CD or cd - like in every modern OS */
+	if (STRING_STARTS_WITH(buffer, "CD ") || STRING_STARTS_WITH(buffer, "cd ")) {
+		GoToFolder(buffer + 3);
+		return;
+	}
+
 	/* CLEAR or CLS - clear screen */
 	if (STRING_STARTS_WITH(buffer, "CLEAR") || STRING_STARTS_WITH(buffer, "CLS")) {
 		printf("\033[H\033[J");
