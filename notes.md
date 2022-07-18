@@ -12,8 +12,8 @@ Not saying I'll do them all, but this is the goal. :)
 
 # TO-DO'S
 
-* Wake up with a fresh brain, attack aliases from different angles, and see what hits.  It seems to work, sometimes, but it's inconsistent.  Weird.  Senseless.  That's debugging in C if you don't understand the Deep Magic from the Dawn of Time that is "core dumps".  I gotta take a hard core dump right now. :D
 * Get on the "CD" command.
+* A few days (or weeks) from now, wake up with a fresh brain, attack aliases from different angles, and see what hits.  It seems to work a bit more consistently now, still no clue why, but NEW causes the dreaded segmented-demented mindset that is faulty.  :P  Oh and so does setting an alias in program mode - 10 ALIAS anything=BOOM!!!!!!!! :P
 
 # KNOWN ISSUES
 

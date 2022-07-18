@@ -1,0 +1,4 @@
+10 ALIAS WRITE=nano
+20 ALIAS PY=python3
+30 ALIAS NODE=node
+40 ALIAS MOO=cowsay

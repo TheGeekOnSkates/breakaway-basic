@@ -22,9 +22,14 @@ int main(int argc, const char** argv) {
 		subs[i] = -1;
 	}
 	
+	/* Set a couple aliases */
+	firstAlias = CreateVariable("FILES=ls");
+	SetVariable("PWD=pwd", true);
+	SetVariable("EDIT=nano", true);
+	
 	/* Show the title message */
 	printf("\033[H\033[J");
-	PrintCentered("**** BREAKAWAY BASIC 2022.07.17.3 ****");
+	PrintCentered("**** BREAKAWAY BASIC 2022.07.17.4 ****");
 	NewLine();
 	sprintf(buffer, "%lu BYTES FREE", GetBytesFree());
 	PrintCentered(buffer);

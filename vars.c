@@ -93,16 +93,6 @@ void SetVariable(char* raw, bool isAlias) {
 	char* equals, * name;
 	size_t i, length;
 	
-	/* If the first was not created yet, create it */
-	if (isAlias && firstVar == NULL) {
-		firstVar = CreateVariable(raw);
-		return;
-	}
-	if (!isAlias && firstAlias == NULL) {
-		firstAlias = CreateVariable(raw);
-		return;
-	}
-	
 	/* Get the position of the equals sign */
 	equals = strchr(raw, '=');
 	if (equals == NULL) {
@@ -154,6 +144,9 @@ void SetVariable(char* raw, bool isAlias) {
 	/* If it gets here, create a new variable */
 	current = isAlias ? firstAlias : firstVar;
 	while(current != NULL && current->next != NULL) {
+		#if DEBUG_MODE
+		printf("SetVariable: current->name = \"%s\"\n", current->name);
+		#endif
 		current = current->next;
 	}
 	current->next = CreateVariable(raw);
