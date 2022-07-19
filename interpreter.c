@@ -11,6 +11,27 @@ extern Variable* firstVar, * firstAlias;
 
 /************************************************************************/
 
+void RunIF(char* buffer) {
+	/* Declare variables */
+	char line[BUFFER_MAX], left[BUFFER_MAX], right[BUFFER_MAX];
+	bool answer, leftIsNumber, rightIsNumber;
+	
+	/* Make a copy of the buffer.  I'm not sure if this is really necessary,
+	but it seems this has fixed (or at least worked around) a lot of bugs. */
+	strncpy(line, buffer, BUFFER_MAX);
+	
+	/* Get rid of unnecessary spaces */
+	StripSpaces(line);
+	#if DEBUG_MODE
+	printf("if: %s\n", line);
+	#endif
+	
+	/* Next, we need to figure out exactly what we're comparing */
+	/* Left off here */
+}
+
+/************************************************************************/
+
 void RunSYS(char* buffer) {
 	char code[BUFFER_MAX];
 	int returnCode = system((const char*)buffer);
@@ -40,7 +61,7 @@ void RunLET(char* line) {
 
 /************************************************************************/
 
-void New() {
+void RunNEW() {
 	/* Clear the program memory */
 	FreeProgram(currentProgram);
 	currentProgram = NULL;
@@ -62,7 +83,7 @@ void LoadFile(char* name) {
 	name[strlen(name) - 1] = '\0';
 	
 	/* Clear whatever old program was in memory */
-	New();
+	RunNEW();
 	
 	FILE* file = fopen((const char*)name, "r");
 	if (file == NULL) {
@@ -99,24 +120,6 @@ void SaveFile(char* name) {
 		fprintf(file, "%ld %s", i, currentProgram[i]);
 	}
 	fclose(file);
-}
-
-/************************************************************************/
-
-void SyntaxError() {
-	printf("?SYNTAX ERROR");
-	if (programMode)
-		printf(" IN LINE %ld", currentLine);
-	NewLine();
-}
-
-/************************************************************************/
-
-void MemoryError() {
-	printf("?MEMORY ERROR");
-	if (programMode)
-		printf(" IN LINE %ld", currentLine);
-	NewLine();
 }
 
 /************************************************************************/
@@ -357,6 +360,12 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
+	/* IF condition THEN line ELSE line */
+	if (STRING_STARTS_WITH(buffer, "IF ")) {
+		RunIF(buffer + 3);
+		return;
+	}
+	
 	/* INPUT variable */
 	if (STRING_STARTS_WITH(buffer, "INPUT ")) {
 		if (!programMode) {
@@ -445,7 +454,7 @@ void Interpret(char* buffer) {
 	
 	/* NEW - clear contents of program */
 	if (STRING_EQUALS(buffer, "NEW\n")) {
-		New();
+		RunNEW();
 		return;
 	}
 	

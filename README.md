@@ -104,6 +104,8 @@ LIST
 READY.
 ```
 
+The only thing that is NOT cleared/reset is aliases.  Unlike other variables, aliases add functions to the language (and also to avoid a known bug that crashes Breakaway BASIC).
+
 ### REM [comment]
 
 Comments are ignored by the interpreter.  They're a way for you to write notes in your code.

@@ -224,12 +224,6 @@ void RunOrContinue(void);
 /** Clears program memory, and also variables */
 void New(void);
 
-/** Prints "?SYNTAX ERROR" (and the line number if running)  on the screen */
-void SyntaxError(void);
-
-/** Prints "?MEMORY ERROR" (and the line number if running)  on the screen */
-void MemoryError(void);
-
 /**
  * Loads a file into memory
  * @param[in] The file to load
@@ -323,6 +317,78 @@ void ReplaceVariablesWithValues(char* buffer1);
  * @param[in] The string to print
  */
 void PrintCentered(const char* string);
+
+
+
+/************************************************************************/
+/* MATH FUNCTIONS (defined in Math.c                                    */
+/************************************************************************/
+
+/**
+ * Checks if a character is a digit
+ * @param[in] The character to be tested
+ * @returns True if it is, false if it isn't
+ */
+static inline bool IsNumeric(char ch) {
+	return ch >= '0' && ch <= '9';
+}
+
+/**
+ * Replaces math equations with their results
+ * @param[in] The string to be updated
+ */
+void EvalMath(char* line);
+
+/**
+ * Replaces the text "PI" with 3.1415926whatever
+ * @param[in] The string to be updated
+ */
+void ReplacePI(char* line);
+
+/**
+ * Replaces exponents (i.e. 2^3) with their values (i.e. 16)
+ * @param[in] The string to be updated
+ */
+void Exponent(char* line);
+
+/**
+ * Replaces addition problems with their solutions
+ * @param[in] The string to be updated
+ */
+void Add(char* line);
+
+/**
+ * Replaces subtraction problems with their solutions
+ * @param[in] The string to be updated
+ */
+void Subtract(char* line);
+
+/**
+ * Replaces multiplication problems with their solutions
+ * @param[in] The string to be updated
+ */
+void Multiply(char* line);
+
+/**
+ * Replaces division problems with their solutions
+ * @param[in] The string to be updated
+ */
+void Divide(char* line);
+
+
+
+/************************************************************************/
+/* TO BE SORTED (defined in errors.c)                                   */
+/************************************************************************/
+
+/** Prints the last error */
+void PrintLastError(void);
+
+/** Prints "?SYNTAX ERROR" (and the line number if running)  on the screen */
+void SyntaxError(void);
+
+/** Prints "?MEMORY ERROR" (and the line number if running)  on the screen */
+void MemoryError(void);
 
 
 
