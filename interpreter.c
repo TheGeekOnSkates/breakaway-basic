@@ -20,6 +20,9 @@ void RunIF(char* buffer) {
 	but it seems this has fixed (or at least worked around) a lot of bugs. */
 	strncpy(line, buffer, BUFFER_MAX);
 	
+	ReplaceVariablesWithValues(line);
+	printf("if: %s\n", line);
+	
 	/* Get rid of unnecessary spaces */
 	StripSpaces(line);
 	#if DEBUG_MODE
@@ -27,6 +30,9 @@ void RunIF(char* buffer) {
 	#endif
 	
 	/* Next, we need to figure out exactly what we're comparing */
+	if (line[0] == '-' || line[0] >= '0' && line[0] <= '9') {
+		
+	}
 	/* Left off here */
 }
 

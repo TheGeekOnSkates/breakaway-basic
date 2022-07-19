@@ -35,7 +35,18 @@ Variable* CreateVariable(char* raw) {
 		lastError = MEMORY_ERROR;
 		return NULL;
 	}
-	for (i=0; i<length; i++) var->name[i] = raw[i];
+	for (i=0; i<length; i++) {
+		if (raw[i] == ' ') {
+			while(raw[i] == ' ') i++;
+			if (raw[i] != '=') {
+				free(var);
+				lastError = SYNTAX_ERROR;
+				return NULL;
+			}
+			break;
+		}
+		var->name[i] = raw[i];
+	}
 	
 	/* Set up the value */
 	var->value = calloc(BUFFER_MAX - length + 1, sizeof(char));
@@ -46,6 +57,7 @@ Variable* CreateVariable(char* raw) {
 		return NULL;
 	}
 	strncpy(var->value, equals + 1, BUFFER_MAX - length + 1);
+	StripSpaces(var->value);
 	return var;
 }
 
