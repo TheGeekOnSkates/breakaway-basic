@@ -33,9 +33,6 @@ IF 7.14159+3.14159<3.14159 THEN 10
 
 One of those lovely logic-defying mind-grinding goobers.  For now, work around it; eventually, attack it with a fresh brain and (Lord willing) squash it.
 
--------------------------------------------------------------------
-
-Also, calling FreeVariables on firstAlias and then defining an alias makes it crash.  More mysterious segfaults.  One of these days, I gotta do a deep dive into the Dark World of core dumps.  Wish I had the Master Sword. :D
 
 
 # FEATURES TO BE ADDED

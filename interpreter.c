@@ -80,7 +80,9 @@ void RunNEW() {
 	
 	/* Clear variables */
 	FreeVariables(firstVar);
-	/* FreeVariables(firstAlias); */
+	firstVar = NULL;
+	FreeVariables(firstAlias);
+	firstAlias = NULL;
 }
 
 /************************************************************************/
@@ -212,7 +214,6 @@ void Interpret(char* buffer) {
 		token = strstr(copy, "\n");
 		if (token != NULL) token[0] = '\0';
 		if (firstAlias == NULL) {
-			printf("copy = \"%s\"\n", copy);
 			firstAlias = CreateVariable(copy);
 			return;
 		}
