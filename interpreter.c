@@ -465,13 +465,6 @@ void Interpret(char* buffer) {
 	/* REM - comment - do nothing */
 	if (STRING_STARTS_WITH(buffer, "REM")) return;
 	
-	/* RUN - self-explanatory :) */
-	if (STRING_EQUALS(buffer, "RUN")) {
-		currentLine = 0;
-		RunOrContinue();
-		return;
-	}
-	
 	/* RESET - reset the terminal settings */
 	if (STRING_EQUALS(buffer, "RESET")) {
 		printf("\033[0m");
@@ -499,15 +492,24 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
-	/* REVERSE ON - text reverse mode on */
+	/* REVERSE ON/OFF */
 	if (STRING_EQUALS(buffer, "REVERSE ON")) {
 		printf("\033[7m");
 		return;
 	}
-	
-	/* REVERSE OFF - text reverse mode off */
 	if (STRING_EQUALS(buffer, "REVERSE OFF")) {
 		printf("\033[27m");
+		return;
+	}
+	if (STRING_STARTS_WITH(buffer, "RENUMBER ")) {
+		RenumberProgram(currentProgram, buffer + 9);
+		return;
+	}
+	
+	/* RUN - self-explanatory :) */
+	if (STRING_EQUALS(buffer, "RUN")) {
+		currentLine = 0;
+		RunOrContinue();
 		return;
 	}
 	

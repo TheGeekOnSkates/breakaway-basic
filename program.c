@@ -94,7 +94,7 @@ void ListProgram(char** program, char* instruction) {
 	/* Run a syntax-check */
 	pastDash = false;
 	for (i=0; i<BUFFER_MAX; i++) {
-		if (instruction[i] == '\n') break;
+		if (instruction[i] == '\n' || instruction[i] == '\0') break;
 		if (instruction[i] == ' ')
 			continue;
 		if (instruction[i] == '-') {
@@ -125,6 +125,60 @@ void ListProgram(char** program, char* instruction) {
 	}
 	for (i=start; i<=end; i++) {
 		if (IsLineEmpty(program, i)) continue;
-		printf("%d %s", i, program[i]);
+		printf(" %d %s", i, program[i]);
+		NewLine();
 	}
+}
+
+/************************************************************************/
+
+void RenumberProgram(char** program, char* instruction) {
+	/* Variables */
+	char* temp;
+	size_t i, step, counter;
+	char* newProgram[PROGRAM_MAX];
+	
+	/* Move the pointer past any spaces between the word
+	"RENUMBER" and the next part */
+	while (instruction[0] == ' ')
+		instruction++;
+	
+	/* Run a syntax-check */
+	if (instruction[0] == '\n' || instruction[0] == 0) {
+		lastError = SYNTAX_ERROR;
+		return;
+	}
+	for (i=0; i<BUFFER_MAX; i++) {
+		if (instruction[i] == '\n' || instruction[i] == 0) break;
+		if (instruction[i] <= '0' || instruction[i] >= '9') {
+			lastError = SYNTAX_ERROR;
+			return;
+		}
+	}
+	
+	/* Get the steps the user wants to */
+	step = atoi(instruction);
+	if (step < 1 || step > PROGRAM_MAX) {
+		lastError = SYNTAX_ERROR;
+		return;
+	}
+	
+	/* Clear the contents of newProgram */
+	memset(newProgram, 0, PROGRAM_MAX);
+	
+	/* Do the renumbering */
+	counter = 0;
+	for (i=0; i<PROGRAM_MAX; i++) {
+		if (program[i] == NULL) continue;
+		counter++;
+		if (step * counter > PROGRAM_MAX) {
+			lastError = MEMORY_ERROR;
+			return;
+		}
+		newProgram[step * counter] = program[i];
+		program[i] = NULL;
+	}
+	
+	/* Copy the pointers in newProgram to the current program */
+	memcpy(program, newProgram, PROGRAM_MAX);
 }

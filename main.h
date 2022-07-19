@@ -145,6 +145,13 @@ bool AddToProgram(char** program, char* line);
 void ListProgram(char** program, char* instruction);
 
 /**
+ * Runs the RENUMBER command
+ * @param[in] The user's program
+ * @param[in] The un-formatted string (in case there's a line number in it)
+ */
+void RenumberProgram(char** program, char* instruction);
+
+/**
  * Checks if a line is empty
  * @param[in] The user's program
  * @param[in] The line number to check
