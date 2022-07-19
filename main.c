@@ -7,6 +7,7 @@ extern Variable* firstVar, * firstAlias;
 int main(int argc, const char** argv) {
 	/* Declare variables */
 	char buffer[BUFFER_MAX];
+	char* temp = NULL;
 	size_t i = 0;
 	
 	/* Set up the program's memory */
@@ -27,7 +28,7 @@ int main(int argc, const char** argv) {
 	
 	/* Show the title message */
 	printf("\033[H\033[J");
-	PrintCentered("**** BREAKAWAY BASIC 2022.07.19.3 ****");
+	PrintCentered("**** BREAKAWAY BASIC 2022.07.19.4 ****");
 	NewLine();
 	sprintf(buffer, "%lu BYTES FREE", GetBytesFree());
 	PrintCentered(buffer);
@@ -41,10 +42,18 @@ int main(int argc, const char** argv) {
 		
 		/* Actually prompt the user for input */
 		memset(buffer, 0, INPUT_BUFFER_SIZE);
-		fgets(buffer, INPUT_BUFFER_SIZE, stdin);
+		/* fgets(buffer, INPUT_BUFFER_SIZE, stdin); */
+		temp = ReadLine("");
+		if (temp == NULL) {
+			MemoryError();
+			return 0;
+		}
 		
 		/* And interpret that input */
-		Interpret(buffer);
+		Interpret(temp);
+		AddToHistory(temp);
+		free(temp);
+		temp = NULL;
 	}
 	
 	/* If it gets here (which it actually shouldn't, we're done. */

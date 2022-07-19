@@ -7,6 +7,17 @@
 #include <termios.h>
 #include <sys/resource.h>
 #include <sys/ioctl.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+
+inline char* ReadLine(char* prompt) {
+	return readline(prompt);
+}
+
+void AddToHistory(char* code) {
+	add_history(code);
+}
+
 
 void GetScreenSize(int* rows, int* columns) {
 	static struct winsize w;

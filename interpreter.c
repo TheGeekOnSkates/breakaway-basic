@@ -33,7 +33,7 @@ void RunIF(char* buffer) {
 	#endif
 	
 	/* Next, we need to figure out exactly what we're comparing */
-	if (line[0] == '-' || line[0] >= '0' && line[0] <= '9') {
+	if (line[0] == '-' || (line[0] >= '0' && line[0] <= '9')) {
 		
 	}
 	/* Left off here */
@@ -211,8 +211,6 @@ void Interpret(char* buffer) {
 	if (STRING_STARTS_WITH(buffer, "ALIAS ")) {
 		char copy[BUFFER_MAX - 6];
 		strcpy(copy, buffer + 6);
-		token = strstr(copy, "\n");
-		if (token != NULL) token[0] = '\0';
 		if (firstAlias == NULL) {
 			firstAlias = CreateVariable(copy);
 			return;
@@ -233,21 +231,21 @@ void Interpret(char* buffer) {
 	}
 	
 	/* BLINK ON/OFF - text blink mode on */
-	if (STRING_EQUALS(buffer, "BLINK ON\n")) {
+	if (STRING_EQUALS(buffer, "BLINK ON")) {
 		printf("\033[5m");
 		return;
 	}
-	if (STRING_EQUALS(buffer, "BLINK OFF\n")) {
+	if (STRING_EQUALS(buffer, "BLINK OFF")) {
 		printf("\033[25m");
 		return;
 	}
 	
 	/* BOLD ON/OFF - bold text */
-	if (STRING_EQUALS(buffer, "BOLD ON\n")) {
+	if (STRING_EQUALS(buffer, "BOLD ON")) {
 		printf("\033[1m");
 		return;
 	}
-	if (STRING_EQUALS(buffer, "BOLD OFF\n")) {
+	if (STRING_EQUALS(buffer, "BOLD OFF")) {
 		printf("\033[22m");
 		return;
 	}
@@ -265,13 +263,13 @@ void Interpret(char* buffer) {
 	}
 	
 	/* CONT or CONTINUE - continue program */
-	if (STRING_EQUALS(buffer, "CONT\n") || STRING_EQUALS(buffer, "CONTINUE\n")) {
+	if (STRING_EQUALS(buffer, "CONT") || STRING_EQUALS(buffer, "CONTINUE")) {
 		RunOrContinue();
 		return;
 	}
 	
 	/* END (in program mode) is handled by the RunOrContinue function */
-	if (STRING_EQUALS(buffer, "END\n")) {
+	if (STRING_EQUALS(buffer, "END")) {
 		SyntaxError();
 		return;
 	}
@@ -283,7 +281,7 @@ void Interpret(char* buffer) {
 	}
 	
 	/* EXIT - exit Breakaway Basic */
-	if (STRING_EQUALS(buffer, "EXIT\n")) {
+	if (STRING_EQUALS(buffer, "EXIT")) {
 		printf("\033[0m");		/* RESET */
 		printf("\033[H\033[J");		/* CLEAR */
 		FreeProgram(currentProgram);
@@ -291,11 +289,11 @@ void Interpret(char* buffer) {
 	}
 	
 	/* FAINT ON/OFF - text dim/faint colors */
-	if (STRING_EQUALS(buffer, "FAINT ON\n")) {
+	if (STRING_EQUALS(buffer, "FAINT ON")) {
 		printf("\033[2m");
 		return;
 	}
-	if (STRING_EQUALS(buffer, "FAINT OFF\n")) {
+	if (STRING_EQUALS(buffer, "FAINT OFF")) {
 		printf("\033[22m");
 		return;
 	}
@@ -392,12 +390,8 @@ void Interpret(char* buffer) {
 		/* Build the string that will be the variable's value */
 		char varValue[BUFFER_MAX];
 		strcpy(varValue, buffer + 6);
-		token = strstr(varValue, "\n");
-		token[0] = '\0';
 		strcat(varValue, "=");
 		strcat(varValue, input);
-		token = strstr(varValue, "\n");
-		token[0] = '\0';
 		#if DEBUG_MODE
 		printf("\n\"%s\"\n", varValue);
 		#endif
@@ -408,21 +402,21 @@ void Interpret(char* buffer) {
 	}
 	
 	/* HIDDEN ON/OFF - hidden text */
-	if (STRING_EQUALS(buffer, "HIDDEN ON\n")) {
+	if (STRING_EQUALS(buffer, "HIDDEN ON")) {
 		printf("\033[8m");
 		return;
 	}
-	if (STRING_EQUALS(buffer, "HIDDEN OFF\n")) {
+	if (STRING_EQUALS(buffer, "HIDDEN OFF")) {
 		printf("\033[28m");
 		return;
 	}
 	
 	/* ITALIC ON/OFF - italic text */
-	if (STRING_EQUALS(buffer, "ITALIC ON\n")) {
+	if (STRING_EQUALS(buffer, "ITALIC ON")) {
 		printf("\033[3m");
 		return;
 	}
-	if (STRING_EQUALS(buffer, "ITALIC OFF\n")) {
+	if (STRING_EQUALS(buffer, "ITALIC OFF")) {
 		printf("\033[23m");
 		return;
 	}
@@ -463,7 +457,7 @@ void Interpret(char* buffer) {
 	}
 	
 	/* NEW - clear contents of program */
-	if (STRING_EQUALS(buffer, "NEW\n")) {
+	if (STRING_EQUALS(buffer, "NEW")) {
 		RunNEW();
 		return;
 	}
@@ -472,20 +466,20 @@ void Interpret(char* buffer) {
 	if (STRING_STARTS_WITH(buffer, "REM")) return;
 	
 	/* RUN - self-explanatory :) */
-	if (STRING_EQUALS(buffer, "RUN\n")) {
+	if (STRING_EQUALS(buffer, "RUN")) {
 		currentLine = 0;
 		RunOrContinue();
 		return;
 	}
 	
 	/* RESET - reset the terminal settings */
-	if (STRING_EQUALS(buffer, "RESET\n")) {
+	if (STRING_EQUALS(buffer, "RESET")) {
 		printf("\033[0m");
 		return;
 	}
 
 	/* RETURN - return from subrouting */
-	if (STRING_EQUALS(buffer, "RETURN\n")) {
+	if (STRING_EQUALS(buffer, "RETURN")) {
 		tempInt = subs[currentSub - 1]; //+ 1;
 		#if DEBUG_MODE
 		printf("RETURN: ");
@@ -506,13 +500,13 @@ void Interpret(char* buffer) {
 	}
 	
 	/* REVERSE ON - text reverse mode on */
-	if (STRING_EQUALS(buffer, "REVERSE ON\n")) {
+	if (STRING_EQUALS(buffer, "REVERSE ON")) {
 		printf("\033[7m");
 		return;
 	}
 	
 	/* REVERSE OFF - text reverse mode off */
-	if (STRING_EQUALS(buffer, "REVERSE OFF\n")) {
+	if (STRING_EQUALS(buffer, "REVERSE OFF")) {
 		printf("\033[27m");
 		return;
 	}
@@ -532,8 +526,6 @@ void Interpret(char* buffer) {
 	
 	/* Testing variables */
 	if (STRING_STARTS_WITH(buffer, "TEST ")) {
-		token = strstr(buffer, "\n");
-		if (token != NULL) token[0] = '\0';
 		#if DEBUG_MODE
 		printf("Looking for a variable named \"%s\"\n", buffer + 5);
 		#endif
@@ -543,11 +535,11 @@ void Interpret(char* buffer) {
 	}
 	
 	/* UNDERLINE ON/OFF - underlined text */
-	if (STRING_EQUALS(buffer, "UNDERLINE ON\n")) {
+	if (STRING_EQUALS(buffer, "UNDERLINE ON")) {
 		printf("\033[4m");
 		return;
 	}
-	if (STRING_EQUALS(buffer, "UNDERLINE OFF\n")) {
+	if (STRING_EQUALS(buffer, "UNDERLINE OFF")) {
 		printf("\033[24m");
 		return;
 	}

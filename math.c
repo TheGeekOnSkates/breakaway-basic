@@ -5,7 +5,6 @@ extern uint8_t lastError;
 void ReplaceABS(char* line) {
 	/* Declare variables */
 	char* functionName;
-	char temp[BUFFER_MAX];
 	size_t i, start, end;
 	bool pastDot, pastSign;
 	float answer;
@@ -52,7 +51,6 @@ void ReplaceABS(char* line) {
 
 void ReplaceATN(char* line) {
 	/* Declare variables */
-	char temp[BUFFER_MAX];
 	char* functionName;
 	size_t i, start, end;
 	bool pastDot, pastSign;
@@ -99,7 +97,6 @@ void ReplaceATN(char* line) {
 }
 
 void ReplaceCOS(char* line) {
-	char temp[BUFFER_MAX];
 	char* functionName;
 	size_t i, start, end;
 	bool pastDot, pastSign;
@@ -142,7 +139,6 @@ void ReplaceCOS(char* line) {
 }
 
 void ReplaceEXP(char* line) {
-	char temp[BUFFER_MAX];
 	char* functionName;
 	size_t i, start, end;
 	bool pastDot, pastSign;
@@ -185,7 +181,6 @@ void ReplaceEXP(char* line) {
 }
 
 void ReplaceINT(char* line) {
-	char temp[BUFFER_MAX];
 	char* functionName;
 	size_t i, start, end;
 	bool pastDot, pastSign;
@@ -227,7 +222,6 @@ void ReplaceINT(char* line) {
 }
 
 void ReplaceLOG(char* line) {
-	char temp[BUFFER_MAX];
 	char* functionName;
 	size_t i, start, end;
 	bool pastDot, pastSign;
@@ -277,7 +271,6 @@ void ReplaceLOG(char* line) {
 }
 
 void ReplaceRND(char* line) {
-	char temp[BUFFER_MAX];
 	char* functionName;
 	size_t i, start, end;
 	bool pastDot, pastSign;
@@ -316,7 +309,6 @@ void ReplaceRND(char* line) {
 }
 
 void ReplaceSGN(char* line) {
-	char temp[BUFFER_MAX];
 	char* functionName;
 	size_t i, start, end;
 	bool pastDot, pastSign;
@@ -357,7 +349,6 @@ void ReplaceSGN(char* line) {
 }
 
 void ReplaceSIN(char* line) {
-	char temp[BUFFER_MAX];
 	char* functionName;
 	size_t i, start, end;
 	bool pastDot, pastSign;
@@ -400,7 +391,6 @@ void ReplaceSIN(char* line) {
 }
 
 void ReplaceSQR(char* line) {
-	char temp[BUFFER_MAX];
 	char* functionName;
 	size_t i, start, end;
 	bool pastDot;
@@ -435,7 +425,6 @@ void ReplaceSQR(char* line) {
 }
 
 void ReplaceTAN(char* line) {
-	char temp[BUFFER_MAX];
 	char* functionName;
 	size_t i, start, end;
 	bool pastDot, pastSign;
@@ -541,7 +530,6 @@ void ReplacePI(char* line) {
 	/* Declare variables */
 	size_t start;
 	char* pi;
-	char temp[BUFFER_MAX];
 	
 	while(true) {
 		/* Find the next instance of the string "PI" */
@@ -629,7 +617,6 @@ void Exponent(char* line) {
 
 void Multiply(char* line) {
 	/* Declare variables */
-	char tmep[BUFFER_MAX];
 	int i, times, start, end;
 	float answer;
 	bool pastDot;
@@ -690,7 +677,6 @@ void Multiply(char* line) {
 
 void Divide(char* line) {
 	/* Declare variables */
-	char tmep[BUFFER_MAX];
 	int i, div, start, end;
 	float answer;
 	bool pastDot;
@@ -758,7 +744,6 @@ void Divide(char* line) {
 
 void Add(char* line) {
 	/* Declare variables */
-	char tmep[BUFFER_MAX];
 	int i, plus, start, end;
 	float answer;
 	bool pastDot;
@@ -819,7 +804,6 @@ void Add(char* line) {
 
 void Subtract(char* line) {
 	/* Declare variables */
-	char tmep[BUFFER_MAX];
 	int i, minus, start, end;
 	float answer;
 	bool pastDot;

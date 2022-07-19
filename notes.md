@@ -1,15 +1,21 @@
 # TO-DO'S
 
-1. If possible, fix the bugs; if tired, work around them. :)
-2. Create an "eval" type function like I was starting to do before.
+**EDIT:** Found a library that changes everything (why isn't this part of the C standard?  Why isn't this the new scanf or something?): readline.  Readline changes _everything_.  Now I no longer have to strip off trailing newline chars myself, and I won't have to rewrite my interpreter if I ever port to windows or something that uses \r.  More importantly, it also means lines don't need a character limit.  Don't get me wrong, I could have jumped through a lot of these hoops myself, but why?  Linux can suck, as Lunduke says, but sometimes, Linux rules! :)
 
-This function should:
+To-do's based on this new discovery:
 
-* Replace functions I haven't written yet (CHR$, ASC, etc.) with their values
-* Replace variables with their values (maybe just rewrite that function, lol)
-* Check for type mismatches
-* Crunch numbers (turn "2+2" into "4" and so on).
-* Continue until we have either a number or a string in quotes.
+1. Test all my instructions, to make sure they still work as expected.
+2. Ditch all that code that strips out newline chars and test again.
+3. Try going beyond BUFFER_MAX and see what happens; might need to fix some things.
+4. Figure out how to clear readline history, and add a command for it (and maybe a command to _list_ history too, maybe even turn it on/off).
+
+Beyond that, get back to IF:
+
+* Keep trying to figure out that bug with PI (I think maybe it's because there was a ReplacePi function in math.h that I forgot about, lol).  Or maybe the above will fix it?
+* Write a function to check if a string is a number (I think I have one in my library?)
+* Write a function to check if a string starts and ends with quotation marks (maybe a QuotesMatch similar to ParensMatch
+* Using that, back in RunIF, get the left and right sides and try these functions on them; see how that works out.
+* Also, I found out aliases can override keyboards (I created one called TEST, then tried to TEST a variable lol... add an IsKeyword function and fix that).
 
 3. Use that to finish IF
 

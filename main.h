@@ -164,6 +164,9 @@ static inline bool IsLineEmpty(char** program, uint16_t lineNumber) {
 /* Just Linux for now, but eventually might support Windows */
 #define Linux true
 
+char* ReadLine(char* prompt);
+void AddToHistory(char* code);
+
 /**
  * For the "CD" command (which does the same thing as in most other OSes)
  * @param[in] The folder to go to
