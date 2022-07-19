@@ -31,7 +31,16 @@ IF X+Y<PI THEN 10
 I get:
 IF 7.14159+3.14159<3.14159 THEN 10
 
-One of those lovely logic-defying mind-grinding goobers.  For now, work around it; eventually, attack it with a fresh brain and (Lord willing) squash it.
+-----------------------------------------------------------------------------------------------
+
+In xterm, whenever I type a line > 80 chars, it somehow gets separated/cut off.  For example, if I do:
+
+git commit -m "some message that goes to the next line because it's greater than 80 characters long..."
+
+Git only sees the first 80 chars.  Also, if you don't give it a closing quote (which Git is normally fine with) you get an error.  Not sure what to do about that apart from changing my Git config to use nano :)
+
+
+-----------------------------------------------------------------------------------------------
 
 
 
@@ -43,21 +52,11 @@ One of those lovely logic-defying mind-grinding goobers.  For now, work around i
 * As I create/change BASIC commands, keep updating the docs.
 * Add PUT x y character
 * Add COLOR x y color, or maybe COLORS x y fg bg
-* Playing with the idea of aliases.  For example:
-
-	ALIAS CD SYS cd
-	REM THIS IS LIKE A FIND-&-REPLACE, SO...
-	CD /path/to/whatever
-	REM IT WOULD REPLACE "CD " WITH "SYS cd "
-	REM NOTE THE SPACES ABOVE
-
-If I really wanted to get fancy, I could have an auto-run file to set these aliases up automagically - but that's *waaaay* down the road...
-
+* Environment variables like ~
 * Arrays
 * GET
 * Looping (FOR, _maybe_ WHILE)
-* All the math stuff from my old calculator program
-* With the math stuff done, PRINT (have it eval math, combine strings, and call the echo command which already works kinda like PRINT)
+* PRINT
 * Advanced file I/O: OPEN and CLOSE, GET# and INPUT#, PRINT#, CLEAR# etc.
 * __MAYBE__ an auto-run file (kinda like a config file, but not really... think autoexec.bat in DOS :D)
 * Maybe a history like Bash has; not important, but it would be kinda nice.

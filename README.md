@@ -90,7 +90,7 @@ Moves the cursor to column x, row y.  This is different from other terminal cont
 
 ### NEW
 
-Clears the contents of the program memory.  For example:
+Clears the contents of the program memory, including all variables and aliases.  For example:
 
 ```
 10 REM THIS COMMENT WILL GET ERASED BY "NEW"
@@ -103,8 +103,6 @@ READY.
 LIST
 READY.
 ```
-
-The only thing that is NOT cleared/reset is aliases.  Unlike other variables, aliases add functions to the language (and also to avoid a known bug that crashes Breakaway BASIC).
 
 ### REM [comment]
 
