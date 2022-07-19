@@ -58,7 +58,6 @@ Variable* CreateVariable(char* raw) {
 		return NULL;
 	}
 	strncpy(var->value, equals + 1, BUFFER_MAX - length + 1);
-	StripSpaces(var->value);
 	return var;
 }
 

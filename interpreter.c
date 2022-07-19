@@ -20,11 +20,14 @@ void RunIF(char* buffer) {
 	but it seems this has fixed (or at least worked around) a lot of bugs. */
 	strncpy(line, buffer, BUFFER_MAX);
 	
+	/* Replace variables with their values,
+	then get rid of unnecessary spaces,
+	then replace math equations with their results */
 	ReplaceVariablesWithValues(line);
+	StripSpaces(line);
+	EvalMath(line);
 	printf("if: %s\n", line);
 	
-	/* Get rid of unnecessary spaces */
-	StripSpaces(line);
 	#if DEBUG_MODE
 	printf("if: %s\n", line);
 	#endif
@@ -56,8 +59,8 @@ void RunSYS(char* buffer) {
 
 void RunLET(char* line) {
 	char copy[BUFFER_MAX];
+	memset(copy, 0, BUFFER_MAX);
 	strcpy(copy, line);
-	StripSpaces(line);
 	if (firstVar == NULL) {
 		firstVar = CreateVariable(copy);
 		return;
