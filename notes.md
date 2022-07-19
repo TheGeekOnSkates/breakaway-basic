@@ -1,18 +1,41 @@
-# GOALS FOR A "PRODUCTION" RELEASE
-
-Before I have something that I would be willing to use instead of Bash - before I "breakaway" from Bash, there are some features I would really like this BASIC to have:
-
-* IF; variables are pretty useless without it.
-* In SYS calls, a way to insert variables and other stuff.  I'm thinking percent signs - i.e. SYS echo -n %someVariable CHR$(250)%
-* Evaluating math; for example, even without FOR, to be able to do I = I + 1 makes looping possible.  Might come with IF, but we'll see
-
-Not saying I'll do them all, but this is the goal. :)
-
 # TO-DO'S
 
-* Start on IF, or the percent-sign thing, whichever sounds more fun at the time. :)
+1. If possible, fix the bugs; if tired, work around them. :)
+2. Create an "eval" type function like I was starting to do before.
+
+This function should:
+
+* Replace functions I haven't written yet (CHR$, ASC, etc.) with their values
+* Replace variables with their values (maybe just rewrite that function, lol)
+* Check for type mismatches
+* Crunch numbers (turn "2+2" into "4" and so on).
+* Continue until we have either a number or a string in quotes.
+
+3. Use that to finish IF
 
 # KNOWN ISSUES
+
+There's a bug in ReplaceVariablesWithValues; if I do this:
+
+LET PI = 3.14159
+LET X = 7
+LET Y = 3
+IF X + Y < PI THEN 10
+
+The if-statement works correctly:
+IF 7 + 3 < 3.14159 THEN 10
+
+But if I leave the spaces out of the equation:
+
+IF X+Y<PI THEN 10
+I get:
+IF 7.14159+3.14159<3.14159 THEN 10
+
+One of those lovely logic-defying mind-grinding goobers.  For now, work around it; eventually, attack it with a fresh brain and (Lord willing) squash it.
+
+-------------------------------------------------------------------
+
+Also, calling FreeVariables on firstAlias and then defining an alias makes it crash.  More mysterious segfaults.  One of these days, I gotta do a deep dive into the Dark World of core dumps.  Wish I had the Master Sword. :D
 
 
 # FEATURES TO BE ADDED

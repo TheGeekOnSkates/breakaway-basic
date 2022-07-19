@@ -46,6 +46,7 @@ Variable* CreateVariable(char* raw) {
 			break;
 		}
 		var->name[i] = raw[i];
+		var->name[i + 1] = '\0';
 	}
 	
 	/* Set up the value */
@@ -189,7 +190,7 @@ void ReplaceVariablesWithValues(char* line) {
 			if (position == NULL) break;
 			
 			#if DEBUG_MODE
-			printf("Found %s.  Now replace it.\n", current->name);
+			printf("Found \"%s\".\n", current->name);
 			#endif
 			
 			/* Now that we found it, we need to strip out the
