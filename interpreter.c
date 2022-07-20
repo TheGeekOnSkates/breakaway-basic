@@ -90,9 +90,6 @@ void RunNEW() {
 void LoadFile(char* name) {
 	char temp[BUFFER_MAX];
 	
-	/* Delete the trailing new line character */
-	name[strlen(name) - 1] = '\0';
-	
 	/* Clear whatever old program was in memory */
 	RunNEW();
 	

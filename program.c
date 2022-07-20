@@ -126,7 +126,7 @@ void ListProgram(char** program, char* instruction) {
 	for (i=start; i<=end; i++) {
 		if (IsLineEmpty(program, i)) continue;
 		printf(" %d %s", i, program[i]);
-		NewLine();
+		/* NewLine(); */
 	}
 }
 
@@ -150,7 +150,7 @@ void RenumberProgram(char** program, char* instruction) {
 	}
 	for (i=0; i<BUFFER_MAX; i++) {
 		if (instruction[i] == '\n' || instruction[i] == 0) break;
-		if (instruction[i] <= '0' || instruction[i] >= '9') {
+		if (instruction[i] < '0' || instruction[i] > '9') {
 			lastError = SYNTAX_ERROR;
 			return;
 		}
@@ -158,6 +158,9 @@ void RenumberProgram(char** program, char* instruction) {
 	
 	/* Get the steps the user wants to */
 	step = atoi(instruction);
+	#if DEBUG_MODE
+	printf("instruction = '%s', step = %ld\n", instruction, step);
+	#endif
 	if (step < 1 || step > PROGRAM_MAX) {
 		lastError = SYNTAX_ERROR;
 		return;

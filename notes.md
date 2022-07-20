@@ -8,6 +8,8 @@ For RENUMBER:
 For readline-related stuff:
 
 1. Test all my instructions, to make sure they still work as expected.
+	Looks like RETURN is busted; not sure why, but I think STRING_EQUALS is failing
+	LIST is also a bit iffy still.  Like I said, I'll want to go over each function.
 2. Ditch all that code that strips out newline chars and test again.
 3. Try going beyond BUFFER_MAX and see what happens; might need to fix some things.
 4. Figure out how to clear readline history, and add a command for it (and maybe a command to _list_ history too, maybe even turn it on/off).
