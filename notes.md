@@ -9,6 +9,7 @@ For readline-related stuff:
 1. Test all my instructions, to make sure they still work as expected.
 	Looks like RETURN is busted; not sure why, but I think STRING_EQUALS is failing
 	LIST is also a bit iffy still.  Like I said, I'll want to go over each function.
+	**EDIT:** I think these two might be fixed, though I still have to do a function-by-function test
 2. Ditch all that code that strips out newline chars and test again.
 3. Try going beyond BUFFER_MAX and see what happens; might need to fix some things.
 4. Figure out how to clear readline history, and add a command for it (and maybe a command to _list_ history too, maybe even turn it on/off).
@@ -23,7 +24,7 @@ On IF:
 
 # KNOWN ISSUES
 
-* After calling RENUMBER, running LIST puts all the code on one line.  Look into that. :)
+* (FIXED?) After calling RENUMBER, running LIST puts all the code on one line.
 * If you try to CD to a place that doesn't exist, there is no error message.  Look at the return value of chdir to see if I can fix that.
 
 

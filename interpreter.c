@@ -112,9 +112,7 @@ void LoadFile(char* name) {
 void SaveFile(char* name) {
 	size_t i = 0;
 	FILE* file = NULL;
-	
-	/* Delete the trailing new line character */
-	name[strlen(name) - 1] = '\0';
+	char* newline = NULL;
 	
 	file = fopen((const char*)name, "w");
 	if (file == NULL) {
@@ -125,7 +123,7 @@ void SaveFile(char* name) {
 	for (i=0; i<PROGRAM_MAX; i++) {
 		if (currentProgram[i] == NULL) continue;
 		/* Keep in mind, the line already includes a newline */
-		fprintf(file, "%ld %s", i, currentProgram[i]);
+		fprintf(file, "%ld %s\n", i, currentProgram[i]);
 	}
 	fclose(file);
 }

@@ -388,7 +388,7 @@ void Divide(char* line);
 
 
 /************************************************************************/
-/* TO BE SORTED (defined in errors.c)                                   */
+/* ERROR HANDLERS (defined in errors.c)                                 */
 /************************************************************************/
 
 /** Prints the last error */
@@ -401,5 +401,11 @@ void SyntaxError(void);
 void MemoryError(void);
 
 
+
+/************************************************************************/
+/* BASIC FUNCTIONS (defined in functions.c)                             */
+/************************************************************************/
+
+void ReplaceCHR(char* buffer);
 
 #endif

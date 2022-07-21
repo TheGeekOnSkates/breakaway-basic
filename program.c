@@ -36,7 +36,7 @@ void FreeProgram(char** program) {
 bool AddToProgram(char** program, char* line) {
 	/* Declare variables */
 	uint32_t lineNumber;
-	char* temp;
+	char* temp, * newline;
 	
 	/* Get the line number and make sure it's valid */
 	lineNumber = atol(line);
@@ -69,6 +69,13 @@ bool AddToProgram(char** program, char* line) {
 			return false;
 		}
 	}
+	
+	/* If there is a newline character at the end (which can happen
+	in LoadFile but not from user input/readliine), get rid of it. */
+	newline = strstr(line, "\r");
+	if (newline != NULL) newline[0] = '\0';
+	newline = strstr(line, "\n");
+	if (newline != NULL) newline[0] = '\0';
 	
 	/* Copy the line into the program and we're done */
 	strncpy(program[lineNumber], line, BUFFER_MAX);
@@ -125,7 +132,7 @@ void ListProgram(char** program, char* instruction) {
 	}
 	for (i=start; i<=end; i++) {
 		if (IsLineEmpty(program, i)) continue;
-		printf(" %d %s", i, program[i]);
+		printf(" %d %s\n", i, program[i]);
 		/* NewLine(); */
 	}
 }
