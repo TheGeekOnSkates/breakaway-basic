@@ -408,4 +408,15 @@ void MemoryError(void);
 
 void ReplaceCHR(char* buffer);
 
+
+
+/************************************************************************/
+/* STRING VALIDATION FUNCTIONS (defined in validation.c)                */
+/************************************************************************/
+
+bool StringIsInt(char* string);
+bool StringIsUInt(char* string);
+bool StringIsFloat(char* string);
+
+
 #endif

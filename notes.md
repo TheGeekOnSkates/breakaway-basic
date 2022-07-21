@@ -4,28 +4,22 @@ For RENUMBER:
 
 * Get it to also check for strings that contain GOSUB and GOTO, and replace those line numbers with the new ones (that's gonna be a big job lol)
 
-For readline-related stuff:
+Readline-related stuff:
 
-1. Test all my instructions, to make sure they still work as expected.
-	Looks like RETURN is busted; not sure why, but I think STRING_EQUALS is failing
-	LIST is also a bit iffy still.  Like I said, I'll want to go over each function.
-	**EDIT:** I think these two might be fixed, though I still have to do a function-by-function test
-2. Ditch all that code that strips out newline chars and test again.
-3. Try going beyond BUFFER_MAX and see what happens; might need to fix some things.
-4. Figure out how to clear readline history, and add a command for it (and maybe a command to _list_ history too, maybe even turn it on/off).
+* Try going beyond BUFFER_MAX and see what happens; might need to fix some things.
+	**EDIT:** I think this is not an issue - I use strncpy, not strcpy, unless I know I'm under the limit.  So next commit delete this message. :)
+* Figure out how to clear readline history, and add a command for it (and maybe a command to _list_ history too, maybe even turn it on/off).
 
 On IF:
 
-* Keep trying to figure out that bug with PI (I think maybe it's because there was a ReplacePi function in math.h that I forgot about, lol).  Or maybe the above will fix it?
-* Write a function to check if a string is a number (I think I have one in my library?)
 * Write a function to check if a string starts and ends with quotation marks (maybe a QuotesMatch similar to ParensMatch
 * Using that, back in RunIF, get the left and right sides and try these functions on them; see how that works out.
-* Also, I found out aliases can override keyboards (I created one called TEST, then tried to TEST a variable lol... add an IsKeyword function and fix that).
+	**NOTE:** This is tricker than it sounds; for one thing, AND/OR/NOT throws a monkey-wrench into the whole idea.  I think this will be a char-by-char analysis, not using functions like the ones in validation.c... at least, maybe not yet...)
 
 # KNOWN ISSUES
 
-* (FIXED?) After calling RENUMBER, running LIST puts all the code on one line.
-* If you try to CD to a place that doesn't exist, there is no error message.  Look at the return value of chdir to see if I can fix that.
+* Aliases can override keywords (I created one called TEST, then tried to TEST a variable lol... add an IsKeyword function and fix that).
+* Also, idk if I want NEW to delete aliases; I have a script I wrote (not in this folder) that adds a bunch of them, but every time I load a different program, they get deleted.
 
 
 -----------------------------------------------------------------------------------------------
@@ -35,6 +29,8 @@ In xterm, whenever I type a line > 80 chars, it somehow gets separated/cut off. 
 git commit -m "some message that goes to the next line because it's greater than 80 characters long..."
 
 Git only sees the first 80 chars.  Also, if you don't give it a closing quote (which Git is normally fine with) you get an error.  Not sure what to do about that apart from changing my Git config to use nano :)
+
+**NOTE:** Does readline fix this?  Find out.
 
 
 -----------------------------------------------------------------------------------------------

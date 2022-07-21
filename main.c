@@ -28,7 +28,7 @@ int main(int argc, const char** argv) {
 	
 	/* Show the title message */
 	printf("\033[H\033[J");
-	PrintCentered("**** BREAKAWAY BASIC 2022.07.21.0 ****");
+	PrintCentered("**** BREAKAWAY BASIC 2022.07.21.2 ****");
 	NewLine();
 	sprintf(buffer, "%lu BYTES FREE", GetBytesFree());
 	PrintCentered(buffer);
@@ -52,6 +52,7 @@ int main(int argc, const char** argv) {
 		/* And interpret that input */
 		Interpret(temp);
 		AddToHistory(temp);
+		PrintLastError();
 		free(temp);
 		temp = NULL;
 	}

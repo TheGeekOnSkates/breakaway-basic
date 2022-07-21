@@ -57,7 +57,8 @@ inline void GoToFolder(char* folder) {
 	#if DEBUG_MODE
 	printf("folder = \"%s\"\n", folder);
 	#endif
-	chdir((const char*)folder);
+	if (chdir((const char*)folder) == -1)
+		perror("ERROR");;
 }
 
 #endif

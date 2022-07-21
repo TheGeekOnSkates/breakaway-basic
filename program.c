@@ -132,9 +132,10 @@ void ListProgram(char** program, char* instruction) {
 	}
 	for (i=start; i<=end; i++) {
 		if (IsLineEmpty(program, i)) continue;
-		printf(" %d %s\n", i, program[i]);
-		/* NewLine(); */
+		printf(" %d %s", i, program[i]);
+		NewLine();
 	}
+	NewLine();
 }
 
 /************************************************************************/

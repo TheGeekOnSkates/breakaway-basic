@@ -15,6 +15,7 @@ void RunIF(char* buffer) {
 	/* Declare variables */
 	char line[BUFFER_MAX], left[BUFFER_MAX], right[BUFFER_MAX];
 	bool answer, leftIsNumber, rightIsNumber;
+	size_t i, length, counter;
 	
 	/* Make a copy of the buffer.  I'm not sure if this is really necessary,
 	but it seems this has fixed (or at least worked around) a lot of bugs. */
@@ -26,17 +27,32 @@ void RunIF(char* buffer) {
 	ReplaceVariablesWithValues(line);
 	StripSpaces(line);
 	EvalMath(line);
-	printf("if: %s\n", line);
 	
+	/* Make sure there's a THEN */
+	if (strstr(line, "THEN") == NULL) {
+		lastError = SYNTAX_ERROR;
+		return;
+	}
 	#if DEBUG_MODE
 	printf("if: %s\n", line);
 	#endif
 	
-	/* Next, we need to figure out exactly what we're comparing */
-	if (line[0] == '-' || (line[0] >= '0' && line[0] <= '9')) {
+	/* Next, we need to figure out exactly what we're comparing.
+	To do that, we first need the left-hand side of the string. 
+	I'm not gonna bother with AND, OR, NOT etc. just yet; IF is hard enough! */
+	printf("if: %s\n", line);
+	counter = 0;
+	length = strlen(line);
+	for (i=1; i<length; i++) {
+		/* Left off here */
+		
+		
+		
+		
+		
+		
 		
 	}
-	/* Left off here */
 }
 
 /************************************************************************/
@@ -151,7 +167,7 @@ void RunOrContinue() {
 		}
 		
 		/* If it's END, end the program */
-		if (STRING_EQUALS(currentProgram[currentLine], "END\n")) {
+		if (STRING_EQUALS(currentProgram[currentLine], "END")) {
 			programMode = false;
 			currentLine = 0;
 			SetBlocking(true);
@@ -160,8 +176,7 @@ void RunOrContinue() {
 		
 		/* Otherwise, interpret the line and handle errors */
 		Interpret(currentProgram[currentLine]);
-		if (lastError == SYNTAX_ERROR) {
-			SyntaxError();
+		if (lastError != NO_ERROR) {
 			NewLine();
 			programMode = false;
 			SetBlocking(true);
@@ -265,7 +280,7 @@ void Interpret(char* buffer) {
 	
 	/* END (in program mode) is handled by the RunOrContinue function */
 	if (STRING_EQUALS(buffer, "END")) {
-		SyntaxError();
+		lastError = SYNTAX_ERROR;
 		return;
 	}
 	
@@ -346,7 +361,7 @@ void Interpret(char* buffer) {
 	/* GOTO line */
 	if (STRING_STARTS_WITH(buffer, "GOTO") || STRING_STARTS_WITH(buffer, "GO TO")) {
 		if (!programMode) {
-			SyntaxError();
+			lastError = SYNTAX_ERROR;
 			return;
 		}
 		buffer += 2;	/* past GO */
@@ -372,7 +387,7 @@ void Interpret(char* buffer) {
 	/* INPUT variable */
 	if (STRING_STARTS_WITH(buffer, "INPUT ")) {
 		if (!programMode) {
-			SyntaxError();
+			lastError = SYNTAX_ERROR;
 			return;
 		}
 		/* Get the user's input */
@@ -425,12 +440,6 @@ void Interpret(char* buffer) {
 	/* LIST [line numbers] - List the contents of the program */
 	if (STRING_STARTS_WITH(buffer, "LIST")) {
 		ListProgram(currentProgram, buffer + 4);
-		switch (lastError) {
-			case SYNTAX_ERROR:
-				SyntaxError(); break;
-			case MEMORY_ERROR:
-				MemoryError(); break;
-		}
 		return;
 	}
 	
@@ -548,6 +557,5 @@ void Interpret(char* buffer) {
 	}
 	
 	/* And if it gets here, the user goofed */
-	/* SyntaxError(); - No, let's do this instead... */
 	RunSYS(buffer);
 }
