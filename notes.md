@@ -2,7 +2,6 @@
 
 For RENUMBER:
 
-* For some reason, renumbering by multiples of 10 is not working (but RENUMBER 5, RENUMBER 7 etc. are)
 * Get it to also check for strings that contain GOSUB and GOTO, and replace those line numbers with the new ones (that's gonna be a big job lol)
 
 For readline-related stuff:
@@ -24,21 +23,9 @@ On IF:
 
 # KNOWN ISSUES
 
-There's a bug in ReplaceVariablesWithValues; if I do this:
+* After calling RENUMBER, running LIST puts all the code on one line.  Look into that. :)
+* If you try to CD to a place that doesn't exist, there is no error message.  Look at the return value of chdir to see if I can fix that.
 
-LET PI = 3.14159
-LET X = 7
-LET Y = 3
-IF X + Y < PI THEN 10
-
-The if-statement works correctly:
-IF 7 + 3 < 3.14159 THEN 10
-
-But if I leave the spaces out of the equation:
-
-IF X+Y<PI THEN 10
-I get:
-IF 7.14159+3.14159<3.14159 THEN 10
 
 -----------------------------------------------------------------------------------------------
 
