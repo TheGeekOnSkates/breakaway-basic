@@ -10,9 +10,8 @@ Readline-related stuff:
 
 On IF:
 
-* Check for > (greater than) like I just did with less than
-* Same for equals and not equals ("<>" in BASICs); here's where it gets a bit trickier, because we have to check strings to (like strcmp)
-* I think eventually I'll have to break this up into its own .c file - so many ways an IF can go (especially factoring in AND, OR, and NOT - idk if I will ever get there, or at least NOT for a 1.0 lol)
+* If an if-statement fails, and there is no ELSE, it segfaults (what the).
+* Move more of the branches into if.c - that function is getting huge
 * Still like the idea of a function to check if a string starts and ends with quotation marks (maybe a QuotesMatch similar to ParensMatch
 
 # KNOWN ISSUES

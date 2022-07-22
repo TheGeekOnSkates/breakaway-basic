@@ -12,13 +12,9 @@ extern Variable* firstVar, * firstAlias;
 void RunIF(char* buffer) {
 	/* Declare variables */
 	char line[BUFFER_MAX],
-		left[BUFFER_MAX],
-		right[BUFFER_MAX],
 		* end = NULL,
 		* temp = NULL;
 	float leftF = 0, rightF = 0;
-	bool answer;
-	size_t i, length;
 	
 	/* Make a copy of the buffer.  I'm not sure if this is really necessary,
 	but it seems this has fixed (or at least worked around) a lot of bugs. */
@@ -40,7 +36,89 @@ void RunIF(char* buffer) {
 	printf("if: %s\n", line);
 	#endif
 	
-	/* For now, let's just handle less-than */
+	/* Handle equal */
+	end = strstr(line, "=");
+	if (end != NULL) {
+		temp = CopySubstring(line, end);
+		if (temp == NULL) {
+			lastError = MEMORY_ERROR;
+			return;
+		}
+		if (!StringIsFloat(temp)) {
+			#if DEBUG_MODE
+			printf("temp = \"%s\"\n", temp);
+			#endif
+			free(temp);
+			lastError = TYPE_MISMATCH_ERROR;
+			return;
+		}
+		leftF = atof(temp);
+		free(temp);
+		temp = NULL;
+		temp = CopySubstring(end + 1, strstr(end + 1, "THEN"));
+		if (temp == NULL) {
+			lastError = MEMORY_ERROR;
+			return;
+		}
+		if (!StringIsFloat(temp)) {
+			#if DEBUG_MODE
+			printf("temp = \"%s\"\n", temp);
+			#endif
+			free(temp);
+			lastError = TYPE_MISMATCH_ERROR;
+			return;
+		}
+		rightF = atof(temp);
+		free(temp);
+		temp = NULL;
+		
+		/* And handle THEN/ELSE */
+		then(line, leftF == rightF);
+		return;
+	}
+	
+	/* Handle not-equal */
+	end = strstr(line, "<>");
+	if (end != NULL) {
+		temp = CopySubstring(line, end);
+		if (temp == NULL) {
+			lastError = MEMORY_ERROR;
+			return;
+		}
+		if (!StringIsFloat(temp)) {
+			#if DEBUG_MODE
+			printf("temp = \"%s\"\n", temp);
+			#endif
+			free(temp);
+			lastError = TYPE_MISMATCH_ERROR;
+			return;
+		}
+		leftF = atof(temp);
+		free(temp);
+		temp = NULL;
+		temp = CopySubstring(end + 2, strstr(end + 1, "THEN"));
+		if (temp == NULL) {
+			lastError = MEMORY_ERROR;
+			return;
+		}
+		if (!StringIsFloat(temp)) {
+			#if DEBUG_MODE
+			printf("temp = \"%s\"\n", temp);
+			#endif
+			free(temp);
+			lastError = TYPE_MISMATCH_ERROR;
+			return;
+		}
+		rightF = atof(temp);
+		free(temp);
+		temp = NULL;
+		
+		/* And handle THEN/ELSE */
+		then(line, leftF != rightF);
+		return;
+	}
+	
+	/* Handle less-than */
 	end = strstr(line, "<");
 	if (end != NULL) {
 		temp = CopySubstring(line, end);
@@ -75,31 +153,52 @@ void RunIF(char* buffer) {
 		rightF = atof(temp);
 		free(temp);
 		temp = NULL;
-		answer = leftF < rightF;
-	}
-	
-	/* Then do stuff based on the outcome */
-	if (answer) {
-		end = strstr(line, "THEN") + 4;
-		#if DEBUG_MODE
-		printf("end = \"%s\"\n", end);
-		#endif
-		if (end[0] < '0' || end[0] > '9') {
-			/* Non-number after THEN */
-			lastError = SYNTAX_ERROR;
-		}
-		else currentLine = atol(end) - 1;
+		
+		/* And handle THEN/ELSE */
+		then(line, leftF < rightF);
 		return;
 	}
 	
-	/* If it gets here, look for an ELSE */
-	end = strstr(line, "ELSE") + 4;
-	if (end == NULL) return;
-	if (end[0] < '0' || end[0] > '9') {
-		/* Non-number after THEN */
-		lastError = SYNTAX_ERROR;
+	/* Greater-than */
+	end = strstr(line, ">");
+	if (end != NULL) {
+		temp = CopySubstring(line, end);
+		if (temp == NULL) {
+			lastError = MEMORY_ERROR;
+			return;
+		}
+		if (!StringIsFloat(temp)) {
+			#if DEBUG_MODE
+			printf("temp = \"%s\"\n", temp);
+			#endif
+			free(temp);
+			lastError = TYPE_MISMATCH_ERROR;
+			return;
+		}
+		leftF = atof(temp);
+		free(temp);
+		temp = NULL;
+		temp = CopySubstring(end + 1, strstr(end + 1, "THEN"));
+		if (temp == NULL) {
+			lastError = MEMORY_ERROR;
+			return;
+		}
+		if (!StringIsFloat(temp)) {
+			#if DEBUG_MODE
+			printf("temp = \"%s\"\n", temp);
+			#endif
+			free(temp);
+			lastError = TYPE_MISMATCH_ERROR;
+			return;
+		}
+		rightF = atof(temp);
+		free(temp);
+		temp = NULL;
+		
+		/* And handle THEN/ELSE */
+		then(line, leftF > rightF);
+		return;
 	}
-	else currentLine = atol(end) - 1;
 }
 
 /************************************************************************/
@@ -175,7 +274,6 @@ void LoadFile(char* name) {
 void SaveFile(char* name) {
 	size_t i = 0;
 	FILE* file = NULL;
-	char* newline = NULL;
 	
 	file = fopen((const char*)name, "w");
 	if (file == NULL) {

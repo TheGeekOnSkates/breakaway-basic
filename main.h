@@ -423,9 +423,40 @@ void ReplaceCHR(char* buffer);
 /* STRING VALIDATION FUNCTIONS (defined in validation.c)                */
 /************************************************************************/
 
+/**
+ * Checks if a string is a whole number (negatives okay)
+ * @param[in] The string to be tested
+ * @returns True if it is, false if it isn't
+ */
 bool StringIsInt(char* string);
+
+/**
+ * Checks if a string is a positive whole number
+ * @param[in] The string to be tested
+ * @returns True if it is, false if it isn't
+ */
 bool StringIsUInt(char* string);
+
+/**
+ * Checks if a string is a number (negatives and ecimals okay)
+ * @param[in] The string to be tested
+ * @returns True if it is, false if it isn't
+ */
 bool StringIsFloat(char* string);
+
+
+
+/************************************************************************/
+/* FUNCTIONS THAT MAKE "IF" WORK (defined in if.c)                      */
+/************************************************************************/
+
+/**
+ * Handles the THEN <line number> [ELSE <line number>] part
+ * @param[in] The user's code
+ * @param[in] If true, go to THEN; if not, go to ELSE if there is one
+ */
+void then(char* line, bool answer);
+
 
 
 #endif

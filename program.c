@@ -174,7 +174,7 @@ void RenumberProgram(char** program, char* instruction) {
 	}
 	
 	/* Clear the contents of newProgram */
-	memset(newProgram, 0, PROGRAM_MAX);
+	memset(newProgram, 0, PROGRAM_MAX * sizeof(char*));
 	
 	/* Do the renumbering */
 	counter = 0;

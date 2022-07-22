@@ -1,0 +1,10 @@
+10 LET X = 7
+20 LET Y = 8
+30 IF X <> Y THEN 50
+40 echo "X and Y are equal."
+50 echo "X and Y are not equal."
+60 IF X > Y THEN 80 ELSE 100
+70 END
+80 echo "X is greater."
+90 END
+100 echo "Y is greater."
