@@ -6,40 +6,26 @@ For RENUMBER:
 
 Readline-related stuff:
 
-* Try going beyond BUFFER_MAX and see what happens; might need to fix some things.
-	**EDIT:** I think this is not an issue - I use strncpy, not strcpy, unless I know I'm under the limit.  So next commit delete this message. :)
 * Figure out how to clear readline history, and add a command for it (and maybe a command to _list_ history too, maybe even turn it on/off).
 
 On IF:
 
-* Write a function to check if a string starts and ends with quotation marks (maybe a QuotesMatch similar to ParensMatch
-* Using that, back in RunIF, get the left and right sides and try these functions on them; see how that works out.
-	**NOTE:** This is tricker than it sounds; for one thing, AND/OR/NOT throws a monkey-wrench into the whole idea.  I think this will be a char-by-char analysis, not using functions like the ones in validation.c... at least, maybe not yet...)
+* Check for > (greater than) like I just did with less than
+* Same for equals and not equals ("<>" in BASICs); here's where it gets a bit trickier, because we have to check strings to (like strcmp)
+* I think eventually I'll have to break this up into its own .c file - so many ways an IF can go (especially factoring in AND, OR, and NOT - idk if I will ever get there, or at least NOT for a 1.0 lol)
+* Still like the idea of a function to check if a string starts and ends with quotation marks (maybe a QuotesMatch similar to ParensMatch
 
 # KNOWN ISSUES
 
+* It seems changing variables isn't working; look at tests/test6 - if I change lines 20 or 30 (the values to be compared in an IF-statement), it doesn't actually work correctly unless I do a NEW and then re-LOAD)
 * Aliases can override keywords (I created one called TEST, then tried to TEST a variable lol... add an IsKeyword function and fix that).
 * Also, idk if I want NEW to delete aliases; I have a script I wrote (not in this folder) that adds a bunch of them, but every time I load a different program, they get deleted.
 
 
 -----------------------------------------------------------------------------------------------
 
-In xterm, whenever I type a line > 80 chars, it somehow gets separated/cut off.  For example, if I do:
-
-git commit -m "some message that goes to the next line because it's greater than 80 characters long..."
-
-Git only sees the first 80 chars.  Also, if you don't give it a closing quote (which Git is normally fine with) you get an error.  Not sure what to do about that apart from changing my Git config to use nano :)
-
-**NOTE:** Does readline fix this?  Find out.
-
-
------------------------------------------------------------------------------------------------
-
-
-
 # FEATURES TO BE ADDED
 
-* RENUMBER (like I think it was the TI 99 4/A had)
 * Type-checking on variables
 * PROMPT string (so instead of "READY." users could have "Ok" like on the Tandy M-100, or "]" like on the Apple ][ etc.)
 * As I create/change BASIC commands, keep updating the docs.

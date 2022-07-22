@@ -14,13 +14,18 @@ bool StringIsUInt(char* string) {
 }
 
 bool StringIsFloat(char* string) {
-	if (string[0] == '-') string++;
 	size_t i=0, length = strlen(string);
 	bool pastDot = false;
+
+	if (string[0] == '-') {
+		string++;
+		length--;
+	}
 	for(; i<length; i++) {
 		if (string[i] == '.') {
 			if (pastDot) return false;
 			pastDot = true;
+			continue;
 		}
 		if (string[i] < '0' || string[i] > '9') return false;
 	}

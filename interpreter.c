@@ -7,8 +7,6 @@ extern uint8_t lastError;
 int64_t subs[PROGRAM_MAX];
 extern Variable* firstVar, * firstAlias;
 
-
-
 /************************************************************************/
 
 void RunIF(char* buffer) {
@@ -51,8 +49,11 @@ void RunIF(char* buffer) {
 			return;
 		}
 		if (!StringIsFloat(temp)) {
+			#if DEBUG_MODE
+			printf("temp = \"%s\"\n", temp);
+			#endif
 			free(temp);
-			lastError = MEMORY_ERROR;
+			lastError = TYPE_MISMATCH_ERROR;
 			return;
 		}
 		leftF = atof(temp);
@@ -64,18 +65,41 @@ void RunIF(char* buffer) {
 			return;
 		}
 		if (!StringIsFloat(temp)) {
+			#if DEBUG_MODE
+			printf("temp = \"%s\"\n", temp);
+			#endif
 			free(temp);
-			lastError = MEMORY_ERROR;
+			lastError = TYPE_MISMATCH_ERROR;
 			return;
 		}
 		rightF = atof(temp);
 		free(temp);
 		temp = NULL;
-		printf("%g<%g\n", leftF, rightF);
+		answer = leftF < rightF;
 	}
 	
+	/* Then do stuff based on the outcome */
+	if (answer) {
+		end = strstr(line, "THEN") + 4;
+		#if DEBUG_MODE
+		printf("end = \"%s\"\n", end);
+		#endif
+		if (end[0] < '0' || end[0] > '9') {
+			/* Non-number after THEN */
+			lastError = SYNTAX_ERROR;
+		}
+		else currentLine = atol(end) - 1;
+		return;
+	}
 	
-	
+	/* If it gets here, look for an ELSE */
+	end = strstr(line, "ELSE") + 4;
+	if (end == NULL) return;
+	if (end[0] < '0' || end[0] > '9') {
+		/* Non-number after THEN */
+		lastError = SYNTAX_ERROR;
+	}
+	else currentLine = atol(end) - 1;
 }
 
 /************************************************************************/

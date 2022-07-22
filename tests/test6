@@ -1,7 +1,8 @@
-5 REM TO-DO: ADD AN IF-STATEMENT
-10 SYS echo -n "Password:   "
-20 HIDDEN ON
-30 INPUT PW
-40 HIDDEN OFF
-50 SYS echo -n "Yup, that's it, "
-60 TEST PW70 SYS echo "!"
+10 CLEAR
+20 LET X = 2
+30 LET Y = 5
+40 IF X < Y THEN 60 ELSE 80
+50 END
+60 echo "X is less than Y."
+70 END
+80 echo "X is not less than Y."
