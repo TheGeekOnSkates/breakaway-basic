@@ -33,6 +33,13 @@ void OverflowError() {
 
 /************************************************************************/
 
+void SystemError() {
+	perror("?SYSTEM ERROR");
+	if (programMode)
+		printf("IN %ld", currentLine);
+	NewLine();
+}
+
 /************************************************************************/
 
 void TypeMismatch() {
@@ -51,6 +58,7 @@ void PrintLastError() {
 		case MEMORY_ERROR: MemoryError(); return;
 		case TYPE_MISMATCH_ERROR: TypeMismatch(); return;
 		case OVERFLOW_ERROR: OverflowError(); return;
+		case SYSTEM_ERROR: SystemError(); return;
 		default: printf("%d\n", lastError);
 	}
 }

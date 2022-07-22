@@ -67,6 +67,7 @@ enum Errors {
 	OVERFLOW_ERROR,		/* Happens in math functions */
 	DIVISION_BY_SERO_ERROR,	/* Can't divide by zero */
 	ILLEGAL_QTY_ERROR,	/* Number is too big or too small */
+	SYSTEM_ERROR,		/* Something outside Breakaway BASIC failed */
 };
 
 
@@ -291,6 +292,14 @@ void SetVariable(char* raw, bool isAlias);
 /************************************************************************/
 /* STRING MANIPULATION FUNCTIONS (defined in strings.c)                 */
 /************************************************************************/
+
+/**
+ * Creates a copy of a substring
+ * @param[in] The string to get a substring from
+ * @param[in] A pointer greater than from (for example, from strstr)
+ * @returns The substring (on the heap) or NULL if it fails
+ */
+char* CopySubstring(char* from, char* to);
 
 /**
  * Strips spaces from a string (except inside strings)

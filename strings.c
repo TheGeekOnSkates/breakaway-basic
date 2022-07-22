@@ -2,6 +2,28 @@
 
 /************************************************************************/
 
+char* CopySubstring(char* from, char* to) {
+	/* Declare variables */
+	size_t i = 0, length = 0;
+	char* result = NULL;
+	
+	/* Handle obvious user errors */
+	if (from == NULL || to == NULL) return NULL;
+	
+	/* Allocate memory */
+	length = to - from;
+	result = calloc(length + 1, sizeof(char));
+	if (result == NULL) return NULL;
+	
+	/* Copy the data into it */
+	for (i=0; i<length; i++) result[i] = from[i];
+	
+	/* And we're done */
+	return result;
+}
+
+/************************************************************************/
+
 void ShiftLeft(char* string, size_t start, size_t length) {
         size_t i;
         for (i = start + 1; i < length; i++) {

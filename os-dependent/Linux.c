@@ -10,6 +10,8 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+extern uint8_t lastError;
+
 inline char* ReadLine(char* prompt) {
 	return readline(prompt);
 }
@@ -17,7 +19,6 @@ inline char* ReadLine(char* prompt) {
 void AddToHistory(char* code) {
 	add_history(code);
 }
-
 
 void GetScreenSize(int* rows, int* columns) {
 	static struct winsize w;
@@ -58,7 +59,7 @@ inline void GoToFolder(char* folder) {
 	printf("folder = \"%s\"\n", folder);
 	#endif
 	if (chdir((const char*)folder) == -1)
-		perror("ERROR");;
+		lastError = SYSTEM_ERROR;
 }
 
 #endif

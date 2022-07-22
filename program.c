@@ -142,7 +142,6 @@ void ListProgram(char** program, char* instruction) {
 
 void RenumberProgram(char** program, char* instruction) {
 	/* Variables */
-	char* temp;
 	size_t i, step, counter;
 	char* newProgram[PROGRAM_MAX];
 	

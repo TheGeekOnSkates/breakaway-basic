@@ -13,9 +13,14 @@ extern Variable* firstVar, * firstAlias;
 
 void RunIF(char* buffer) {
 	/* Declare variables */
-	char line[BUFFER_MAX], left[BUFFER_MAX], right[BUFFER_MAX];
-	bool answer, leftIsNumber, rightIsNumber;
-	size_t i, length, counter;
+	char line[BUFFER_MAX],
+		left[BUFFER_MAX],
+		right[BUFFER_MAX],
+		* end = NULL,
+		* temp = NULL;
+	float leftF = 0, rightF = 0;
+	bool answer;
+	size_t i, length;
 	
 	/* Make a copy of the buffer.  I'm not sure if this is really necessary,
 	but it seems this has fixed (or at least worked around) a lot of bugs. */
@@ -37,22 +42,40 @@ void RunIF(char* buffer) {
 	printf("if: %s\n", line);
 	#endif
 	
-	/* Next, we need to figure out exactly what we're comparing.
-	To do that, we first need the left-hand side of the string. 
-	I'm not gonna bother with AND, OR, NOT etc. just yet; IF is hard enough! */
-	printf("if: %s\n", line);
-	counter = 0;
-	length = strlen(line);
-	for (i=1; i<length; i++) {
-		/* Left off here */
-		
-		
-		
-		
-		
-		
-		
+	/* For now, let's just handle less-than */
+	end = strstr(line, "<");
+	if (end != NULL) {
+		temp = CopySubstring(line, end);
+		if (temp == NULL) {
+			lastError = MEMORY_ERROR;
+			return;
+		}
+		if (!StringIsFloat(temp)) {
+			free(temp);
+			lastError = MEMORY_ERROR;
+			return;
+		}
+		leftF = atof(temp);
+		free(temp);
+		temp = NULL;
+		temp = CopySubstring(end + 1, strstr(end + 1, "THEN"));
+		if (temp == NULL) {
+			lastError = MEMORY_ERROR;
+			return;
+		}
+		if (!StringIsFloat(temp)) {
+			free(temp);
+			lastError = MEMORY_ERROR;
+			return;
+		}
+		rightF = atof(temp);
+		free(temp);
+		temp = NULL;
+		printf("%g<%g\n", leftF, rightF);
 	}
+	
+	
+	
 }
 
 /************************************************************************/
