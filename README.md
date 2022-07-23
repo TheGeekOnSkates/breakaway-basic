@@ -72,6 +72,24 @@ Turns hidden text (like you might see for a password) on or off
 
 Turns text italic mode on or off
 
+### LET variable = value
+
+Sets a variable (I'm kinda surprised BASICs used LET instead of SET, but it's a convention I won't break because people know it and BASIC is supposed to be, well, basic). :)
+
+```
+10 LET NAME = Wayne Gretzky
+20 LET JERSEY = 99
+30 LEAGUE = NHL
+```
+
+If you'll notice here, there are some HUGE differences from other basics:
+
+* You don't need to put strings in quotes (you can, but the quotes would become part of the string).
+* There is no type-checking.  If you like, you can use the $ and % characters like other BASICs do, and I suggest you do that just so you (and other users) know what the type should be.  But at the time of this writing, Breakaway BASIC doesn't enforce that.
+* Also, like in other BASICs, the "LET" part is totally optional (see line 30)
+
+Eventually, I would like to have it strip leading/trailing quotes off, and also do type-checking, but for now this is where we're at.
+
 ### LIST [line number [ - line number]]
 
 Lists the contents of your program.  Examples:
