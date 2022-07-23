@@ -6,6 +6,33 @@ extern size_t currentLine;
 
 /************************************************************************/
 
+void DivBy0Error() {
+	printf("?DIVISION BY ZERO ERROR");
+	if (programMode)
+		printf("IN %ld", currentLine);
+	NewLine();
+}
+
+/************************************************************************/
+
+void IllegalDirectError() {
+	printf("?ILLEGAL DIRECT ERROR");
+	if (programMode)
+		printf("IN %ld", currentLine);
+	NewLine();
+}
+
+/************************************************************************/
+
+void IllegalQtyError() {
+	printf("?ILLEGAL QUANTITY ERROR");
+	if (programMode)
+		printf("IN %ld", currentLine);
+	NewLine();
+}
+
+/************************************************************************/
+
 void SyntaxError() {
 	printf("?SYNTAX ERROR");
 	if (programMode)
@@ -57,8 +84,11 @@ void PrintLastError() {
 		case SYNTAX_ERROR: SyntaxError(); return;
 		case MEMORY_ERROR: MemoryError(); return;
 		case TYPE_MISMATCH_ERROR: TypeMismatch(); return;
+		case ILLEGAL_DIRECT_ERROR: IllegalDirectError(); return;
+		case ILLEGAL_QTY_ERROR: IllegalQtyError(); return;
 		case OVERFLOW_ERROR: OverflowError(); return;
 		case SYSTEM_ERROR: SystemError(); return;
+		case DIVISION_BY_SERO_ERROR: DivBy0Error(); return;
 		default: printf("%d\n", lastError);
 	}
 }

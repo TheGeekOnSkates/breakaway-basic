@@ -76,20 +76,16 @@ Variable* GetVariable(char* name, bool isAlias) {
 	#endif
 	
 	Variable* current = isAlias ? firstAlias : firstVar;
-	
-	#if DEBUG_MODE
-	printf("It gets here.\n");
-	#endif
-	
 	if (current == NULL) return NULL;
 	
-	#if DEBUG_MODE
-	printf("But not here?  Why would simply checking if a thing is NULL make it crash?  Core dumps stink worse than the Sabres. :D\n");
-	#endif
-	
 	while(current != NULL) {
-		if (current->name == NULL)
-			printf("Bingo!\n");
+		if (current->name == NULL) {
+			#if DEBUG_MODE
+			printf("current->name is NULL\n");
+			#endif
+			return NULL;
+		}
+		
 		#if DEBUG_MODE
 		printf("\"%s\" = \"%s\"\n", current->name, current->value);
 		#endif

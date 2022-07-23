@@ -339,6 +339,7 @@ void Interpret(char* buffer) {
 	lastError = NO_ERROR;
 	char* token = NULL, input[BUFFER_MAX];
 	int tempInt = 0, x = -1, y = -1, x2 = -1, y2 = -1;
+	char varValue[BUFFER_MAX];
 	#if DEBUG_MODE
 	size_t i = 0;
 	#endif
@@ -464,6 +465,36 @@ void Interpret(char* buffer) {
 		return;
 	}
 
+	/* GET variable */
+	if (STRING_STARTS_WITH(buffer, "GET ")) {
+		if (!programMode) {
+			lastError = ILLEGAL_DIRECT_ERROR;
+			return;
+		}
+		/* Get the user's input */
+		SetBlocking(false);
+		tempInt = (int)getchar();
+		SetBlocking(true);
+		#if DEBUG_MODE
+		printf("tempInt = %d\n", tempInt);
+		#endif
+		memset(input, 0, BUFFER_MAX);
+		snprintf(input, BUFFER_MAX, "%d", tempInt);
+		
+		/* Build the string that will be the variable's value */
+		memset(varValue, 0, BUFFER_MAX);
+		strcpy(varValue, buffer + 4);
+		strcat(varValue, "=");
+		strcat(varValue, input);
+		#if DEBUG_MODE
+		printf("\n\"%s\"\n", varValue);
+		#endif
+		
+		/* Then make it a variable */
+		RunLET(varValue);
+		return;
+	}
+	
 	/* GOSUB line number */
 	if (STRING_STARTS_WITH(buffer, "GOSUB") || STRING_STARTS_WITH(buffer, "GO SUB")) {
 		buffer += 2;	/* past GO */
@@ -532,7 +563,7 @@ void Interpret(char* buffer) {
 	/* INPUT variable */
 	if (STRING_STARTS_WITH(buffer, "INPUT ")) {
 		if (!programMode) {
-			lastError = SYNTAX_ERROR;
+			lastError = ILLEGAL_DIRECT_ERROR;
 			return;
 		}
 		/* Get the user's input */
@@ -543,7 +574,6 @@ void Interpret(char* buffer) {
 		SetBlocking(false);
 		
 		/* Build the string that will be the variable's value */
-		char varValue[BUFFER_MAX];
 		strcpy(varValue, buffer + 6);
 		strcat(varValue, "=");
 		strcat(varValue, input);

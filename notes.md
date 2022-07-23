@@ -1,5 +1,15 @@
 # TO-DO'S
 
+For GET:
+
+* Get loops like this to work:
+
+10 GET KEY
+20 IF KEY = -1 THEN 10
+30 TEST KEY
+
+I think the issue is with variables (see "known issues")
+
 For RENUMBER:
 
 * Get it to also check for strings that contain GOSUB and GOTO, and replace those line numbers with the new ones (that's gonna be a big job lol)
@@ -32,7 +42,6 @@ On IF:
 * Add COLOR x y color, or maybe COLORS x y fg bg
 * Environment variables like ~
 * Arrays
-* GET
 * Looping (FOR, _maybe_ WHILE)
 * PRINT
 * Advanced file I/O: OPEN and CLOSE, GET# and INPUT#, PRINT#, CLEAR# etc.

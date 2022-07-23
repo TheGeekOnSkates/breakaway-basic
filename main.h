@@ -67,6 +67,7 @@ enum Errors {
 	OVERFLOW_ERROR,		/* Happens in math functions */
 	DIVISION_BY_SERO_ERROR,	/* Can't divide by zero */
 	ILLEGAL_QTY_ERROR,	/* Number is too big or too small */
+	ILLEGAL_DIRECT_ERROR,	/* The instruction only runs in program mode */
 	SYSTEM_ERROR,		/* Something outside Breakaway BASIC failed */
 };
 
