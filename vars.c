@@ -28,28 +28,39 @@ Variable* CreateVariable(char* raw) {
 	i = 0;
 	length = equals - raw;
 	
-	/* Set up the name */
+	/* Set up the memory for the name */
 	var->name = calloc(length + 1, sizeof(char));
 	if (var->name == NULL) {
 		free(var);
 		lastError = MEMORY_ERROR;
 		return NULL;
 	}
+	
+	/* Copy the variable name into that memory */
 	for (i=0; i<length; i++) {
 		if (raw[i] == ' ') {
+			/* It found one space, so move pass all spaces */
 			while(raw[i] == ' ') i++;
+			
+			/* If it's not at an equals sign, the user goofed */
 			if (raw[i] != '=') {
 				free(var);
 				lastError = SYNTAX_ERROR;
 				return NULL;
 			}
+			
+			/* Then break regardless, cuz we're at the end of
+			the variable's name */
 			break;
 		}
+		
+		/* Otherwise, it's a character that works in variable names,
+		so add it to the name */
 		var->name[i] = raw[i];
 		var->name[i + 1] = '\0';
 	}
 	
-	/* Set up the value */
+	/* Set up the memory to store the value */
 	var->value = calloc(BUFFER_MAX - length + 1, sizeof(char));
 	if (var->value == NULL) {
 		free(var);
@@ -57,7 +68,17 @@ Variable* CreateVariable(char* raw) {
 		lastError = MEMORY_ERROR;
 		return NULL;
 	}
-	strncpy(var->value, equals + 1, BUFFER_MAX - length + 1);
+	
+	/* Make sure we're past any leading spaces */
+	equals++;	/* past the actual = sign */
+	while(equals[0] == ' ') equals++;
+	
+	#if DEBUG_MODE
+	printf("equals = \"%s\"\n", equals);
+	#endif
+	
+	/* Copy the value into the variable */
+	strncpy(var->value, equals, BUFFER_MAX - length + 1);
 	return var;
 }
 
@@ -110,13 +131,32 @@ void SetVariable(char* raw, bool isAlias) {
 	i = 0;
 	length = equals - raw;
 	
-	/* Set up the name */
+	/* Set up the memory for the name */
 	name = calloc(length + 1, sizeof(char));
 	if (name == NULL) {
 		lastError = MEMORY_ERROR;
 		return;
 	}
+	
+	/* Copy the variable name into that memory */
 	for (i=0; i<length; i++) {
+		if (raw[i] == ' ') {
+			/* It found one space, so move pass all spaces */
+			while(raw[i] == ' ') i++;
+			
+			/* If it's not at an equals sign, the user goofed */
+			if (raw[i] != '=') {
+				lastError = SYNTAX_ERROR;
+				return;
+			}
+			
+			/* Then break regardless, cuz we're at the end of
+			the variable's name */
+			break;
+		}
+		
+		/* Otherwise, it's a character that works in variable names,
+		so add it to the name */
 		name[i] = raw[i];
 		name[i + 1] = '\0';
 	}
@@ -142,7 +182,10 @@ void SetVariable(char* raw, bool isAlias) {
 		#if DEBUG_MODE
 		printf("equals + 1 = %s.\n", equals + 1);
 		#endif
-		strncpy(current->value, equals + 1, BUFFER_MAX - length + 1);
+		
+		equals++;	/* past the actual = sign */
+		while(equals[0] == ' ') equals++;
+		strncpy(current->value, equals, BUFFER_MAX - length + 1);
 		#if DEBUG_MODE
 		printf("current->value = %s\n", current->value);
 		#endif

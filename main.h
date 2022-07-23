@@ -295,6 +295,13 @@ void SetVariable(char* raw, bool isAlias);
 /************************************************************************/
 
 /**
+ * Checks if the line is a variable assignment (i.e. "X = 7")
+ * @param[in] The line to look at
+ * @returns True if it is, false if it isn't
+ */
+bool IsAssignment(char* line);
+
+/**
  * Creates a copy of a substring
  * @param[in] The string to get a substring from
  * @param[in] A pointer greater than from (for example, from strstr)

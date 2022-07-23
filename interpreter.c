@@ -350,6 +350,9 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
+	/* Move past any leading spaces */
+	while(buffer[0] == ' ') buffer++;
+	
 	/* If the user deletes a line, the pointer is just a new line
 	NOTE: Kinda makes me wonder about my NewLine() function... I use
 	a lot of \n characters in my code, but on other systems that
@@ -731,6 +734,9 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
-	/* And if it gets here, the user goofed */
-	RunSYS(buffer);
+	/* If it gets here, it's either a variable assignment
+	(i.e. "X = 7") or a system command (i.e. "ls") */
+	if (IsAssignment(buffer))
+		RunLET(buffer);
+	else RunSYS(buffer);
 }

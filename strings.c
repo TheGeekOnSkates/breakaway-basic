@@ -2,6 +2,20 @@
 
 /************************************************************************/
 
+bool IsAssignment(char* line) {
+	size_t i=0, length = strlen(line);
+	bool inQuotes = false;
+	for(; i<length; i++) {
+		if (line[i] == '"')
+			inQuotes = !inQuotes;
+		if (inQuotes) continue;
+		if (line[i] == '=') return true;
+	}
+	return false;
+}
+
+/************************************************************************/
+
 char* CopySubstring(char* from, char* to) {
 	/* Declare variables */
 	size_t i = 0, length = 0;
