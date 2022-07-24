@@ -143,7 +143,8 @@ void ListProgram(char** program, char* instruction) {
 void RenumberProgram(char** program, char* instruction) {
 	/* Variables */
 	size_t i, step, counter;
-	char* newProgram[PROGRAM_MAX];
+	char* newProgram[PROGRAM_MAX], * temp;
+	size_t newNumbers[PROGRAM_MAX], oldNumber;
 	
 	/* Move the pointer past any spaces between the word
 	"RENUMBER" and the next part */
@@ -187,8 +188,31 @@ void RenumberProgram(char** program, char* instruction) {
 		}
 		newProgram[step * counter] = program[i];
 		program[i] = NULL;
+		newNumbers[i] = step * counter;
 	}
 	
 	/* Copy the pointers in newProgram to the current program */
 	memcpy(program, newProgram, PROGRAM_MAX);
+	
+	/* Replace references to the old numbers with the new numbers */
+	for (i=0; i<PROGRAM_MAX; i++) {
+		if (program[i] == NULL || STRING_EQUALS(program[i], "")) continue;
+		temp = strstr(program[i], "THEN");
+		if (temp != NULL) {
+			
+			/* Move past the word "THEN" and any spaces */
+			temp += 4;
+			while(temp[0] == ' ') temp++;
+			
+			/* Replace the old number with the new one
+			Note the spaces after - this is because if we have
+			i.e. "10 IF _ THEN 100, THEN RENUMBER 1, there would
+			still be zeroes left behind. */
+			oldNumber = atoi(temp);
+			if (oldNumber < 0 || oldNumber > PROGRAM_MAX)
+				continue;	/* Shouldn't happen, but "better safe than sorry */
+			snprintf(temp, PROGRAM_MAX, "%ld      ", newNumbers[oldNumber]);
+			continue;
+		}
+	}
 }

@@ -243,8 +243,18 @@ void RunNEW() {
 	/* Clear variables */
 	FreeVariables(firstVar);
 	firstVar = NULL;
+	
+	/* Clear aliases
+	
+	This worked, but the more I used Breakaway BASIC as my shell, the
+	less I liked this "feature".  I had a file that defined a bunch of
+	OS-dependent aliases (like FILES = ls -la), and others, but whenever
+	I'd LOAD another program or entered NEW, I would lose them.  That
+	kind of defeats the whole purpose of having aliases at all.
+	
 	FreeVariables(firstAlias);
 	firstAlias = NULL;
+	*/
 }
 
 /************************************************************************/
@@ -352,6 +362,12 @@ void Interpret(char* buffer) {
 	
 	/* Move past any leading spaces */
 	while(buffer[0] == ' ') buffer++;
+	
+	/* Handle obvious syntax errors */
+	if (strchr("`~!@#$%^&*()_+-=\\|/<>", buffer[0]) != NULL) {
+		lastError = SYNTAX_ERROR;
+		return;
+	}
 	
 	/* If the user deletes a line, the pointer is just a new line
 	NOTE: Kinda makes me wonder about my NewLine() function... I use
@@ -475,9 +491,11 @@ void Interpret(char* buffer) {
 			return;
 		}
 		/* Get the user's input */
+		printf("Started. ");
 		SetBlocking(false);
 		tempInt = (int)getchar();
 		SetBlocking(true);
+		printf("Ended.\n");
 		#if DEBUG_MODE
 		printf("tempInt = %d\n", tempInt);
 		#endif

@@ -2,15 +2,30 @@
 
 ## Overview
 
-This idea started off as a fun experiment; let's see if I can create my own scripting language.  I wanted it to have a bunch of fun tools for creating ANSI graphics, 2D or even 3D sound, and to be fully screen-reader accessible (cuz sometimes I like to work eyes-free, not to mention it would be a great tool for building audio games).  I wanted it to be freed software, easy to pick up and fun for geeks like me who love the retro stuff.  But I also wanted it to be something I could actually use to get sh...tuff done.  It was fun, for awhile, but eventually collected dust as I got other ideas I was more interested in at the time. :)
+This idea started off as a fun experiment; let's see if I can create my own scripting language (and of course, what better than something super-old-school?  lol).  I wanted it to have a bunch of fun tools for creating ANSI graphics, 2D or even 3D sound, and to be fully screen-reader accessible (cuz sometimes I like to work eyes-free, not to mention it would be a great tool for building audio games).  I wanted it to be freed software, easy to pick up and fun for geeks like me who love the retro stuff.  But I also wanted it to be something I could actually use to get sh...tuff done.  It was fun, for awhile, but eventually collected dust as I got other ideas I was more interested in (distracted by) at the time. :)
 
-But then I got to tinkering with something else when I realized, Linux command-line scripting is HARD.  Its syntax is a mess, it's super-config-heavy, and it just... kinda stinks.  But then I discovered the difference between a "shell" and a "terminal"; turns out, there are lots of other shells out there.  There's one in particular that I really like, called "nushell" (they really need to capitalize that S cuz I keep wanting to type "nutshell" lol).  There's also a "cbmbasic" that is very nice, but it has some problems that make it less than ideal as a replacement for Bash.  Then there's zish and fish and lish and a bunch of other funny-sounding ones.  Basically, a shell is the main program that runs when you bring up a terminal/command prompt.  It's what you use to run other programs.
+But one day I got to tinkering with something else when I realized, Linux command-line scripting is HARD.  Its syntax is a mess, it's super-config-heavy, and it just... kinda stinks.  But then I discovered the difference between a "shell" and a "terminal"; turns out, there are lots of other shells out there.  There's one in particular that I really like, called "nushell" (they really need to capitalize that S cuz I keep wanting to type "nutshell" lol).  There's also a "cbmbasic" that is very nice, but it has some problems that make it less than ideal as a replacement for Bash.  Then there's zish and fish and lish and a bunch of other funny-sounding ones.  Basically, a shell is the main program that runs when you bring up a terminal/command prompt.  It's what you use to run other programs.
 
 And then it hit me.  My old BASIC, with the right tweaks, would make a great (or at least fun) shell for Linux.  As of right now, my focus is mostly on Linux, but when I notice clearly OS-dependent code, I have a place for it.  It works similar to 8-bit BASICs, with line numbers and all that.
 
 Also, for the curious: The name "Breakaway BASIC" has a double meaning.  For one thing, I'm kind of trying to "break away" from Bash.  But before that, the idea came from hockey.  A breakaway is one of the most exciting things that can happen in a game.  It's when a player gets past the other team's defense, a sort of duel between the player and the goalie.  Mano a mano.  Sometimes with the game on the line.  That's what I want my BASIC to be, like a player on a breakaway: fast, powerful, fun to watch, and just plain awesome. :)
 
 ## Command Reference
+
+### ALIAS name = value
+
+Aliases are a concept I borrowed from other shells; they're kind of like a "create-your-own instruction", which can come in really handy.  For example, if I run this code (on Linux):
+
+ALIAS FILES = ls -la
+
+I can then do this:
+
+FILES /path/to/my/stuff
+
+A couple notes here:
+
+* For now, if you're going to use them as commands, don't enclose them in quotes.  This is something I hope to fix in future releases, but for now that's how it works.
+* Aliases are not cleared by running LOAD or NEW.
 
 ### BG number
 
@@ -108,7 +123,7 @@ Moves the cursor to column x, row y.  This is different from other terminal cont
 
 ### NEW
 
-Clears the contents of the program memory, including all variables and aliases.  For example:
+Clears the contents of the program memory, including all variables.  For example:
 
 ```
 10 REM THIS COMMENT WILL GET ERASED BY "NEW"
@@ -121,6 +136,8 @@ READY.
 LIST
 READY.
 ```
+
+The only thing that is not deleted are any aliases you may have defined with the ALIAS keyword.
 
 ### REM [comment]
 

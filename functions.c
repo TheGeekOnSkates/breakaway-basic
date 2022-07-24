@@ -11,3 +11,46 @@ void ReplaceCHR(char* buffer) {
 	6. replace with \"%lc\", the character
 	*/
 }
+
+void ReplaceSTR(char* line) {
+	/* Declare variables */
+	/*
+	char temp[BUFFER_MAX], replacement[BUFFER_MAX];
+	char* functionName;
+	size_t i, start, end;
+	bool pastDot;
+	#if DEBUG_MODE
+	printf("line = \"%s\"\n", line);
+	#endif
+	
+	functionName = strstr(line, "STR$");
+	if (functionName == NULL) return;
+	start = functionName - line;
+	
+	#if DEBUG_MODE
+	printf("Before ReplaceSTR: \"%s\"\n", line);
+	printf("functionName = \"%s\"\n", functionName);
+	printf("start = %d\n", start);
+	#endif
+	
+	pastDot = false;
+	for (i=start + 5; i<BUFFER_MAX; i++) {
+		if (IsNumeric(line[i])) continue;
+		if (!pastDot && line[i] == '.') {
+			pastDot = true;
+			continue;
+		}
+		end = i;
+		break;
+	}
+	#if DEBUG_MODE
+	printf("end is at %d\n", end);
+	#endif
+	memset(replacement, 0, BUFFER_MAX);
+	snprintf(replacement, BUFFER_MAX, "\"%s\"", functionName + 4);
+	#if DEBUG_MODE
+	printf("replacement = \"%s\"\n", replacement);
+	#endif
+	ReplaceWithString(line, start, end, replacement);
+	*/
+}

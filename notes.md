@@ -1,34 +1,93 @@
-# TO-DO'S
+TO-DO'S
 
-For GET:
+--------------------------------------------------------------------------------
 
-* Get loops like this to work:
+# For variables:
+
+## Rework the value-setting part
+
+For example, right now if I did:
+
+LET X = 7
+X = X + 3
+TEST X
+
+I would get "X + 3" (minus the quotes) when it should give me "10".
+
+## Add name- and type-checking
+
+* Up till version 2022.07.24.0, I could do crazy stuff like this:
+
+=!SOMEVAR* = A string but not in quotes
+
+This isn't particularly bad, cuz then I could do stuff like:
+
+10 FILES = ls -la
+20 FILES /path/to/whatever
+
+But this BASIC has aliases now; I think what I might end up doing (for cases where I need to mix variables and commands) would be to do i.e.
+
+10 OPTIONS = "-la"
+20 "ls " + OPTIONS + " /path/to/whatever"
+
+Which means checking for type mismatches, doing CombineStrings etc. like my old one did.
+
+--------------------------------------------------------------------------------
+
+# For PRINT
+
+Yes, I think it's finally time to add that command.  Once the variable stuff is done, it'll nice to not have to use echo for everything (cuz not all systems will have it, though idk which - Haiku or BSDs maybe?  Even DOS did... idk).
+
+1. Add a check for it to Interpret()
+2. Have it run the eval functions on only the code not in quotes; for example:
+	PRINT "7 + 3 = " 7 + 3
+	It should print 7 + 3 = 10
+3. Have it build and print the string.
+
+--------------------------------------------------------------------------------
+
+# For GET:
+
+Get loops like this to work:
 
 10 GET KEY
 20 IF KEY = -1 THEN 10
 30 TEST KEY
 
-I think the issue is with variables (see "known issues")
+I've confirmed that the issue is not with variables; setting variables is fixed.  I think what might be happening is getchar is called, and then blocking is immediately turned back on.  idk, still working on it
 
-For RENUMBER:
+--------------------------------------------------------------------------------
 
-* Get it to also check for strings that contain GOSUB and GOTO, and replace those line numbers with the new ones (that's gonna be a big job lol)
+# For RENUMBER
 
-Readline-related stuff:
+Finish getting it to renumber references
 
-* Figure out how to clear readline history, and add a command for it (and maybe a command to _list_ history too, maybe even turn it on/off).
+* Debug the test I have in place for THEN.  It seems to work (when I run LIST it shows what I want), but then RUNning it causes segfaults (because {reasons}).  I really need to do a CRASH-course on core dumps. :D
+* Once I can RUN my renumbered program without crashing it, factor in ELSE.  Right now, it would get erased (but that's okay cuz I'm still tinkering with the strategy - usually segfaults are a sign of an ID10T error, so THEN may take serious time to fully discover what stupid thing I did, lol).
+* Then do it for GOTO/GO TO/GOSUB/GO SUB
 
-On IF:
+--------------------------------------------------------------------------------
+
+# Readline-related stuff:
+
+* Figure out how to clear readline history
+* Add a DH (delete history) command
+* Add an LH (list history) command
+
+--------------------------------------------------------------------------------
+
+# On IF:
 
 * If an if-statement fails, and there is no ELSE, it segfaults (what the).
 * Move more of the branches into if.c - that function is getting huge
 * Still like the idea of a function to check if a string starts and ends with quotation marks (maybe a QuotesMatch similar to ParensMatch
 
+
+--------------------------------------------------------------------------------
+
 # KNOWN ISSUES
 
-* It seems changing variables isn't working; look at tests/test6 - if I change lines 20 or 30 (the values to be compared in an IF-statement), it doesn't actually work correctly unless I do a NEW and then re-LOAD)
 * Aliases can override keywords (I created one called TEST, then tried to TEST a variable lol... add an IsKeyword function and fix that).
-* Also, idk if I want NEW to delete aliases; I have a script I wrote (not in this folder) that adds a bunch of them, but every time I load a different program, they get deleted.
 
 
 -----------------------------------------------------------------------------------------------
