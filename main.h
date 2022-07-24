@@ -49,6 +49,15 @@
  */
 #define STRING_STARTS_WITH(a, b) (strstr(a, b) == a)
 
+/**
+ * Checks if the first string contains the second string
+ * @param[in] The first string
+ * @param[in] The second string
+ * @returns True if it does, false if it doesn't
+ */
+#define STRING_CONTAINS(a, b) (strstr(a, b) != NULL)
+
+
 /** Max size of a BASIC program (1K of pointers * 256 bytes max per line = about 15 MB) */
 #define PROGRAM_MAX 65536
 
@@ -466,6 +475,20 @@ bool StringIsUInt(char* string);
  * @returns True if it is, false if it isn't
  */
 bool StringIsFloat(char* string);
+
+/**
+ * Checks if a string is a string literal (in quotes)
+ * @param[in] The string to be tested
+ * @returns True if it is, false if it isn't
+ */
+bool IsStringLiteral(char* string);
+
+/**
+ * Checks if a string is a Breakaway BASIC keyword
+ * @param[in] The string to be tested
+ * @returns True if it is, false if it isn't
+ */
+bool IsKeyword(char* string);
 
 
 

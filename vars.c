@@ -60,6 +60,17 @@ Variable* CreateVariable(char* raw) {
 		var->name[i + 1] = '\0';
 	}
 	
+	/* If it's a keyword, it's a syntax error */
+	if (IsKeyword(var->name)) {
+		#if DEBUG_MODE
+		printf("\"%s\" contains a keyword.\n", var->name);
+		#endif
+		free(var->name);
+		free(var);
+		lastError = SYNTAX_ERROR;
+		return NULL;
+	}
+	
 	/* Set up the memory to store the value */
 	var->value = calloc(BUFFER_MAX - length + 1, sizeof(char));
 	if (var->value == NULL) {
@@ -160,10 +171,19 @@ void SetVariable(char* raw, bool isAlias) {
 		name[i] = raw[i];
 		name[i + 1] = '\0';
 	}
-	
 	#if DEBUG_MODE
 	printf("Name = \"%s\"\n", name);
 	#endif
+	
+	/* If it's a keyword, it's a syntax error */
+	if (IsKeyword(name)) {
+		#if DEBUG_MODE
+		printf("\"%s\" contains a keyword.\n", var->name);
+		#endif
+		free(name);
+		lastError = SYNTAX_ERROR;
+		return;
+	}
 	
 	/* Check if a variable named name already exists;
 	if so, reset its value. */
