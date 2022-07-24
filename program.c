@@ -209,7 +209,10 @@ void RenumberProgram(char** program, char* instruction) {
 			i.e. "10 IF _ THEN 100, THEN RENUMBER 1, there would
 			still be zeroes left behind. */
 			oldNumber = atoi(temp);
-			if (oldNumber < 0 || oldNumber > PROGRAM_MAX)
+			#if DEBUG_MODE
+			printf("oldNumber = %ld\n", oldNumber);
+			#endif
+			if (oldNumber < 0 || oldNumber >= PROGRAM_MAX)
 				continue;	/* Shouldn't happen, but "better safe than sorry */
 			snprintf(temp, PROGRAM_MAX, "%ld      ", newNumbers[oldNumber]);
 			continue;

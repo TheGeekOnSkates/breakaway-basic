@@ -12,6 +12,10 @@
 
 extern uint8_t lastError;
 
+inline void DeleteHistory() {
+	clear_history();
+}
+
 inline char* ReadLine(char* prompt) {
 	return readline(prompt);
 }

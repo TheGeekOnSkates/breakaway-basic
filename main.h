@@ -173,8 +173,23 @@ static inline bool IsLineEmpty(char** program, uint16_t lineNumber) {
 /* Just Linux for now, but eventually might support Windows */
 #define Linux true
 
+/**
+ * Gets the user's input (for INPUT or direct mode)
+ * @param[in] The prompt (i.e. "? " for INPUT)
+ * @returns The user's input
+ */
 char* ReadLine(char* prompt);
+
+/**
+ * Adds code to the user's command history
+ * @param[in] The user's code
+ */
 void AddToHistory(char* code);
+
+/**
+ * Deletes the user's command history
+ */
+void DeleteHistory(void);
 
 /**
  * For the "CD" command (which does the same thing as in most other OSes)

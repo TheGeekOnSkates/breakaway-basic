@@ -43,6 +43,14 @@ Turns bright/bold color on or off
 
 Clears the screen (assuming your terminal supports ANSI escape codes).
 
+### CLEAR ALIASES
+
+Clears the list of aliases (undoes all ALIAS instructions)
+
+### CLEAR HISTORY
+
+Clears the command history
+
 ### CONT or CONTINUE
 
 Runs the your program from wherever it left off

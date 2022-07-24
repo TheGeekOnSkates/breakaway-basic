@@ -243,18 +243,6 @@ void RunNEW() {
 	/* Clear variables */
 	FreeVariables(firstVar);
 	firstVar = NULL;
-	
-	/* Clear aliases
-	
-	This worked, but the more I used Breakaway BASIC as my shell, the
-	less I liked this "feature".  I had a file that defined a bunch of
-	OS-dependent aliases (like FILES = ls -la), and others, but whenever
-	I'd LOAD another program or entered NEW, I would lose them.  That
-	kind of defeats the whole purpose of having aliases at all.
-	
-	FreeVariables(firstAlias);
-	firstAlias = NULL;
-	*/
 }
 
 /************************************************************************/
@@ -431,6 +419,19 @@ void Interpret(char* buffer) {
 		return;
 	}
 
+	/* CLEAR ALIASES */
+	if (STRING_EQUALS(buffer, "CLEAR ALIASES")) {
+		FreeVariables(firstAlias);
+		firstAlias = NULL;
+		return;
+	}
+	
+	/* CLEAR HISTORY */
+	if (STRING_EQUALS(buffer, "CLEAR HISTORY")) {
+		DeleteHistory();
+		return;
+	}
+	
 	/* CLEAR or CLS - clear screen */
 	if (STRING_STARTS_WITH(buffer, "CLEAR") || STRING_STARTS_WITH(buffer, "CLS")) {
 		printf("\033[H\033[J");
@@ -558,7 +559,7 @@ void Interpret(char* buffer) {
 	/* GOTO line */
 	if (STRING_STARTS_WITH(buffer, "GOTO") || STRING_STARTS_WITH(buffer, "GO TO")) {
 		if (!programMode) {
-			lastError = SYNTAX_ERROR;
+			lastError = ILLEGAL_DIRECT_ERROR;
 			return;
 		}
 		buffer += 2;	/* past GO */

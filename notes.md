@@ -2,6 +2,20 @@ TO-DO'S
 
 --------------------------------------------------------------------------------
 
+# High-level: To call this a release (to push to the master branch)
+
+* Finish RENUMBER
+* Finish variables
+* Finish IF
+* If possible, finish GET (the only thing I'd need it for isn't working, no obvious reason, might not be possible?)
+* Add PRINT
+* Add at least an instruction to clear history (maybe list history too?)
+* Fix bug: Aliases can override keywords
+
+
+
+--------------------------------------------------------------------------------
+
 # For variables:
 
 ## Rework the value-setting part
@@ -94,15 +108,13 @@ Finish getting it to renumber references
 
 # FEATURES TO BE ADDED
 
-* Type-checking on variables
 * PROMPT string (so instead of "READY." users could have "Ok" like on the Tandy M-100, or "]" like on the Apple ][ etc.)
 * As I create/change BASIC commands, keep updating the docs.
 * Add PUT x y character
 * Add COLOR x y color, or maybe COLORS x y fg bg
 * Environment variables like ~
 * Arrays
-* Looping (FOR, _maybe_ WHILE)
-* PRINT
+* FOR
 * Advanced file I/O: OPEN and CLOSE, GET# and INPUT#, PRINT#, CLEAR# etc.
 * __MAYBE__ an auto-run file (kinda like a config file, but not really... think autoexec.bat in DOS :D)
 * Maybe a history like Bash has; not important, but it would be kinda nice.

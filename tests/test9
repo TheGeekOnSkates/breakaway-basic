@@ -1,0 +1,4 @@
+10 LET X = 40
+20 IF X < 90 THEN 40
+30 END
+40 echo -n "It works."
