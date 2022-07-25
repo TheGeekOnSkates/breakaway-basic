@@ -634,6 +634,12 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
+	/* LIST HISTORY */
+	if (STRING_EQUALS(buffer, "LIST HISTORY")) {
+		ListHistory();
+		return;
+	}
+	
 	/* LIST [line numbers] - List the contents of the program */
 	if (STRING_STARTS_WITH(buffer, "LIST")) {
 		ListProgram(currentProgram, buffer + 4);

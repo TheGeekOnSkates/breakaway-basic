@@ -196,6 +196,11 @@ char* ReadLine(char* prompt);
 void AddToHistory(char* code);
 
 /**
+ * Lists the user's command history
+ */
+void ListHistory(void);
+
+/**
  * Deletes the user's command history
  */
 void DeleteHistory(void);

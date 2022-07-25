@@ -9,8 +9,6 @@ TO-DO'S
 * Finish IF
 * If possible, finish GET (the only thing I'd need it for isn't working, no obvious reason, might not be possible?)
 * Add PRINT
-* Add at least an instruction to clear history (maybe list history too?)
-* Fix bug: Aliases can override keywords
 
 
 
@@ -82,14 +80,6 @@ Finish getting it to renumber references
 
 --------------------------------------------------------------------------------
 
-# Readline-related stuff:
-
-* Figure out how to clear readline history
-* Add a DH (delete history) command
-* Add an LH (list history) command
-
---------------------------------------------------------------------------------
-
 # On IF:
 
 * If an if-statement fails, and there is no ELSE, it segfaults (what the).
@@ -99,10 +89,9 @@ Finish getting it to renumber references
 
 --------------------------------------------------------------------------------
 
-# KNOWN ISSUES
+# KNOWN ISSUES I'M WILLING TO OVERLOOK :)
 
-* Aliases can override keywords (I created one called TEST, then tried to TEST a variable lol... add an IsKeyword function and fix that).
-
+From what I read about readline's history, getting the history list creates variables that need to be freed; however, actually doing that as the Stack Overflow post suggested leads to memory errors (double frees, linked list corrupt or something, etc.).  So there is probably (?) a memory leak there.  But I've been all over the web looking for docs on readline and haven't found them yet, so obscure SO posts are all I have to go on.  Not worth fighting with for a fun project. :)
 
 -----------------------------------------------------------------------------------------------
 
@@ -112,12 +101,10 @@ Finish getting it to renumber references
 * As I create/change BASIC commands, keep updating the docs.
 * Add PUT x y character
 * Add COLOR x y color, or maybe COLORS x y fg bg
-* Environment variables like ~
+* Environment variables like ~ (looks like on Linux, the "getenv" function works for this)
 * Arrays
 * FOR
 * Advanced file I/O: OPEN and CLOSE, GET# and INPUT#, PRINT#, CLEAR# etc.
 * __MAYBE__ an auto-run file (kinda like a config file, but not really... think autoexec.bat in DOS :D)
-* Maybe a history like Bash has; not important, but it would be kinda nice.
-* But that would also involve putting text into STDIN (and if I can do that I'd also want an EDIT command like the TI 99 4/A has)
 
 And by the time I get here, idk what else I could possibley need/want.  I can write aliases for things like speech (i.e. `ALIAS SAY SYS easpeak `), sound, and things like listing files.  And if I'm using this with a screen reader, the screen reader will automatically speak stuff as I PRINT it anyway... now 3D sound is a bit tricky, but IMO that's a different project entirely.  And if I write that program, I can make aliases for that in Breakaway BASIC too :)
