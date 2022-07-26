@@ -247,6 +247,12 @@ void NewLine(void);
 /************************************************************************/
 
 /**
+ * Replaces variables with their values, does math etc.
+ * @param[in, out] The string
+ */
+void Eval(char* line);
+
+/**
  * Interprets a single line of BASIC code
  * @param[in] The user's code
  * @remarks called in the main event loop

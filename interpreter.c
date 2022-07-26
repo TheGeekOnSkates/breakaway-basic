@@ -9,6 +9,93 @@ extern Variable* firstVar, * firstAlias;
 
 /************************************************************************/
 
+void Eval(char* line) {
+	#if DEBUG_MODE
+	printf("Line = \"%s\"\n", line);
+	#endif
+	
+	StripSpaces(line);
+	#if DEBUG_MODE
+	printf("After StripSpaces: \"%s\"\n", line);
+	#endif
+	
+	CombineStrings(line);
+	printf("After CombineStrings: \"%s\"\n", line);
+	#if DEBUG_MODE
+	#endif
+	
+	ReplaceVariablesWithValues(line);
+	#if DEBUG_MODE
+	printf("After ReplaceVariablesWithValues: \"%s\"\n", line);
+	#endif
+	
+	EvalMath(line);
+	#if DEBUG_MODE
+	printf("After EvalMath: \"%s\"\n", line);
+	#endif
+}
+
+/************************************************************************/
+
+void RunPRINT(char* line) {
+	char output[BUFFER_MAX], temp[BUFFER_MAX];
+	size_t i = 0, length = strlen(line), counter = 0, counter2 = 0;
+	bool inQuotes = false;
+	
+	memset(output, 0, BUFFER_MAX);
+	memset(temp, 0, BUFFER_MAX);
+	for(; i<length; i++) {
+		/* If it's a quotation mark, toggle inQuotes */
+		if (line[i] == '"') {
+			if (!inQuotes) {
+				Eval(temp);
+				snprintf(output + counter, BUFFER_MAX, "%s", temp);
+				counter += strlen(temp);
+				counter2 = 0;
+				memset(temp, 0, BUFFER_MAX);
+			}
+			inQuotes = !inQuotes;
+			continue;
+		}
+		
+		/* Otherwise, if we're in quotes, append to the string */
+		if (inQuotes) {
+			output[counter] = line[i];
+			counter++;
+			continue;
+		}
+		
+		/* If we're at the last char, and it's a semicolon, we're
+		done - see the lines below (semicolong is like the -n switch
+		in the "echo" command; it's like saying, "don't put a new
+		line there." */
+		if (line[i] == ';' && i + 1 == length) {
+			Eval(temp);
+			snprintf(output + counter, BUFFER_MAX, "%s", temp);
+			counter += strlen(temp);
+			counter2 = 0;
+			memset(temp, 0, BUFFER_MAX);
+			break;
+		}
+		
+		/* Otherwise, add it to the temp string.
+		This string, when we hit a quote or the end of the line,
+		will be evaluated as variables/math stuff/functions etc. */
+		temp[counter2] = line[i];
+		counter2++;
+	}
+	Eval(temp);
+	snprintf(output + counter, BUFFER_MAX, "%s", temp);
+	counter += strlen(temp);
+	
+	/* Print it, and also a newline if the last char is not ';' */
+	printf("%s", output);
+	if (line[length - 1] != ';')
+		NewLine();
+}
+
+/************************************************************************/
+
 void RunIF(char* buffer) {
 	/* Declare variables */
 	char line[BUFFER_MAX],
@@ -669,6 +756,12 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
+	/* PRINT */
+	if (STRING_STARTS_WITH(buffer, "PRINT ")) {
+		RunPRINT(buffer + 6);
+		return;
+	}
+	
 	/* REM - comment - do nothing */
 	if (STRING_STARTS_WITH(buffer, "REM")) return;
 	
@@ -730,16 +823,6 @@ void Interpret(char* buffer) {
 	if (STRING_STARTS_WITH(buffer, "SYS ")) {
 		token = buffer + 4;
 		RunSYS(token);
-		return;
-	}
-	
-	/* Testing variables */
-	if (STRING_STARTS_WITH(buffer, "TEST ")) {
-		#if DEBUG_MODE
-		printf("Looking for a variable named \"%s\"\n", buffer + 5);
-		#endif
-		Variable* tempVar = GetVariable(buffer + 5, false);
-		printf("%s", tempVar == NULL || tempVar->value == NULL ? "0" : tempVar->value);
 		return;
 	}
 	

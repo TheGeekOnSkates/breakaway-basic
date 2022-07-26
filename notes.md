@@ -5,11 +5,21 @@ TO-DO'S
 # High-level: To call this a release (to push to the master branch)
 
 * Finish RENUMBER
+* Finish PRINT
 * Finish variables
 * Finish IF
-* If possible, finish GET (the only thing I'd need it for isn't working, no obvious reason, might not be possible?)
-* Add PRINT
+* If possible, finish GET (delete it if not)
 
+
+
+--------------------------------------------------------------------------------
+
+# For PRINT
+
+* Finish my "Eval" function; it needs to be ready to handle all kinds of crazy scenarios, and right now it does better in some than others (see tests/test9)
+* Maybe rework "ReplaceVariablesWithValues" to be a little "smarter"; right now, if I set a variable "X" I can no longer use "EXP"; or maybe call evalMath etc. first?  idk, more an Eval problem I think
+
+Really, once Eval is done, I think PRINT is done too.
 
 
 --------------------------------------------------------------------------------
@@ -18,13 +28,7 @@ TO-DO'S
 
 ## Rework the value-setting part
 
-For example, right now if I did:
-
-LET X = 7
-X = X + 3
-TEST X
-
-I would get "X + 3" (minus the quotes) when it should give me "10".
+Use the same Eval function (or very similar) that I had with PRINT.
 
 ## Add name- and type-checking
 
@@ -43,18 +47,6 @@ But this BASIC has aliases now; I think what I might end up doing (for cases whe
 20 "ls " + OPTIONS + " /path/to/whatever"
 
 Which means checking for type mismatches, doing CombineStrings etc. like my old one did.
-
---------------------------------------------------------------------------------
-
-# For PRINT
-
-Yes, I think it's finally time to add that command.  Once the variable stuff is done, it'll nice to not have to use echo for everything (cuz not all systems will have it, though idk which - Haiku or BSDs maybe?  Even DOS did... idk).
-
-1. Add a check for it to Interpret()
-2. Have it run the eval functions on only the code not in quotes; for example:
-	PRINT "7 + 3 = " 7 + 3
-	It should print 7 + 3 = 10
-3. Have it build and print the string.
 
 --------------------------------------------------------------------------------
 

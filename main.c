@@ -28,7 +28,7 @@ int main(int argc, const char** argv) {
 	
 	/* Show the title message */
 	printf("\033[H\033[J");
-	PrintCentered("**** BREAKAWAY BASIC 2022.07.25.0 ****");
+	PrintCentered("**** BREAKAWAY BASIC 2022.07.25.1 ****");
 	NewLine();
 	sprintf(buffer, "%lu BYTES FREE", GetBytesFree());
 	PrintCentered(buffer);
@@ -37,6 +37,7 @@ int main(int argc, const char** argv) {
 	/* Main event loop */
 	while(true) {
 		/* Let the user know we're ready for input */
+		NewLine();
 		printf("READY.");
 		NewLine();
 		
