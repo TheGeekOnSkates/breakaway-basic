@@ -20,8 +20,8 @@ void Eval(char* line) {
 	#endif
 	
 	CombineStrings(line);
-	printf("After CombineStrings: \"%s\"\n", line);
 	#if DEBUG_MODE
+	printf("After CombineStrings: \"%s\"\n", line);
 	#endif
 	
 	ReplaceVariablesWithValues(line);
@@ -676,10 +676,14 @@ void Interpret(char* buffer) {
 			return;
 		}
 		/* Get the user's input */
-		printf("? ");
 		memset(input, 0, BUFFER_MAX);
 		SetBlocking(true);
-		fgets(input, BUFFER_MAX - strlen(buffer) + 6, stdin);
+		char* tempString = ReadLine("? ");
+		if (tempString == NULL) {
+			lastError = MEMORY_ERROR;
+			return;
+		}
+		strncpy(input, tempString, BUFFER_MAX);
 		SetBlocking(false);
 		
 		/* Build the string that will be the variable's value */
