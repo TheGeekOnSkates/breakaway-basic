@@ -183,6 +183,17 @@ static inline bool IsLineEmpty(char** program, uint16_t lineNumber) {
 #define Linux true
 
 /**
+ * @returns The full name/path of the config file
+ * @remarks On Linux, this is /etc/.breakaway.  If I
+ * ever port it to Windows, it'll probably be somewhere
+ * like AppData or ProgramData or whatever.  On DOS,
+ * (cuz it's more likely to come to DOS than Windows,
+ * lol) it would probably be in the same folder as the
+ * executable (BREAKBAS.EXE or whatever). :D
+ */
+char* GetConfigFile();
+
+/**
  * Gets the user's input (for INPUT or direct mode)
  * @param[in] The prompt (i.e. "? " for INPUT)
  * @returns The user's input
@@ -251,6 +262,9 @@ void NewLine(void);
  * @param[in, out] The string
  */
 void Eval(char* line);
+
+/** Runs the NEW instruction */
+void RunNEW(void);
 
 /**
  * Interprets a single line of BASIC code

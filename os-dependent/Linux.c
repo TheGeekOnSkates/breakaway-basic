@@ -95,4 +95,8 @@ inline void GoToFolder(char* folder) {
 		lastError = SYSTEM_ERROR;
 }
 
+inline char* GetConfigFile() {
+	return "/etc/.breakaway";
+}
+
 #endif
