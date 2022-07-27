@@ -472,6 +472,7 @@ void Interpret(char* buffer) {
 	/* BG number - set the background */
 	if (STRING_STARTS_WITH(buffer, "BG ")) {
 		buffer += 3;
+		ReplaceVariablesWithValues(buffer);
 		if (buffer[0] < '0' || buffer[0] > '9')
 			lastError = SYNTAX_ERROR;
 		else {
@@ -564,6 +565,7 @@ void Interpret(char* buffer) {
 	/* FG number - set the text foreground color */
 	if (STRING_STARTS_WITH(buffer, "FG ")) {
 		buffer += 3;
+		ReplaceVariablesWithValues(buffer);
 		if (buffer[0] < '0' || buffer[0] > '9')
 			lastError = SYNTAX_ERROR;
 		else {
