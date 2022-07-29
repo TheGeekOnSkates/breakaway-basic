@@ -74,8 +74,8 @@ Variable* CreateVariable(char* raw) {
 	/* Set up the memory to store the value */
 	var->value = calloc(BUFFER_MAX - length + 1, sizeof(char));
 	if (var->value == NULL) {
-		free(var);
 		free(var->name);
+		free(var);
 		lastError = MEMORY_ERROR;
 		return NULL;
 	}
@@ -190,6 +190,10 @@ void SetVariable(char* raw, bool isAlias) {
 	current = GetVariable(name, isAlias);
 	if (current != NULL) {
 		if (current->value != NULL) {
+			// Maybe do a realloc here instead?
+			// Every once in awhile, I get strange malloc/free errors.
+			// I don't see why this would be the issue,
+			// but who knows.
 			free(current->value);
 			current->value = NULL;
 		}

@@ -9,7 +9,7 @@ TO-DO'S
 * Finish variables
 * Finish IF
 * If possible, finish GET (delete it if not)
-
+* Every once in awhile, my program crashes.  Usually the "errors" (if they're even good enough to be called that) are about as helpful as "ya goofed."  Spend some quality time learning valgrind, go through all my calls to malloc/calloc/free, study the living shnikees out of the finished software, and fix whatever needs fixing.
 
 
 --------------------------------------------------------------------------------
