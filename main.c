@@ -30,7 +30,7 @@ int main(int argc, const char** argv) {
 	
 	/* Show the title message */
 	printf("\033[H\033[J");
-	PrintCentered("**** BREAKAWAY BASIC 2022.07.28.0 ****");
+	PrintCentered("**** BREAKAWAY BASIC 2022.07.30.1 ****");
 	NewLine();
 	sprintf(buffer, "%lu BYTES FREE", GetBytesFree());
 	PrintCentered(buffer);

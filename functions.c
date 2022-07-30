@@ -1,5 +1,27 @@
 #include "main.h"
 
+void ReplaceROWSandCOLS(char* buffer) {
+	int cols = -1, rows = -1;
+	uint16_t start = 0;
+	char* temp = NULL;
+	
+	GetScreenSize(&rows, &cols);
+	
+	while(true) {
+		temp = strstr(buffer, "ROWS()");
+		if (temp == NULL) break;
+		start = temp - buffer;
+		ReplaceWithFloat(buffer, start, start + 6, (float)rows);
+	}
+	
+	while(true) {
+		temp = strstr(buffer, "COLS()");
+		if (temp == NULL) break;
+		start = temp - buffer;
+		ReplaceWithFloat(buffer, start, start + 6, (float)cols);
+	}
+}
+
 void ReplaceCHR(char* buffer) {
 	/*
 	Replace CHR$(number) with the character
@@ -53,4 +75,9 @@ void ReplaceSTR(char* line) {
 	#endif
 	ReplaceWithString(line, start, end, replacement);
 	*/
+}
+
+void ReplaceFunctions(char* buffer) {
+	ReplaceROWSandCOLS(buffer);
+	/* Replace others later :) */
 }

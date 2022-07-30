@@ -6,9 +6,9 @@ Variable* firstVar = NULL, * firstAlias = NULL;
 
 Variable* CreateVariable(char* raw) {
 	/* Declare variables */
-	Variable* var;
+	Variable* var = NULL;
 	size_t i, length;
-	char* equals;
+	char* equals = NULL;
 	
 	/* Set up the variable we'll return later */
 	var = malloc(sizeof(Variable));

@@ -472,6 +472,7 @@ void MemoryError(void);
 /* BASIC FUNCTIONS (defined in functions.c)                             */
 /************************************************************************/
 
+void ReplaceFunctions(char* buffer);
 void ReplaceCHR(char* buffer);
 
 

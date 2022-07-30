@@ -457,6 +457,11 @@ void Interpret(char* buffer) {
 	printf("After ReplaceAliases:  \"%s\"\n", buffer);
 	#endif
 	
+	ReplaceFunctions(buffer);
+	#if DEBUG_MODE
+	printf("After ReplaceFunctions:  \"%s\"\n", buffer);
+	#endif
+	
 	/* ALIAS NAME = value */
 	if (STRING_STARTS_WITH(buffer, "ALIAS ")) {
 		char copy[BUFFER_MAX - 6];
