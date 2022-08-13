@@ -65,4 +65,15 @@ void set_line(Program program, Line line);
  */
 bool is_statement(Line line);
 
+// All these check if the string is a specific statement.
+// They have the same parameters and return value as is_statement.
+bool is_gosub(Line line);
+bool is_goto(Line line);
+bool is_if(Line line);
+bool is_input(Line line);
+bool is_let(Line line);
+bool is_print(Line line);
+
+
+
 #endif

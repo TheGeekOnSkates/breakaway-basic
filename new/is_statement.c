@@ -10,20 +10,11 @@ bool is_statement(Line line) {
 		|| STRING_EQUALS(line, "RUN")
 	) return true;
 	
-	/* I don't think this is actually the way to go;
-	have it check for each of these, one at a time,
-	cuz they all have very different requirements. */
-	if (
-		!STRING_STARTS_WITH(line, "GOSUB")
-		&& !STRING_STARTS_WITH(line, "GOTO")
-		&& !STRING_STARTS_WITH(line, "IF")
-		&& !STRING_STARTS_WITH(line, "INPUT")
-		&& !STRING_STARTS_WITH(line, "LET")
-		&& !STRING_STARTS_WITH(line, "PRINT")
-	) return false;
-	
-	
-	
-	
-	return true;
+	/* The others have specific requirements, so check for each of those */
+	return is_gosub(line)
+		|| is_goto(line)
+		|| is_if(line)
+		|| is_input(line)
+		|| is_let(line)
+		|| is_print(line);
 }
