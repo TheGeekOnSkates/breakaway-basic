@@ -46,22 +46,11 @@ And here's my attempt at translating that into something meaningful to humans (l
 
 ## TO-DO's:
 
-* Finish is_expr; right now it just checks if the line starts with characters that work in expressions.  But that would also include things like:
-	3 + 4 2 * 2
-	7 ***
-	etc. - not real math stuff
-* Once that's done, is_goto and is_gosub should be easy :)
-* Write validation functions.  Test them in the prompt, cuz we'll need them later.
-	- is_statement
-	- is_number (I could have used that one earlier)
-	- is_expression
-	- is_var
-	- is_expr_list
-	- is_var_list
-	- is_term
-	- is_factor
-	- is_relop
-	- etc.
-	- Maybe wrap them all in is_line
+* Write, is_goto and is_gosub
+* Write is_relop and is_string (should be easy)
+* Use these to build is_expr_list etc.
+* And use these to finish the validation phase
+
 * Once the program correctly validates any line I throw at it, it's time to actually get them working!
+	Look at the Wikipedia article again; I think CLEAR was like NEW on the BASICs I know, and there are other things like that too.
 * When everything I've described above - Tiny BASIC as I understand it - is fully functional, push version 1.0 to master and start planning more features; start with stuff common in 8-bit BASICs (FOR, arrays, functions like CHR$ and ASC, instructions like SYS, file I/O etc.).  Nail down 2.0 project goals before starting :)

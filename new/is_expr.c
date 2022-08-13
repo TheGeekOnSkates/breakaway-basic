@@ -1,18 +1,34 @@
 #include "main.h"
 
-bool char_works_in_expr(char ch) {
-	if (ch >= '0' && ch <= '9') return true;
-	if (ch >= 'A' && ch <= 'Z') return true;
+bool is_math_action(char ch) {
 	return ch == '+' || ch == '-' || ch == '*' || ch == '/';
 }
 
+
 bool is_expr(Line line, char** position) {
-	char* pos = *position;
-	size_t i, length = strlen(line);
-	bool result = char_works_in_expr(line[0]);
-	for (i=0; i<length; i++) {
-		if (!char_works_in_expr(line[i])) break;
+	/* Variables */
+	char* pos;
+	bool result = is_number(line, position);
+	
+	/* Skip spaces again */
+	pos = *position;
+	while(pos[0] == ' ') pos++;
+	
+	/* From here, we already know if it starts with an expression or not.
+	But let's move the pointer to the end of the expression, because some
+	functions (IF, PRINT etc.) involve more than one on the same line */
+	while(true) {
+		/* Skip spaces again */
+		while(pos[0] == ' ') pos++;
+		
+		if (!is_math_action(pos[0])) break;
 		pos++;
+		
+		/* Here we get into a kinda weird scenario:
+		What if I enter 3 + 4 * (nothing at the end?)
+		We can't have that, so... */
+		if (!is_number(pos, &pos))
+			return false;
 	}
 	*position = pos;
 	return result;

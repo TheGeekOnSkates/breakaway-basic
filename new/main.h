@@ -97,6 +97,12 @@ bool is_var(Line line, char** position);
  */
 bool is_expr(Line line, char** position);
 
+bool is_number(Line line, char** position);
+
+static inline bool is_digit(char ch) {
+	return ch >= '0' && ch <= '9';
+}
+
 
 
 #endif
