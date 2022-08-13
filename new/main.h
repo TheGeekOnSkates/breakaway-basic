@@ -10,7 +10,7 @@
 /* 80 chars per line */
 #define LINE_SIZE 80
 
-/* 80 lines * 80 chars per line, 6.25 KB */
+/* 6400 lines * 80 chars per line, 500 KB */
 #define PROGRAM_SIZE 6400
 
 /* Define some types for better readability and size-checking */
@@ -23,6 +23,13 @@ typedef Line Program[PROGRAM_SIZE];
  * @param[in] The memory where variables' values are stored
  * @param[in] The line the user just typed
  */
-void parse(Program* program, Program* variables, Line line);
+void parse(Program program, Program variables, Line line);
+
+/**
+ * Adds a line of code to the program
+ * @param[in] The memory where the user's code is stores
+ * @param[in] The line the user just typed
+ */
+void set_line(Program program, Line line);
 
 #endif
