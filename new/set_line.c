@@ -20,6 +20,4 @@ void set_line(Program program, Line line) {
 	/* Copy the string into the program */
 	memset(program[lineNumber], 0, LINE_SIZE);
 	strncpy(program[lineNumber], temp, LINE_SIZE);
-	
-	printf("Line %d = \"%s\"\n", lineNumber, program[lineNumber]);
 }

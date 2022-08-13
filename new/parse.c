@@ -12,5 +12,7 @@ void parse(Program program, Program variables, Line line) {
 	if (temp[0] >= '0' && temp[0] <= '9') {
 		set_line(program, line);
 	}
+	else if (is_statement(line))
+		printf("statement\n");
 	else printf("LEFT OFF HERE\n");
 }
