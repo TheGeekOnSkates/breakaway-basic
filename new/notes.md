@@ -1,13 +1,5 @@
 # BREAKAWAY BASIC OVERHAUL
 
-## Why the overhaul?
-
-This major revision does a few very important things differently:
-
-* It *doesn't* use any heap memory.  I could probably debug my existing dev branch with valgrind now that I've more or less figured out how.  But this sounded more fun. :)
-* It's not using any OS-dependent code.  Porting comes after it works on one system well. :)
-* It focuses on the basics (no cheesy pun intended) - get the minimal language spec working first, then add all the fun stuff my other one had.
-
 ## Syntax
 
 For now, my goal is to make it meet the [Tiny BASIC grammar](https://en.wikipedia.org/wiki/Tiny_BASIC#Formal_grammar).  For my own purposes (and future editing), here is that grammar:
@@ -54,6 +46,11 @@ And here's my attempt at translating that into something meaningful to humans (l
 
 ## TO-DO's:
 
+* Finish is_expr; right now it just checks if the line starts with characters that work in expressions.  But that would also include things like:
+	3 + 4 2 * 2
+	7 ***
+	etc. - not real math stuff
+* Once that's done, is_goto and is_gosub should be easy :)
 * Write validation functions.  Test them in the prompt, cuz we'll need them later.
 	- is_statement
 	- is_number (I could have used that one earlier)
