@@ -88,5 +88,15 @@ bool is_print(Line line);
  */
 bool is_var(Line line, char** position);
 
+/**
+ * Checks if a line is a valid expression
+ * @param[in] The line the user just typed
+ * @param[in, out] Pointer to the start of the string; when this function is
+ * done, it will move the pointer to the first character AFTER the variable.
+ * @returns True if it is, false if it isn't
+ */
+bool is_expr(Line line, char** position);
+
+
 
 #endif

@@ -45,10 +45,8 @@ And here's my attempt at translating that into something meaningful to humans (l
 * A "variable list" ("var-list" in the original) is one or more variables, separated by commas
 * An "expression" is one or more of the following structure (no delimiter):
 	A optional plus or minus sign
-	then a "term"
-* A "term" is one or more "factors", separated by * or / characters (math)
-* A "factor" is either a variable, a number, or an expression
-	So really, it looks like an expression is a math thing.
+	then one or more variables, numbers, or expressions
+  So really, it looks like an expression is a math thing.
 * A variable is a capital letter from A to Z.
 * A number is an int (Tiny BASIC didn't do floats).  I won't define "digit" lol
 * A "relop" is a comparison (for IF): <, >, <>, or =

@@ -18,12 +18,13 @@ bool is_let(Line line) {
 	
 	/* If the next char is not an euqals sign, then no */
 	if (temp[0] != '=') return false;
+	temp++;
 	
 	/* Skip spaces again */
 	while (temp[0] == ' ') temp++;
 	
-	/* LEFT OFF HERE - add is_expression :) */
-	
+	/* If the next part is not an expression, then no */
+	if (!is_expr(temp, &temp)) return false;
 	
 	/* If it gets here, then yeah! */
 	return true;
