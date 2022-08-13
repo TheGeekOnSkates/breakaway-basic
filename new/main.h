@@ -74,6 +74,19 @@ bool is_input(Line line);
 bool is_let(Line line);
 bool is_print(Line line);
 
+/**
+ * Checks if a line is a valid variable name
+ * @param[in] The line the user just typed
+ * @param[in, out] Pointer to the start of the string; when this function is
+ * done, it will move the pointer to the first character AFTER the variable.
+ * @returns True if it is, false if it isn't
+ * @remarks For version 1, variables are just one letter.  I thought about
+ * having the first parameter be just one character, but decided against it
+ * because eventually I'd like to add features like Commodore BASIC ($ and %
+ * for type-checking, for example).  So I'm using the whole line to "future-
+ * proof" this function.  Others might also fall into the same situation.
+ */
+bool is_var(Line line, char** position);
 
 
 #endif
