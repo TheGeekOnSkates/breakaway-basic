@@ -48,6 +48,7 @@ And here's my attempt at translating that into something meaningful to humans (l
 	then a "term"
 * A "term" is one or more "factors", separated by * or / characters (math)
 * A "factor" is either a variable, a number, or an expression
+	So really, it looks like an expression is a math thing.
 * A variable is a capital letter from A to Z.
 * A number is an int (Tiny BASIC didn't do floats).  I won't define "digit" lol
 * A "relop" is a comparison (for IF): <, >, <>, or =
@@ -55,8 +56,6 @@ And here's my attempt at translating that into something meaningful to humans (l
 
 ## TO-DO's:
 
-* Import my STRING_* macros from the old version
-* Create a "Variable" typedef of just 26 Lines, since 1.0 will only have A-Z.
 * Write validation functions.  Test them in the prompt, cuz we'll need them later.
 	- is_statement
 	- is_number (I could have used that one earlier)

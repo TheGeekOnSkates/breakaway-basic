@@ -40,6 +40,8 @@
 /* Define some types for better readability and size-checking */
 typedef char Line[LINE_SIZE];
 typedef Line Program[PROGRAM_SIZE];
+typedef char Variable;		/* Might not always be this way - might be same as a Line someday lol */
+typedef Variable VarList[26];	/* Again, that limit might not last long lol */
 
 /**
  * Parses a line of BASIC code
@@ -47,7 +49,7 @@ typedef Line Program[PROGRAM_SIZE];
  * @param[in] The memory where variables' values are stored
  * @param[in] The line the user just typed
  */
-void parse(Program program, Program variables, Line line);
+void parse(Program program, VarList variables, Line line);
 
 /**
  * Adds a line of code to the program

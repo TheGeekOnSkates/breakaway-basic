@@ -2,7 +2,8 @@
 
 int main() {
 	/* Declare variables */
-	Program code, variables;
+	Program code;
+	VarList variables;
 	Line buffer;
 	
 	/* Title */
