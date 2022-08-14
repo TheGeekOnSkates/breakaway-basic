@@ -43,14 +43,23 @@ And here's my attempt at translating that into something meaningful to humans (l
 
 ## TO-DO's:
 
-* Finish is_print - see below
+* Finish is_print and is_input - see below
 * Write is_if
-* Write is_input
 * Once the program correctly validates any line I throw at it, it's time to actually get them working!
 	Look at the Wikipedia article again; I think CLEAR was like NEW on the BASICs I know, and there are other things like that too.
 * When everything I've described above - Tiny BASIC as I understand it - is fully functional, push version 1.0 to master and start planning more features; start with stuff common in 8-bit BASICs (FOR, arrays, functions like CHR$ and ASC, instructions like SYS, file I/O etc.).  Nail down 2.0 project goals before starting :)
 
 # Known issues
 
-* is_print doesn't flag this: PRINT "GEEK", ON, "SKATES" (the issue being "ON" without the quotes)
-* There is a problem with GOTO/GOSUB that I can't get to yet: currently, GOSUB -4 and GOSUB 100000000 pass validation.  When I get to the running phase, after I have functions in place to replace variables with their values, and evaluate expressions, THEN I will have to validate whether numbers in GOTO/GOSUB are too big or too small.
+# is_print/is_input don't validate the entire line
+
+For example, I can do:
+
+	PRINT "GEEK", ASDFJKL;
+	INPUT X, 12345ASDFKL;
+
+I think this is because the is_*_list functions are either not moving the pointer or not checking every element in the list... which doesn't make sense, but I'm tired. :D
+
+## GOTO/GOSUB can go out-of-bounds
+
+There is a problem with GOTO/GOSUB that I can't get to yet: currently, GOSUB -4 and GOSUB 100000000 pass validation.  When I get to the running phase, after I have functions in place to replace variables with their values, and evaluate expressions, THEN I will have to validate whether numbers in GOTO/GOSUB are too big or too small.

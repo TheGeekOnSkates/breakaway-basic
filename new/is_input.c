@@ -2,7 +2,7 @@
 
 bool is_input(Line line) {
 	if (!STRING_STARTS_WITH(line, "INPUT")) return false;
-	
-	
-	return true; /* for now */
+	line += 5;
+	while(line[0] == ' ') line++;
+	return is_var_list(line, &line);
 }
