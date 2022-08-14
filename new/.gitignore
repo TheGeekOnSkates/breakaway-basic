@@ -1,2 +1,2 @@
 # Don't track valgrind logs
-./vg*
+./vgcore.*

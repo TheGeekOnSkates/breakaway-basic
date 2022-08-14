@@ -35,10 +35,7 @@ And here's my attempt at translating that into something meaningful to humans (l
 * A "statement" is one of the BASIC instructions (see above for the complete list).
 * An "expression list" ("expr-list" in the original) is one or more expressions, separated by commas
 * A "variable list" ("var-list" in the original) is one or more variables, separated by commas
-* An "expression" is one or more of the following structure (no delimiter):
-	A optional plus or minus sign
-	then one or more variables, numbers, or expressions
-  So really, it looks like an expression is a math thing.
+* An "expression" a math problem
 * A variable is a capital letter from A to Z.
 * A number is an int (Tiny BASIC didn't do floats).  I won't define "digit" lol
 * A "relop" is a comparison (for IF): <, >, <>, or =
@@ -46,12 +43,14 @@ And here's my attempt at translating that into something meaningful to humans (l
 
 ## TO-DO's:
 
-* Finish is_print - currently not liking variables, also allowing trailing coma (see is_expr_list.c)
-* And use these to finish the validation phase
+* Finish is_print - see below
+* Write is_if
+* Write is_input
 * Once the program correctly validates any line I throw at it, it's time to actually get them working!
 	Look at the Wikipedia article again; I think CLEAR was like NEW on the BASICs I know, and there are other things like that too.
 * When everything I've described above - Tiny BASIC as I understand it - is fully functional, push version 1.0 to master and start planning more features; start with stuff common in 8-bit BASICs (FOR, arrays, functions like CHR$ and ASC, instructions like SYS, file I/O etc.).  Nail down 2.0 project goals before starting :)
 
 # Known issues
 
+* is_print doesn't flag this: PRINT "GEEK", ON, "SKATES" (the issue being "ON" without the quotes)
 * There is a problem with GOTO/GOSUB that I can't get to yet: currently, GOSUB -4 and GOSUB 100000000 pass validation.  When I get to the running phase, after I have functions in place to replace variables with their values, and evaluate expressions, THEN I will have to validate whether numbers in GOTO/GOSUB are too big or too small.

@@ -19,6 +19,8 @@ void parse(Program program, VarList variables, Line line) {
 	}
 	
 	/* otherwise, it's either a statement or a syntax error :) */
-	else if (!is_statement(line))
+	else if (!is_statement(line)
+		&& !is_var_list(line, &line)
+	)
 		printf("?SYNTAX ERROR\n");
 }
