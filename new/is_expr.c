@@ -4,11 +4,10 @@ bool is_math_action(char ch) {
 	return ch == '+' || ch == '-' || ch == '*' || ch == '/';
 }
 
-
 bool is_expr(Line line, char** position) {
 	/* Variables */
 	char* pos;
-	bool result = is_number(line, position);
+	bool result = is_number(line, position) || is_var(line, position);
 	
 	/* Skip spaces again */
 	pos = *position;
