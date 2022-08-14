@@ -103,6 +103,8 @@ static inline bool is_digit(char ch) {
 	return ch >= '0' && ch <= '9';
 }
 
+bool is_string(Line line, char** position);
 
+bool is_relop(Line line, char** position);
 
 #endif
