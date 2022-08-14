@@ -46,7 +46,7 @@ And here's my attempt at translating that into something meaningful to humans (l
 
 ## TO-DO's:
 
-* Write is_expr_list and is_var_list
+* Finish is_print - currently not liking variables, also allowing trailing coma (see is_expr_list.c)
 * And use these to finish the validation phase
 * Once the program correctly validates any line I throw at it, it's time to actually get them working!
 	Look at the Wikipedia article again; I think CLEAR was like NEW on the BASICs I know, and there are other things like that too.

@@ -107,4 +107,8 @@ bool is_string(Line line, char** position);
 
 bool is_relop(Line line, char** position);
 
+bool is_expr_list(Line line, char** position);
+
+bool is_var_list(Line line, char** position);
+
 #endif
