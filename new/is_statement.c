@@ -8,6 +8,7 @@ bool is_statement(Line line) {
 		|| STRING_EQUALS(line, "LIST")
 		|| STRING_EQUALS(line, "NEW")
 		|| STRING_EQUALS(line, "RETURN")
+		|| STRING_STARTS_WITH(line, "REM")
 		|| STRING_EQUALS(line, "RUN")
 	) return true;
 	

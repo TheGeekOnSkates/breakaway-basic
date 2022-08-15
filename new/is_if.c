@@ -13,5 +13,5 @@ bool is_if(Line line) {
 	if (!STRING_STARTS_WITH(line, "THEN")) return false;
 	line += 4;
 	while (line[0] == ' ') line++;
-	return is_statement(line);
+	return is_number(line, &line) || is_statement(line);
 }

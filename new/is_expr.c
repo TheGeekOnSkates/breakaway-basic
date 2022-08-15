@@ -26,7 +26,7 @@ bool is_expr(Line line, char** position) {
 		/* Here we get into a kinda weird scenario:
 		What if I enter 3 + 4 * (nothing at the end?)
 		We can't have that, so... */
-		if (!is_number(pos, &pos)) {
+		if (!is_number(pos, &pos) && ! is_var(pos, &pos)) {
 			*position = pos;
 			return false;
 		}

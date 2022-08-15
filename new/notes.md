@@ -41,20 +41,25 @@ And here's my attempt at translating that into something meaningful to humans (l
 * A "relop" is a comparison (for IF): <, >, <>, or =
 * And a string is exactly what you'd find in C.
 
-## One important change from the "formal grammar" linked to above
+## Places where I've "broken away" from the official spec
 
 Since I'm getting closer to the running phase, I went back to that page to figure out what CLEAR was supposed to do, and it varied from one implementation to the other.  On some Tiny BASICs, it cleared variables, and NEW worked cleared code; on others, CLEAR was equivalent to NEW.  So despite having a formal grammar, Tiny BASIC's grammar was not a standard like ANSI C.  With that in mind:
 
 * CLEAR will clear the screen (using an ANSI escape code).  Windows, Linux, and even DOS support ANSI escape codes, and my pre-overhaul version used CLEAR this way, so it makes a bit more sense.
 * NEW will work like it does on the C64 and most other BASICs: It will clear both variables and code, leaving the user with a new program.
 
+Beyond that, there are a couple other things that are simple enough to add, and useful enough that most BASICs have them, that I want to include them in 1.0:
+
+* REM <comment>
+* IF <expression> <relop> <expression> THEN <number>
+* _Maybe_ LIST <number>[-<number>]
+
+
 
 ## TO-DO's:
 
-* Finish is_if - it works (conforms to Tiny BASIC), but I kinda feel like it should support line numbers (not just statements).  i.e. IF X > 7 THEN 20 is valid in most BASICs (and from what I've read in that article, even older and simpler BASICs).
-* Once the program correctly validates any line I throw at it (with exception to GOTO/GOSUB shown below), it's time to actually get them working!
-	Look at the Wikipedia article again; I think CLEAR was like NEW on the BASICs I know, and there are other things like that too.
-* When everything I've described above - Tiny BASIC as I understand it - is fully functional, push version 1.0 to master and start planning more features; start with stuff common in 8-bit BASICs (FOR, arrays, functions like CHR$ and ASC, instructions like SYS, file I/O etc.).  Nail down 2.0 project goals before starting :)
+* Update is_statement to support LIST <number>
+* Start on actually making it RUN! :)
 
 # Known issues
 
