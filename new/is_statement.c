@@ -18,5 +18,6 @@ bool is_statement(Line line) {
 		|| is_if(line)
 		|| is_input(line)
 		|| is_let(line)
+		|| is_list(line)
 		|| is_print(line);
 }

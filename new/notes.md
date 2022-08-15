@@ -52,13 +52,12 @@ Beyond that, there are a couple other things that are simple enough to add, and 
 
 * REM <comment>
 * IF <expression> <relop> <expression> THEN <number>
-* _Maybe_ LIST <number>[-<number>]
+* LIST <number>[-<number>]
 
 
 
 ## TO-DO's:
 
-* Update is_statement to support LIST <number>
 * Start on actually making it RUN! :)
 
 # Known issues

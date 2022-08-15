@@ -72,6 +72,7 @@ bool is_goto(Line line);
 bool is_if(Line line);
 bool is_input(Line line);
 bool is_let(Line line);
+bool is_list(Line line);
 bool is_print(Line line);
 
 /**
