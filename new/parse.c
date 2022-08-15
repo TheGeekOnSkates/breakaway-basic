@@ -16,11 +16,11 @@ void parse(Program program, VarList variables, Line line) {
 	/* If it's a line number, store it in memory */
 	if (temp[0] >= '0' && temp[0] <= '9') {
 		set_line(program, line);
+		return;
 	}
 	
-	/* otherwise, it's either a statement or a syntax error :) */
-	else if (!is_statement(line)
-		&& !is_var_list(line, &line)
-	)
-		printf("?SYNTAX ERROR\n");
+	/* Otherwise, it's either a statement or a syntax error :) */
+	if (is_statement(line))
+		run(program, variables, line);
+	else printf("?SYNTAX ERROR\n");
 }

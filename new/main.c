@@ -7,7 +7,7 @@ int main() {
 	Line buffer;
 	
 	/* Title */
-	printf("BREAKAWAY BASIC 2022.08.14\n");
+	printf("BREAKAWAY BASIC 0.1\n");
 	
 	/* Main event loop */
 	while(true) {

@@ -59,6 +59,14 @@ void parse(Program program, VarList variables, Line line);
 void set_line(Program program, Line line);
 
 /**
+ * Runs the user's program
+ * @param[in] The memory where the user's code is stores
+ * @param[in] The memory where variable valeus are stores
+ * @param[in] The line the user just typed
+ */
+void run(Program program, VarList variables, Line line);
+
+/**
  * Checks if a line of code is a valid statement
  * @param[in] The line the user just typed
  * @returns True if it is, false if it isn't
