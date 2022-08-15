@@ -120,4 +120,6 @@ bool is_expr_list(Line line, char** position);
 
 bool is_var_list(Line line, char** position);
 
+void run_list(Program program, Line line);
+
 #endif

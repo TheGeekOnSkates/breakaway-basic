@@ -18,11 +18,14 @@ RUN
 
 ## TO-DO's:
 
-* Rework old functions as needed to evaluate expressions
-* Once that works, get LET working
-* To get LET working (and test it) I'll also need to get PRINT working
-* Then, may as well get RUN and LIST working
-* We'll see where we go from there :)
+* Get PRINT working, at least for strings
+* Use that to get RUN working
+* Get GOTO working
+* Get GOSUB and RETURN working
+* Port as much of my old code as maxes sense to write an "eval_expr" function
+* Use eval_expr to finish PRINT
+* Get LET working
+* Keep going :)
 
 # Known issues
 

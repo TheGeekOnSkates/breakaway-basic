@@ -6,6 +6,10 @@ int main() {
 	VarList variables;
 	Line buffer;
 	
+	/* Clear all memory (no "garbage characters") */
+	memset(code, 0, PROGRAM_SIZE * LINE_SIZE);
+	memset(variables, 0, 26);
+	
 	/* Title */
 	printf("BREAKAWAY BASIC 0.1\n");
 	
