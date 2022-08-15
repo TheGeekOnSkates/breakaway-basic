@@ -113,13 +113,13 @@ static inline bool is_digit(char ch) {
 }
 
 bool is_string(Line line, char** position);
-
 bool is_relop(Line line, char** position);
-
 bool is_expr_list(Line line, char** position);
-
 bool is_var_list(Line line, char** position);
 
 void run_list(Program program, Line line);
+void run_print(Program program, Line line);
+
+void shift_left(char* string, size_t start, size_t length);
 
 #endif

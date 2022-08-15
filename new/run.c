@@ -9,6 +9,10 @@ void run(Program program, VarList variables, Line line) {
 		run_list(program, line + 4);
 		return;
 	}
+	if (STRING_STARTS_WITH(line, "PRINT")) {
+		run_print(program, line + 5);
+		return;
+	}
 	if (STRING_STARTS_WITH(line, "REM")) return;
 	printf("Syntax error or not started yet :)\n");
 }

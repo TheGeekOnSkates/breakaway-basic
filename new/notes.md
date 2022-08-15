@@ -18,12 +18,11 @@ RUN
 
 ## TO-DO's:
 
-* Get PRINT working, at least for strings
-* Use that to get RUN working
+* Get RUN working
+* Port as much of my old code as maxes sense to write an "eval_expr" function
+* Call eval_expr before PRINT
 * Get GOTO working
 * Get GOSUB and RETURN working
-* Port as much of my old code as maxes sense to write an "eval_expr" function
-* Use eval_expr to finish PRINT
 * Get LET working
 * Keep going :)
 
