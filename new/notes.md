@@ -51,22 +51,12 @@ Since I'm getting closer to the running phase, I went back to that page to figur
 
 ## TO-DO's:
 
-* Finish is_print and is_input - see below
 * Write is_if
 * Once the program correctly validates any line I throw at it (with exception to GOTO/GOSUB shown below), it's time to actually get them working!
 	Look at the Wikipedia article again; I think CLEAR was like NEW on the BASICs I know, and there are other things like that too.
 * When everything I've described above - Tiny BASIC as I understand it - is fully functional, push version 1.0 to master and start planning more features; start with stuff common in 8-bit BASICs (FOR, arrays, functions like CHR$ and ASC, instructions like SYS, file I/O etc.).  Nail down 2.0 project goals before starting :)
 
 # Known issues
-
-# is_print/is_input don't validate the entire line
-
-For example, I can do:
-
-	PRINT "GEEK", ASDFJKL;
-	INPUT X, 12345ASDFKL;
-
-I think this is because the is_*_list functions are either not moving the pointer or not checking every element in the list... which doesn't make sense, but I'm tired. :D
 
 ## GOTO/GOSUB can go out-of-bounds
 

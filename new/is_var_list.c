@@ -2,11 +2,12 @@
 
 bool is_var_list(Line line, char** position) {
 	/* Variables */
-	char* pos = *position;
+	char* pos;
 	bool result = is_var(line, position);
 	
 	/* From here, we can have a comma, followed by another varession
 	(but trailing commas are not allowed).  Kind of like is_var :) */
+	pos = *position;
 	while(true) {
 		/* Skip spaces */
 		while(pos[0] == ' ') pos++;
