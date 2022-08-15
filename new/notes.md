@@ -35,7 +35,7 @@ And here's my attempt at translating that into something meaningful to humans (l
 * A "statement" is one of the BASIC instructions (see above for the complete list).
 * An "expression list" ("expr-list" in the original) is one or more expressions, separated by commas
 * A "variable list" ("var-list" in the original) is one or more variables, separated by commas
-* An "expression" a math problem
+* An "expression" is a math problem
 * A variable is a capital letter from A to Z.
 * A number is an int (Tiny BASIC didn't do floats).  I won't define "digit" lol
 * A "relop" is a comparison (for IF): <, >, <>, or =
@@ -51,7 +51,7 @@ Since I'm getting closer to the running phase, I went back to that page to figur
 
 ## TO-DO's:
 
-* Write is_if
+* Finish is_if - it works (conforms to Tiny BASIC), but I kinda feel like it should support line numbers (not just statements).  i.e. IF X > 7 THEN 20 is valid in most BASICs (and from what I've read in that article, even older and simpler BASICs).
 * Once the program correctly validates any line I throw at it (with exception to GOTO/GOSUB shown below), it's time to actually get them working!
 	Look at the Wikipedia article again; I think CLEAR was like NEW on the BASICs I know, and there are other things like that too.
 * When everything I've described above - Tiny BASIC as I understand it - is fully functional, push version 1.0 to master and start planning more features; start with stuff common in 8-bit BASICs (FOR, arrays, functions like CHR$ and ASC, instructions like SYS, file I/O etc.).  Nail down 2.0 project goals before starting :)
