@@ -21,6 +21,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		keepRunning = false;
 		return;
 	}
+	if (STRING_EQUALS(line, "EXIT")) exit(0);
 	if (STRING_STARTS_WITH(line, "GOSUB")) {
 		temp = atoi(line + 5);
 		if (temp < 0 || temp > PROGRAM_SIZE) {

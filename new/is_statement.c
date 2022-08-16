@@ -5,6 +5,7 @@ bool is_statement(Line line) {
 	if (
 		STRING_EQUALS(line, "CLEAR")
 		|| STRING_EQUALS(line, "END")
+		|| STRING_EQUALS(line, "EXIT")
 		|| STRING_EQUALS(line, "LIST")
 		|| STRING_EQUALS(line, "NEW")
 		|| STRING_EQUALS(line, "RETURN")
