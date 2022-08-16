@@ -3,18 +3,16 @@
 ## DONE
 
 CLEAR
+GOTO <expression>
 LIST [<number>[ - <number>]]
 NEW
 PRINT <expression>[, <expression>...]
-	Calling it done cuz the math junk affects multiple and not specifically a PRINT thing.  once that crap is depuzzled, PRINT will work completely as expected.
 REM <comment>
 RUN
-	Of course the *commands* it runs are far from done, but I just wrote a 3-4 line BASIC program and ran it! :)
 
 ## TO-DO
 
 END
-GOTO <expression>
 GOSUB <expression>
 IF <conditions> THEN <number or statement>
 INPUT <variable>[, <variable>...]

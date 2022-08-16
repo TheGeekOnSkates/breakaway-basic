@@ -1,11 +1,26 @@
 #include "main.h"
 
+extern size_t programCounter;
+
 void run(Program program, VarList variables, Line line, bool running) {
-	size_t counter = 0;
-	char* currentLine;
+	size_t temp;
 	
 	if (STRING_EQUALS(line, "CLEAR")) {
 		printf("\033[H\033[J");
+		return;
+	}
+	if (STRING_STARTS_WITH(line, "GOTO")) {
+		temp = atoi(line + 4);
+		printf("temp = %ld\n", temp);
+		if (temp < 0 || temp > PROGRAM_SIZE) {
+			printf("?SYNTAX ERROR");
+			if (running) printf (" IN %ld", programCounter);
+			printf("\n");
+		}
+		else {
+			programCounter = temp;
+			if (!running) run_program(program, variables);
+		}
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "LIST")) {
@@ -19,29 +34,14 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	if (STRING_STARTS_WITH(line, "PRINT")) {
 		line += 5;
-		eval_expr(line);
 		run_print(program, line);
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "REM")) return;
 	if (STRING_EQUALS(line, "RUN")) {
-		counter = 0;
-		while(true) {
-			currentLine = program[counter];
-			if (currentLine[0] == '\0') {
-				counter++;
-				if (counter == PROGRAM_SIZE) return;
-				continue;
-			}
-			if (!is_statement(currentLine)) {
-				printf("?SYNTAX ERROR IN %ld\n", counter);
-				return;
-			}
-			currentLine = program[counter];
-			run(program, variables, currentLine, true);
-			counter++;
-			if (counter == PROGRAM_SIZE) return;
-		}
+		programCounter = 0;
+		run_program(program, variables);
+		return;
 	}
 	printf("Syntax error or not started yet :)\n");
 }
