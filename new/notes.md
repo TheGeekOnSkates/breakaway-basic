@@ -10,6 +10,7 @@ LIST [<number>[ - <number>]]
 NEW
 PRINT <expression>[, <expression>...]
 REM <comment>
+RETURN
 RUN
 
 ## TO-DO
@@ -17,13 +18,16 @@ RUN
 IF <conditions> THEN <number or statement>
 INPUT <variable>[, <variable>...]
 LET <variable> = <expression<
-RETURN
 
 ## BTW...
 
-* Finish that darn mathing; when it's done, this BASIC is as good as finished. :)
-* At some point, add comments to main.h.  That file exists to work around what I've always felt to be one of C's ugliest warts: its need for you to "declare".  No other language on the planet (except for its far uglier superset, C++) has such a demand.  Like, "Hale, ye ancient tools!  Behold!  I shall write a function, and call it... run!"  Seriously?  lol... so really, main.h has become kind of a dumping ground for declarations to keep the compiler happy.  I need toa actually write what all those functions _do_. :)
+* I keep wanting to type EXIT like I did on the old one - add an EXIT command
+* I'm really at a point where I need to puzzle out the math junk.  The only instructions left to do are the ones that depend on it.
+* Clean up main.h, and maybe consolidate some of these .c files
+* Write tests for all 14 instructions
+* Push to master and write docs - I just wrote a BASIC! :)
 
 # Known issues
 
-Math sucks ice :)
+* PRINT replaces commas in strings (i.e. "YUP, IT WORKS" becomes "YUP  IT WORKS"); I'll have to add a check for that.
+* Math sucks ice :)

@@ -38,7 +38,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		else {
 			subs[subCounter] = programCounter;
 			subCounter++;
-			programCounter = temp;
+			programCounter = temp - 1;
 			keepRunning = true;
 			if (!running) run_program(program, variables);
 		}
@@ -77,6 +77,19 @@ void run(Program program, VarList variables, Line line, bool running) {
 		programCounter = 0;
 		keepRunning = true;
 		run_program(program, variables);
+		return;
+	}
+	if (STRING_STARTS_WITH(line, "RETURN")) {
+		subCounter--;
+		if (subCounter < 0 || subCounter >= PROGRAM_SIZE) {
+			printf("?RETURN WITHOUT GOSUB ERROR");
+			if (running) printf (" IN %ld", programCounter);
+			printf("\n");
+			return;
+		}
+		programCounter = subs[subCounter];
+		keepRunning = true;
+		if (!running) run_program(program, variables);
 		return;
 	}
 	printf("Syntax error or not started yet :)\n");

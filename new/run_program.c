@@ -7,7 +7,10 @@ void run_program(Program program, VarList variables) {
 	char* currentLine;
 	
 	while(true) {
-		if (!keepRunning) return;
+		if (!keepRunning) {
+			printf("READY.\n");
+			return;
+		}
 		if (programCounter == PROGRAM_SIZE) return;
 		currentLine = program[programCounter];
 		if (currentLine[0] == '\0') {
@@ -17,11 +20,15 @@ void run_program(Program program, VarList variables) {
 		}
 		if (!is_statement(currentLine)) {
 			printf("?SYNTAX ERROR IN %ld\n", programCounter);
+			printf("READY.\n");
 			return;
 		}
 		currentLine = program[programCounter];
 		run(program, variables, currentLine, true);
 		programCounter++;
-		if (programCounter == PROGRAM_SIZE) return;
+		if (programCounter == PROGRAM_SIZE) {
+			printf("READY.\n");
+			return;
+		}
 	}
 }

@@ -12,11 +12,11 @@ int main() {
 	
 	/* Title */
 	printf("BREAKAWAY BASIC 0.1\n");
+	printf("READY.\n");
 	
 	/* Main event loop */
 	while(true) {
 		memset(buffer, 0, LINE_SIZE);
-		printf("READY.\n");
 		fgets(buffer, LINE_SIZE, stdin);
 		parse(code, variables, buffer);
 	}
