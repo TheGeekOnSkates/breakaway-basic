@@ -1,6 +1,9 @@
 #include "main.h"
 
-void run(Program program, VarList variables, Line line) {
+void run(Program program, VarList variables, Line line, bool running) {
+	size_t counter = 0;
+	char* currentLine;
+	
 	if (STRING_EQUALS(line, "CLEAR")) {
 		printf("\033[H\033[J");
 		return;
@@ -22,7 +25,23 @@ void run(Program program, VarList variables, Line line) {
 	}
 	if (STRING_STARTS_WITH(line, "REM")) return;
 	if (STRING_EQUALS(line, "RUN")) {
-		
+		counter = 0;
+		while(true) {
+			currentLine = program[counter];
+			if (currentLine[0] == '\0') {
+				counter++;
+				if (counter == PROGRAM_SIZE) return;
+				continue;
+			}
+			if (!is_statement(currentLine)) {
+				printf("?SYNTAX ERROR IN %ld\n", counter);
+				return;
+			}
+			currentLine = program[counter];
+			run(program, variables, currentLine, true);
+			counter++;
+			if (counter == PROGRAM_SIZE) return;
+		}
 	}
 	printf("Syntax error or not started yet :)\n");
 }

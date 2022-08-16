@@ -1,9 +1,5 @@
 #include "main.h"
 
-bool is_math_action(char ch) {
-	return ch == '+' || ch == '-' || ch == '*' || ch == '/';
-}
-
 bool is_expr(Line line, char** position) {
 	/* Variables */
 	char* pos;

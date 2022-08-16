@@ -21,6 +21,6 @@ void parse(Program program, VarList variables, Line line) {
 	
 	/* Otherwise, it's either a statement or a syntax error :) */
 	if (is_statement(line))
-		run(program, variables, line);
+		run(program, variables, line, false);
 	else printf("?SYNTAX ERROR\n");
 }

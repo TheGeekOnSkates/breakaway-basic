@@ -63,8 +63,9 @@ void set_line(Program program, Line line);
  * @param[in] The memory where the user's code is stores
  * @param[in] The memory where variable valeus are stores
  * @param[in] The line the user just typed
+ * @param[in] true if in program mode, false if in direct mode
  */
-void run(Program program, VarList variables, Line line);
+void run(Program program, VarList variables, Line line, bool running);
 
 /**
  * Checks if a line of code is a valid statement
@@ -111,7 +112,9 @@ bool is_number(Line line, char** position);
 static inline bool is_digit(char ch) {
 	return ch >= '0' && ch <= '9';
 }
-
+static inline bool is_math_action(char ch) {
+	return ch == '+' || ch == '-' || ch == '*' || ch == '/';
+}
 bool is_string(Line line, char** position);
 bool is_relop(Line line, char** position);
 bool is_expr_list(Line line, char** position);
@@ -123,5 +126,5 @@ void eval_expr(Line line);
 void shift_left(char* string, size_t start, size_t length);
 void replace_with_float(char* line, uint16_t from, uint16_t to, float value);
 void add(char* line);
-
+void strip_spaces(char* string);
 #endif
