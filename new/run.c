@@ -3,9 +3,15 @@
 extern size_t programCounter;
 extern bool keepRunning;
 
+size_t subs[PROGRAM_SIZE];
+size_t subCounter = 0;
+
 void run(Program program, VarList variables, Line line, bool running) {
 	size_t temp;
 	keepRunning = running;
+	
+	/* When all that's left to do is the math,
+	and replacing vars with their values etc. do that here */
 	
 	if (STRING_EQUALS(line, "CLEAR")) {
 		printf("\033[H\033[J");
@@ -15,13 +21,36 @@ void run(Program program, VarList variables, Line line, bool running) {
 		keepRunning = false;
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "GOTO")) {
-		temp = atoi(line + 4);
-		printf("temp = %ld\n", temp);
+	if (STRING_STARTS_WITH(line, "GOSUB")) {
+		temp = atoi(line + 5);
 		if (temp < 0 || temp > PROGRAM_SIZE) {
 			printf("?SYNTAX ERROR");
 			if (running) printf (" IN %ld", programCounter);
 			printf("\n");
+			keepRunning = false;
+		}
+		else if (subCounter + 1 == PROGRAM_SIZE) {
+			/* Should never happen, but if so, handle it gracefully  :D */
+			printf("?TOO MANY SUBS ERROR");
+			if (running) printf (" IN %ld", programCounter);
+			printf("\n");
+		}
+		else {
+			subs[subCounter] = programCounter;
+			subCounter++;
+			programCounter = temp;
+			keepRunning = true;
+			if (!running) run_program(program, variables);
+		}
+		return;
+	}
+	if (STRING_STARTS_WITH(line, "GOTO")) {
+		temp = atoi(line + 4);
+		if (temp < 0 || temp > PROGRAM_SIZE) {
+			printf("?SYNTAX ERROR");
+			if (running) printf (" IN %ld", programCounter);
+			printf("\n");
+			keepRunning = false;
 		}
 		else {
 			programCounter = temp;

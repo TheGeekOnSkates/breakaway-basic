@@ -4,6 +4,7 @@
 
 CLEAR
 END
+GOSUB <expression>
 GOTO <expression>
 LIST [<number>[ - <number>]]
 NEW
@@ -13,7 +14,6 @@ RUN
 
 ## TO-DO
 
-GOSUB <expression>
 IF <conditions> THEN <number or statement>
 INPUT <variable>[, <variable>...]
 LET <variable> = <expression<
@@ -26,6 +26,4 @@ RETURN
 
 # Known issues
 
-## GOSUB can go out-of-bounds
-
-There is a problem with GOSUB that I can't get to yet: currently, GOSUB -4 and GOSUB 100000000 pass validation.  When I get to the running phase, after I have functions in place to replace variables with their values, and evaluate expressions, THEN I will have to validate whether numbers in GOTO/GOSUB are too big or too small.
+Math sucks ice :)
