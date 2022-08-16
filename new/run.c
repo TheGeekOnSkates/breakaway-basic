@@ -54,7 +54,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			keepRunning = false;
 		}
 		else {
-			programCounter = temp;
+			programCounter = temp - 1;
 			if (!running) run_program(program, variables);
 		}
 		return;
