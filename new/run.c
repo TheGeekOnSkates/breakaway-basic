@@ -1,12 +1,18 @@
 #include "main.h"
 
 extern size_t programCounter;
+extern bool keepRunning;
 
 void run(Program program, VarList variables, Line line, bool running) {
 	size_t temp;
+	keepRunning = running;
 	
 	if (STRING_EQUALS(line, "CLEAR")) {
 		printf("\033[H\033[J");
+		return;
+	}
+	if (STRING_EQUALS(line, "END")) {
+		keepRunning = false;
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "GOTO")) {
@@ -40,6 +46,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 	if (STRING_STARTS_WITH(line, "REM")) return;
 	if (STRING_EQUALS(line, "RUN")) {
 		programCounter = 0;
+		keepRunning = true;
 		run_program(program, variables);
 		return;
 	}

@@ -1,11 +1,13 @@
 #include "main.h"
 
 size_t programCounter;
+bool keepRunning = true;
 
 void run_program(Program program, VarList variables) {
 	char* currentLine;
 	
 	while(true) {
+		if (!keepRunning) return;
 		if (programCounter == PROGRAM_SIZE) return;
 		currentLine = program[programCounter];
 		if (currentLine[0] == '\0') {
