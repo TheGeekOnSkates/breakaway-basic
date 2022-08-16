@@ -27,4 +27,3 @@ bool is_expr_list(Line line, char** position) {
 	*position = pos;
 	return result;
 }
-

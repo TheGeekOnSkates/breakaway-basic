@@ -18,9 +18,8 @@ RUN
 
 ## TO-DO's:
 
+* Keep struggleshooting the stupid mathing.  Ugh.  Puck.
 * Get RUN working
-* Port as much of my old code as maxes sense to write an "eval_expr" function
-* Call eval_expr before PRINT
 * Get GOTO working
 * Get GOSUB and RETURN working
 * Get LET working

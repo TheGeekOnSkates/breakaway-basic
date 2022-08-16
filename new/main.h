@@ -119,7 +119,9 @@ bool is_var_list(Line line, char** position);
 
 void run_list(Program program, Line line);
 void run_print(Program program, Line line);
-
+void eval_expr(Line line);
 void shift_left(char* string, size_t start, size_t length);
+void replace_with_float(char* line, uint16_t from, uint16_t to, float value);
+void add(char* line);
 
 #endif

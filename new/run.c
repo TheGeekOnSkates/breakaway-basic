@@ -10,7 +10,9 @@ void run(Program program, VarList variables, Line line) {
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "PRINT")) {
-		run_print(program, line + 5);
+		line += 5;
+		eval_expr(line);
+		run_print(program, line);
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "REM")) return;
