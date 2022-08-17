@@ -9,9 +9,7 @@ size_t subCounter = 0;
 void run(Program program, VarList variables, Line line, bool running) {
 	size_t temp;
 	keepRunning = running;
-	
-	/* When all that's left to do is the math,
-	and replacing vars with their values etc. do that here */
+	Line copy;
 	
 	if (STRING_EQUALS(line, "CLEAR")) {
 		printf("\033[H\033[J");
@@ -70,7 +68,9 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	if (STRING_STARTS_WITH(line, "PRINT")) {
 		line += 5;
-		run_print(program, line);
+		strncpy(copy, line, LINE_SIZE);
+		eval_expr(copy);
+		run_print(program, copy);
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "REM")) return;
