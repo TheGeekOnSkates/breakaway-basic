@@ -107,17 +107,6 @@ void PrintCentered(const char* string) {
 
 /************************************************************************/
 
-void ReplaceWithString(char* line, uint16_t start, uint16_t end, char* replacement) {
-	char temp[BUFFER_MAX];
-	uint16_t i;
-	
-	for (i=0; i<start; i++) temp[i] = line[i];
-	snprintf(temp + start, BUFFER_MAX - start, "%s%s", replacement, line + end);
-	strncpy(line, temp, BUFFER_MAX);
-}
-
-/************************************************************************/
-
 void ReplaceWithFloat(char* line, uint16_t from, uint16_t to, float value) {
         size_t i;
 	char temp[BUFFER_MAX];

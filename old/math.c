@@ -744,9 +744,8 @@ void Divide(char* line) {
 
 void Add(char* line) {
 	/* Declare variables */
-	int i, plus, start, end;
+	size_t i, plus, start, end;
 	float answer;
-	bool pastDot;
 	
 	/* Figure out where the + sign is */
 	plus = 0;
@@ -756,44 +755,10 @@ void Add(char* line) {
 	if (plus == BUFFER_MAX) return;
 	
 	/* Get the position of the left-hand number */
-	pastDot = false;
-	for (i=plus - 1; i>-1; i--) {
-		if (IsNumeric(line[i])) {
-			if (i == 0) {
-				start = 0;
-				break;
-			}
-			continue;
-		}
-		if (line[i] == '.' && !pastDot) {
-			pastDot = true;
-			continue;
-		}
-		if (line[i] == '-' && (i == 0 || !IsNumeric(line[i - 1])))
-			start = i;
-		else start = i + 1;
-		break;
-	}
+	start = get_start(line);
 	
 	/* Get the position of the end of the number at the right */
-	pastDot = false;
-	for (i = plus + 1; i< BUFFER_MAX; i++) {
-		if (i == plus + 1 && line[i] == '-')
-			continue;
-		if (IsNumeric(line[i])) {
-			if (i == BUFFER_MAX - 1) {
-				end = i;
-				break;
-			}
-			continue;
-		}
-		if (line[i] == '.' && !pastDot) {
-			pastDot = true;
-			continue;
-		}
-		end = i;
-		break;
-	}
+	end = get_end(line);
 	
 	/* Do the actual math */
 	answer = atof(line + start) + atof(line + plus + 1);

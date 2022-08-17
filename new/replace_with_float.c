@@ -1,6 +1,6 @@
 #include "main.h"
 
-void replace_with_float(char* line, uint16_t from, uint16_t to, float value) {
+void replace_with_float(char* line, size_t from, size_t to, float value) {
         size_t i;
 	char temp[LINE_SIZE];
         memset(temp, 0, LINE_SIZE);
