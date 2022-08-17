@@ -5,8 +5,10 @@ extern bool keepRunning;
 
 size_t subs[PROGRAM_SIZE];
 size_t subCounter = 0;
+bool thereWasAnError;
 
 void run(Program program, VarList variables, Line line, bool running) {
+	thereWasAnError = false;
 	size_t temp;
 	keepRunning = running;
 	Line copy;
@@ -70,7 +72,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		line += 5;
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy);
-		run_print(program, copy);
+		if (!thereWasAnError) run_print(program, copy);
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "REM")) return;

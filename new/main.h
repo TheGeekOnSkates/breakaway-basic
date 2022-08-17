@@ -125,10 +125,15 @@ void run_print(Program program, Line line);
 void eval_expr(Line line);
 void shift_left(char* string, size_t start, size_t length);
 void replace_with_float(char* line, size_t from, size_t to, float value);
-void add(char* line);
 void strip_spaces(char* string);
 void run_program(Program program, VarList variables) ;
 size_t get_start(char* line, size_t symbol);
 size_t get_end(char* line, size_t symbol);
 void replace_with_string(char* line, size_t start, size_t end, char* replacement);
+size_t count_math_symbols(Line line, char symbol);
+void multiply(char* line, size_t length);
+void divide(char* line, size_t length);
+void add(char* line, size_t length);
+void subtract(char* line, size_t length);
+
 #endif
