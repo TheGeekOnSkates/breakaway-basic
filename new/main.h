@@ -13,6 +13,11 @@
 /* 6400 lines * 80 chars per line, 500 KB */
 #define PROGRAM_SIZE 6400
 
+#define VARIABLE_SIZE 26
+
+#define CLEAR_SCREEN() printf("\033[H\033[J")
+
+
 /**
  * Checks if two strings contain the same text
  * @param[in] The first string
@@ -40,7 +45,7 @@
 /* Define some types for better readability and size-checking */
 typedef char Line[LINE_SIZE];
 typedef Line Program[PROGRAM_SIZE];
-typedef char Variable;		/* Might not always be this way - might be same as a Line someday lol */
+typedef Line Variable;		/* Might not always be this way - might be same as a Line someday lol */
 typedef Variable VarList[26];	/* Again, that limit might not last long lol */
 
 /**
@@ -122,7 +127,7 @@ bool is_var_list(Line line, char** position);
 
 void run_list(Program program, Line line);
 void run_print(Program program, Line line);
-void eval_expr(Line line);
+void eval_expr(Line line, VarList variables);
 void shift_left(char* string, size_t start, size_t length);
 void replace_with_float(char* line, size_t from, size_t to, float value);
 void strip_spaces(char* string);
@@ -135,5 +140,7 @@ void multiply(char* line, size_t length);
 void divide(char* line, size_t length);
 void add(char* line, size_t length);
 void subtract(char* line, size_t length);
+void run_let(char* line, VarList variables);
+void replace_vars_with_values(Line line, VarList variables);
 
 #endif

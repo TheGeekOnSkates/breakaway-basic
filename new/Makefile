@@ -1,2 +1,6 @@
 linux:
-	clear && gcc ./*.c -obasic -Wall && ./basic || exit 1
+	clear && gcc ./*.c -obasic -Wall || exit 1
+	./basic
+
+debug:
+	clear && gcc ./*.c -obasic -Wall || exit 1

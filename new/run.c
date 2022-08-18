@@ -14,14 +14,17 @@ void run(Program program, VarList variables, Line line, bool running) {
 	Line copy;
 	
 	if (STRING_EQUALS(line, "CLEAR")) {
-		printf("\033[H\033[J");
+		CLEAR_SCREEN();
 		return;
 	}
 	if (STRING_EQUALS(line, "END")) {
 		keepRunning = false;
 		return;
 	}
-	if (STRING_EQUALS(line, "EXIT")) exit(0);
+	if (STRING_EQUALS(line, "EXIT")) {
+		CLEAR_SCREEN();
+		exit(0);
+	}
 	if (STRING_STARTS_WITH(line, "GOSUB")) {
 		temp = atoi(line + 5);
 		if (temp < 0 || temp > PROGRAM_SIZE) {
@@ -59,6 +62,11 @@ void run(Program program, VarList variables, Line line, bool running) {
 		}
 		return;
 	}
+	if (STRING_STARTS_WITH(line, "LET")) {
+		line += 3;
+		run_let(line, variables);
+		return;
+	}
 	if (STRING_STARTS_WITH(line, "LIST")) {
 		run_list(program, line + 4);
 		return;
@@ -71,7 +79,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 	if (STRING_STARTS_WITH(line, "PRINT")) {
 		line += 5;
 		strncpy(copy, line, LINE_SIZE);
-		eval_expr(copy);
+		eval_expr(copy, variables);
 		if (!thereWasAnError) run_print(program, copy);
 		return;
 	}

@@ -8,9 +8,10 @@ int main() {
 	
 	/* Clear all memory (no "garbage characters") */
 	memset(code, 0, PROGRAM_SIZE * LINE_SIZE);
-	memset(variables, 0, 26);
+	memset(variables, 0, VARIABLE_SIZE * sizeof(Line));
 	
 	/* Title */
+	CLEAR_SCREEN();
 	printf("BREAKAWAY BASIC 0.1\n");
 	printf("READY.\n");
 	
