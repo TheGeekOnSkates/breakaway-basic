@@ -64,7 +64,8 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	if (STRING_STARTS_WITH(line, "LET")) {
 		line += 3;
-		run_let(line, variables);
+		strncpy(copy, line, LINE_SIZE);
+		run_let(copy, variables);
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "LIST")) {
