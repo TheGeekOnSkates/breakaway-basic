@@ -22,10 +22,7 @@ INPUT <variable>[, <variable>...]
 
 ## BTW...
 
-* Set up eval_expr to get a substring that is just the expression part.  Cuz what happens if I do PRINT "THE ANSWER IS:", 4 + 4, " AND ALSO ", 42 * 1?  Probably gonna fail, and miserably. :D
-	**EDIT:** I think this will be done in run.c and run functions, not eval_expr itself (that's working well so far, for PRINT and LET)
 * Get IF working (should be easy once the math stuff is done)
-* Get INPUT working (seriously thinking about just making it one variable, like on the C64).
 * Clean up main.h, and consolidate some of these .c files
 * Write tests for all 14 instructions
 * Push to master and write docs - I just wrote a BASIC! :)
@@ -48,5 +45,11 @@ INPUT <variable>[, <variable>...]
 
 
 # Known issues
+
+* There is a bug in multiply(); sometimes there is a * left behind; for example:
+	10 INPUT A
+	20 INPUT B
+	30 PRINT A * B
+Gives me "0B".  But it's not an issue with INPUT, cuz the same happens if I set the vars with LET.  Best guess: It has to do with replace_vars_with_values()
 
 * Math sucks ice :)

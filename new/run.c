@@ -62,6 +62,14 @@ void run(Program program, VarList variables, Line line, bool running) {
 		}
 		return;
 	}
+	if (STRING_STARTS_WITH(line, "IF")) {
+		
+		return;
+	}
+	if (STRING_STARTS_WITH(line, "INPUT")) {
+		run_input(line + 5, variables);
+		return;
+	}
 	if (STRING_STARTS_WITH(line, "LET")) {
 		line += 3;
 		strncpy(copy, line, LINE_SIZE);

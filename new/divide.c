@@ -16,7 +16,6 @@ void divide(char* line, size_t length) {
 	/* Now for that many times, do the math */
 	while(count > 0) {
 		length = strlen(line);
-		printf("%ld: line = \"%s\"\n", count, line);
 		in_quotes = false;
 		for (i=0; i<length; i++) {
 			/* Skip anything in quotes */

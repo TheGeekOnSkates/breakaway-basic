@@ -142,5 +142,6 @@ void add(char* line, size_t length);
 void subtract(char* line, size_t length);
 void run_let(char* line, VarList variables);
 void replace_vars_with_values(Line line, VarList variables);
+void run_input(char* line, VarList variables);
 
 #endif
