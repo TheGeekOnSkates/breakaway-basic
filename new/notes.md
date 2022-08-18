@@ -7,6 +7,7 @@ END
 EXIT
 GOSUB <expression>
 GOTO <expression>
+INPUT <variable>
 LET <variable> = <expression>
 LIST [<number>[ - <number>]]
 NEW
@@ -18,7 +19,6 @@ RUN
 ## TO-DO
 
 IF <conditions> THEN <number or statement>
-INPUT <variable>[, <variable>...]
 
 ## BTW...
 
