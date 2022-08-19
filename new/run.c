@@ -7,11 +7,13 @@ size_t subCounter = 0;
 bool thereWasAnError;
 
 void run(Program program, VarList variables, Line line, bool running) {
+	/* Declare vars */
 	thereWasAnError = false;
 	size_t temp;
 	keepRunning = running;
 	Line copy;
 	
+	/* And figure out what to do from there */
 	if (STRING_EQUALS(line, "CLEAR")) {
 		CLEAR_SCREEN();
 		return;
@@ -62,7 +64,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "IF")) {
-		
+		run_if(program, line, variables, running);
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "INPUT")) {
@@ -111,7 +113,89 @@ void run(Program program, VarList variables, Line line, bool running) {
 		if (!running) run_program(program, variables);
 		return;
 	}
-	printf("Syntax error or not started yet :)\n");
+	
+	/* If it gets here, the user goofed */
+	printf("?SYNTAX ERROR");
+	if (!running) return;
+	printf(" IN %ld\n", programCounter);
+}
+
+void run_input(char* line, VarList variables) {
+	/* Declare vars */
+	Line buffer, buffer2;
+	char* temp;
+	
+	/* Get and validate user input (again, for version 0.1, this is
+	super easy cuz only expressions are allowed */
+	memset(buffer, 0, LINE_SIZE);
+	printf("? ");
+	fgets(buffer, LINE_SIZE, stdin);
+	temp = buffer;
+	if (!is_expr(temp, &temp)) {
+		printf("?INVALID INPUT ERROR\n");
+		return;
+	}
+	eval_expr(buffer, variables);
+	while(line[0] == ' ') line++;
+	memset(buffer2, 0, LINE_SIZE);
+	snprintf(buffer2, LINE_SIZE, "%c=%g", line[0], atof(buffer));
+	run_let(buffer2, variables);
+}
+
+void run_if(Program program, char* line, VarList variables, bool running) {
+	/* Declare vars */
+	size_t i, counter;
+	bool past_relop;
+	Line left, right;
+	float f1, f2;
+	bool answer;
+	char* then;
+	
+	/* Get the expressions on the left and right hand sizes */
+	counter = 0;
+	past_relop = false;
+	memset(left, 0, LINE_SIZE);
+	memset(right, 0, LINE_SIZE);
+	for (i=2; i<LINE_SIZE; i++) {
+		if (line[i] == '=' || line[i] == '<' || line[i] == '>') {
+			counter = 0;
+			past_relop = true;
+			if (line[i] == '<' || line[i + 1] == '>') i++;
+			continue;
+		}
+		if (past_relop) {
+			if (STRING_STARTS_WITH(line + i, "THEN")) break;
+			right[counter] = line[i];
+			counter++;
+			continue;
+		}
+		left[counter] = line[i];
+		counter++;
+	}
+	
+	/* Evaluate the left and right hand side of the equation */
+	eval_expr(left, variables);
+	eval_expr(right, variables);
+	f1 = atof(left);
+	f2 = atof(right);
+	
+	/* Figure out the answer */
+	if (strstr(line, "<>") != NULL)
+		answer = f1 != f2;
+	else if (strstr(line, "<") != NULL)
+		answer = f1 < f2;
+	else if (strstr(line, ">") != NULL)
+		answer = f1 > f2;
+	else answer = (int)f1 == (int)f2;
+	
+	/* And IF it returns true, RUN the next bit */
+	if (!answer) return;
+	then = strstr(line, "THEN");
+	then += 4;
+	while(then[0] == ' ') then++;
+	if (is_digit(then[0]))
+		programCounter = atol(then) - 1;
+	else run(program, variables, then, running);
 }
 
 void run_let(char* line, VarList variables) {
@@ -227,24 +311,4 @@ void run_program(Program program, VarList variables) {
 	}
 }
 
-void run_input(char* line, VarList variables) {
-	/* Declare vars */
-	Line buffer, buffer2;
-	char* temp;
-	
-	/* Get and validate user input (again, for version 0.1, this is
-	super easy cuz only expressions are allowed */
-	memset(buffer, 0, LINE_SIZE);
-	printf("? ");
-	fgets(buffer, LINE_SIZE, stdin);
-	temp = buffer;
-	if (!is_expr(temp, &temp)) {
-		printf("?INVALID INPUT ERROR\n");
-		return;
-	}
-	eval_expr(buffer, variables);
-	while(line[0] == ' ') line++;
-	memset(buffer2, 0, LINE_SIZE);
-	snprintf(buffer2, LINE_SIZE, "%c=%g", line[0], atof(buffer));
-	run_let(buffer2, variables);
-}
+// End of code-running functions

@@ -7,6 +7,7 @@ END
 EXIT
 GOSUB <expression>
 GOTO <expression>
+IF <conditions> THEN <number or statement>
 INPUT <variable>
 LET <variable> = <expression>
 LIST [<number>[ - <number>]]
@@ -18,11 +19,6 @@ RUN
 
 ## TO-DO
 
-IF <conditions> THEN <number or statement>
-
-## BTW...
-
-* Get IF working (should be easy once the math stuff is done)
 * Continue to clean up main.h and consolidate all those .c files
 * Write tests for all 14 instructions
 * Fix any bugs (see "known issues")
