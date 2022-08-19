@@ -26,8 +26,7 @@ RUN
 
 # Goals/plans for 0.2
 
-* I would kind of like to get LOAD and SAVE working again; it would be nice not to have to write the same test programs over and over again.  :)
-* Also, PRINT doesn't flag a semicolon at the end; this is a good thing; I want to add the behavior like Commodore stuff had, where putting a semicolon at the end tells BASIC, "Don't put a new line here".
+* Get LOAD and SAVE working again; it would be nice not to have to write the same test programs over and over again.  :)
 * SYS <string> like before - I kinda like not having to use SYS (just like not having to use LET); reuse that code if possible)
 * ESC <string> like before
 * LOAD <string> like before

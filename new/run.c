@@ -261,7 +261,7 @@ void run_print(Program program, Line line) {
 	/* Declare vars */
 	size_t i, length;
 	char copy[LINE_SIZE], * temp;
-	bool in_quotes = false;
+	bool in_quotes = false, newline = true;
 	
 	/* Replaces the commas and quotation marks with spaces */
 	length = strlen(line);
@@ -276,9 +276,18 @@ void run_print(Program program, Line line) {
 			continue;
 		}
 	}
+	
+	/* Figure out if it should print a new line at the end */
+	i = length - 1;
+	while(copy[i] == '\0' || copy[i] == ' ') i--;
+	newline = copy[i] != ';';
+	if (!newline) copy[i] = '\0';
+	
+	/* And print away! */
 	temp = copy;
 	while(temp[0] == ' ') temp++;
-	printf("%s\n", temp);
+	printf("%s", temp);
+	if (newline) printf("\n");
 }
 
 void run_program(Program program, VarList variables) {
