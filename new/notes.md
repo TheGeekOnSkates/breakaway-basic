@@ -18,12 +18,12 @@ PRINT <expression>[, <expression>...]
 REM <comment>
 RETURN
 RUN
+SYS <string>
 
 ## TO-DO
 
 * LOAD <string>
 * SAVE <string>
-* SYS <string>
 * RESET
 * Continue to clean up main.h and all those .c files
 * Write tests for all 20 instructions
@@ -64,7 +64,10 @@ RUN
 	10 INPUT A
 	20 INPUT B
 	30 PRINT A * B
-Gives me "0B".  But it's not an issue with INPUT, cuz the same happens if I set the vars with LET.  Best guess: It has to do with replace_vars_with_values()
+I can even reproduce it without variables:
+	PRINT 3.141 * 1.234
+Gives me something that looks like a version number (two decimal points).
+Starting to think it might be the replace_with_* functions
 
 * Math sucks ice :)
 

@@ -254,7 +254,8 @@ bool is_statement(Line line) {
 		|| is_input(line)
 		|| is_let(line)
 		|| is_list(line)
-		|| is_print(line);
+		|| is_print(line)
+		|| is_sys(line);
 }
 
 bool is_string(Line line, char** position) {
@@ -310,6 +311,14 @@ bool is_var_list(Line line, char** position) {
 	/* And we're done */
 	*position = pos;
 	return result;
+}
+
+bool is_sys(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "SYS")) return false;
+	temp = line + 3;
+	while(temp[0] == ' ') temp++;
+	return is_string(temp, &temp);
 }
 
 // End of validation functions

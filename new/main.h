@@ -169,6 +169,13 @@ bool is_goto(Line line);
 bool is_if(Line line);
 
 /**
+ * All these check if the string is a SYS statement.
+ * @param[in] The line to be tested
+ * @returns True if it is, false if it isn't
+ */
+bool is_sys(Line line);
+
+/**
  * All these check if the string is an INPUT statement.
  * @param[in] The line to be tested
  * @returns True if it is, false if it isn't
@@ -261,10 +268,11 @@ void run_program(Program program, VarList variables) ;
 void run_list(Program program, Line line);
 void run_print(Program program, Line line);
 void run_cd(char* line);
-void run_esc(char* line);void run_let(char* line, VarList variables);
+void run_esc(char* line);
+void run_let(char* line, VarList variables);
 void run_if(Program program, char* line, VarList variables, bool running);
 void run_input(char* line, VarList variables);
-
+void run_sys(char* line);
 
 
 /************************************************************************/

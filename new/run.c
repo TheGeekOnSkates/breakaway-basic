@@ -121,6 +121,10 @@ void run(Program program, VarList variables, Line line, bool running) {
 		if (!running) run_program(program, variables);
 		return;
 	}
+	if (STRING_STARTS_WITH(line, "SYS")) {
+		run_sys(line + 3);
+		return;
+	}
 	
 	/* If it gets here, the user goofed */
 	printf("?SYNTAX ERROR");
@@ -177,6 +181,32 @@ void run_esc(char* line) {
 	/* And here we go... */
 	printf("\033%s", copy);
 }
+
+void run_sys(char* line) {
+	/* Declare vars */
+	Line copy;
+	char* temp;
+	size_t i;
+	
+	/* Set default values */
+	memset(copy, 0, LINE_SIZE);
+	temp = line;
+	i = 0;
+	
+	/* Move past spaces and the first quote */
+	while (temp[0] == ' ' || temp[0] == '"') temp++;
+	
+	/* Copy up to the closing quote */
+	while(temp[0] != '"' && temp[0] != '\0') {
+		copy[i] = temp[0];
+		temp++;
+		i++;
+	}
+	
+	/* And here we go... */
+	system(copy);
+}
+
 
 void run_input(char* line, VarList variables) {
 	/* Declare vars */
