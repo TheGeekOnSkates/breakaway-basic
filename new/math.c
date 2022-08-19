@@ -34,6 +34,58 @@ void eval_expr(Line line, VarList variables) {
 	subtract(line, length);
 }
 
+size_t get_start(char* line, size_t symbol) {
+	/* Move past the math symbol (+*-/) */
+	symbol--;
+	if (symbol <= 0) return 0;
+	
+	/* Move past any spaces */
+	while(line[symbol] == ' ') symbol--;
+	if (symbol <= 0) return 0;
+	
+	/* Here there should be digits */
+	while (symbol > 0 && is_digit(line[symbol])) symbol--;
+	if (symbol <= 0) return 0;
+	
+	/* Move past the decimal point, if there is one */
+	if (line[symbol] != '.' && line[symbol] != '\0') return symbol;
+	if (symbol <= 0) return 0;
+	
+	/* Move past the whole (not factional) digits, if there were any */
+	while (symbol > 0 && is_digit(line[symbol])) symbol--;
+	if (symbol <= 0) return 0;
+	
+	/* If there was a sign, move past that */
+	if (line[symbol] == '+' || line[symbol] == '-') symbol--;
+	
+	/* And we're done */
+	return symbol <= 0 ? 0 : symbol;
+}
+
+size_t get_end(char* line, size_t symbol) {
+	/* First, move past the math symbol (+*-/) */
+	symbol++;
+	
+	/* Move past spaces */
+	while(line[symbol] == ' ') symbol++;
+	
+	/* If there is a sign, move past that */
+	if (line[symbol] == '+' || line[symbol] == '-') symbol++;
+	
+	/* Move past digits */
+	while (is_digit(line[symbol]) && line[symbol] != '\0') symbol++;
+	
+	/* Here we might have reached the end of the string, or there is
+	something other than a decimal point after the numbers */
+	if (line[symbol] != '.' && line[symbol] != '\0') return symbol;
+	
+	/* If the next char was a decimal point, expect more digits */
+	while (is_digit(line[symbol]) && line[symbol] != '\0') symbol++;
+	
+	/* And we're done */
+	return symbol;
+}
+
 void add(char* line, size_t length) {
 	/* Declare vars */
 	size_t i, start, end, count;

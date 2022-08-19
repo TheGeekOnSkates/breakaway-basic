@@ -37,6 +37,7 @@ RUN
 * FG <expression>
 * BOLD ON/OFF
 * BLINK ON/OFF
+* UNDERLINE ON/OFF
 
 # If I make it to 0.3 :)
 
@@ -54,6 +55,7 @@ RUN
 * FOR <expr> TO <expr> STEP <expression>
 * NEXT (can't have FOR without it) :)
 * Variables with parens being arrays
+* Sound (technically possible with SYS "play somesound.wav" but a built-in API would be nice).
 
 # Known issues
 
