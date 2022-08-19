@@ -23,7 +23,7 @@ IF <conditions> THEN <number or statement>
 ## BTW...
 
 * Get IF working (should be easy once the math stuff is done)
-* Clean up main.h, and consolidate some of these .c files
+* Continue to clean up main.h and consolidate all those .c files
 * Write tests for all 14 instructions
 * Fix any bugs (see "known issues")
 * Push to master and write docs - I just wrote a BASIC! :)
