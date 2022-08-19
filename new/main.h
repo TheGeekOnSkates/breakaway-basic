@@ -125,6 +125,13 @@ void SetBlocking(bool setting);
 /************************************************************************/
 
 /**
+ * Checks if a line is an ESC statement
+ * @param[in] The line the user just typed
+ * @returns True if it is, false if it isn't
+ */
+bool is_esc(Line line);
+
+/**
  * Checks if a line is a valid expression
  * @param[in] The line the user just typed
  * @param[in, out] Pointer to the start of the string; when this function is
@@ -257,6 +264,7 @@ void shift_left(char* string, size_t start, size_t length);
 void replace_with_float(char* line, size_t from, size_t to, float value);
 void strip_spaces(char* string);
 void run_program(Program program, VarList variables) ;
+void run_esc(char* line);
 size_t get_start(char* line, size_t symbol);
 size_t get_end(char* line, size_t symbol);
 void replace_with_string(char* line, size_t start, size_t end, char* replacement);

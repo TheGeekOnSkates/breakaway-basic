@@ -501,12 +501,6 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
-	/* ESC string - ANSI escape code */
-	if (STRING_STARTS_WITH(buffer, "ESC ")) {
-		printf("\033%s", buffer + 4);
-		return;
-	}
-	
 	/* FAINT ON/OFF - text dim/faint colors */
 	if (STRING_EQUALS(buffer, "FAINT ON")) {
 		printf("\033[2m");

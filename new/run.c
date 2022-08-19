@@ -22,6 +22,10 @@ void run(Program program, VarList variables, Line line, bool running) {
 		keepRunning = false;
 		return;
 	}
+	if (STRING_STARTS_WITH(line, "ESC")) {
+		run_esc(line + 3);
+		return;
+	}
 	if (STRING_EQUALS(line, "EXIT")) {
 		CLEAR_SCREEN();
 		exit(0);
@@ -118,6 +122,31 @@ void run(Program program, VarList variables, Line line, bool running) {
 	printf("?SYNTAX ERROR");
 	if (!running) return;
 	printf(" IN %ld\n", programCounter);
+}
+
+void run_esc(char* line) {
+	/* Declare vars */
+	Line copy;
+	char* temp;
+	size_t i;
+	
+	/* Set default values */
+	memset(copy, 0, LINE_SIZE);
+	temp = line;
+	i = 0;
+	
+	/* Move past spaces and the first quote */
+	while (temp[0] == ' ' || temp[0] == '"') temp++;
+	
+	/* Copy up to the closing quote */
+	while(temp[0] != '"' && temp[0] != '\0') {
+		copy[i] = temp[0];
+		temp++;
+		i++;
+	}
+	
+	/* And here we go... */
+	printf("\033%s", copy);
 }
 
 void run_input(char* line, VarList variables) {

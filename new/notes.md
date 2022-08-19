@@ -1,9 +1,10 @@
 # BREAKAWAY BASIC OVERHAUL
 
-## DONE
+## Completed functions
 
 CLEAR
 END
+ESC <string>
 EXIT
 GOSUB <expression>
 GOTO <expression>
@@ -20,17 +21,16 @@ RUN
 ## TO-DO
 
 * Continue to clean up main.h and all those .c files
-* Write tests for all 14 instructions
+* Write tests for all 15 instructions
 * Fix any bugs (see "known issues")
 * Push to master and write docs - I just wrote a BASIC! :)
 
 # Goals/plans for 0.2
 
-* Get LOAD and SAVE working again; it would be nice not to have to write the same test programs over and over again.  :)
-* SYS <string> like before - I kinda like not having to use SYS (just like not having to use LET); reuse that code if possible)
-* ESC <string> like before
-* LOAD <string> like before
-* SAVE <string> like before
+* LOAD <string>
+* SAVE <string>
+* CD <string>
+* SYS <string>
 * REVERSE like before
 * BG like before
 * FG like before
@@ -38,13 +38,16 @@ RUN
 
 # If I make it to 0.3 :)
 
-* Add support for parens again; for people like me, who are not Algebrainiacs, parens help.  3 * 4 / 2 is not as clear to me as 3 * (4 / 2).
+* Set up LET so I can just do i.e. X = 7
+* Set up SYS so I can just do i.e. ls -la
+* Add support for parens again (already started); for people like me, who are not Algebrainiacs, parens help.  3 * 4 / 2 is not as clear to me as 3 * (4 / 2).
 * Add in all my other mathing work - meaningless functions like ABS, ATN, COS, TAN, ETC, ETC, ETC, that some people will appreciate.
 * Maybe add some stuff I haven't yet - like  ROWS(), COLUMNS(), and anything else that's easy
 
 # Pipe dreaming about version 1.0
 
 * Variables ending in $ being strings
+* Aliases - that was really cool on the old version
 * Support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
 * FOR <expr> TO <expr> STEP <expression>
 * NEXT (can't have FOR without it) :)
@@ -52,13 +55,20 @@ RUN
 
 # Known issues
 
-* There is a bug in multiply(); sometimes there is a * left behind; for example:
+* The bug with the math functions is still not fixed.
 	10 INPUT A
 	20 INPUT B
 	30 PRINT A * B
 Gives me "0B".  But it's not an issue with INPUT, cuz the same happens if I set the vars with LET.  Best guess: It has to do with replace_vars_with_values()
 
-**EDIT:** It's not just multiplication; did it with addition too.
-
-
 * Math sucks ice :)
+
+
+## How to add new instructions
+
+1. Define an is_* function for it
+2. Add a check for it to is_statement
+3. Add a check for it in RUN to make it do whatever it's supposed to do
+
+
+
