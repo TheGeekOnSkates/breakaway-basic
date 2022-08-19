@@ -125,6 +125,13 @@ void SetBlocking(bool setting);
 /************************************************************************/
 
 /**
+ * Checks if a line is a CD statement
+ * @param[in] The line the user just typed
+ * @returns True if it is, false if it isn't
+ */
+bool is_cd(Line line);
+
+/**
  * Checks if a line is an ESC statement
  * @param[in] The line the user just typed
  * @returns True if it is, false if it isn't
@@ -229,6 +236,37 @@ bool is_expr_list(Line line, char** position);
 bool is_var_list(Line line, char** position);
 
 
+
+/************************************************************************/
+/**** FUNCTIONS THAT RUN CODE (defined in run.c)                     ****/
+/************************************************************************/
+
+/**
+ * Runs the line the user just typed
+ * @param[in] The memory where the user's code is stores
+ * @param[in] The memory where variable valeus are stores
+ * @param[in] The line the user just typed
+ * @param[in] true if in program mode, false if in direct mode
+ */
+void run(Program program, VarList variables, Line line, bool running);
+
+/**
+ * Runs the user's program
+ * @param[in] The memory where the user's code is stores
+ * @param[in] The memory where variable valeus are stores
+ * @param[in] true if in program mode, false if in direct mode
+ */
+void run_program(Program program, VarList variables) ;
+
+void run_list(Program program, Line line);
+void run_print(Program program, Line line);
+void run_cd(char* line);
+void run_esc(char* line);void run_let(char* line, VarList variables);
+void run_if(Program program, char* line, VarList variables, bool running);
+void run_input(char* line, VarList variables);
+
+
+
 /************************************************************************/
 /**** TO BE SORTED                                                   ****/
 /************************************************************************/
@@ -248,23 +286,11 @@ void parse(Program program, VarList variables, Line line);
  */
 void set_line(Program program, Line line);
 
-/**
- * Runs the user's program
- * @param[in] The memory where the user's code is stores
- * @param[in] The memory where variable valeus are stores
- * @param[in] The line the user just typed
- * @param[in] true if in program mode, false if in direct mode
- */
-void run(Program program, VarList variables, Line line, bool running);
-void run_list(Program program, Line line);
-void run_print(Program program, Line line);
 void eval_expr(Line line, VarList variables);
 void print_centered(const char* string);
 void shift_left(char* string, size_t start, size_t length);
 void replace_with_float(char* line, size_t from, size_t to, float value);
 void strip_spaces(char* string);
-void run_program(Program program, VarList variables) ;
-void run_esc(char* line);
 size_t get_start(char* line, size_t symbol);
 size_t get_end(char* line, size_t symbol);
 void replace_with_string(char* line, size_t start, size_t end, char* replacement);
@@ -273,9 +299,6 @@ void multiply(char* line, size_t length);
 void divide(char* line, size_t length);
 void add(char* line, size_t length);
 void subtract(char* line, size_t length);
-void run_let(char* line, VarList variables);
 void replace_vars_with_values(Line line, VarList variables);
-void run_if(Program program, char* line, VarList variables, bool running);
-void run_input(char* line, VarList variables);
 
 #endif

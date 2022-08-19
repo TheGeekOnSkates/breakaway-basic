@@ -2,6 +2,7 @@
 
 ## Completed functions
 
+CD <string>
 CLEAR
 END
 ESC <string>
@@ -20,21 +21,22 @@ RUN
 
 ## TO-DO
 
+* LOAD <string>
+* SAVE <string>
+* SYS <string>
+* RESET
 * Continue to clean up main.h and all those .c files
-* Write tests for all 15 instructions
+* Write tests for all 20 instructions
 * Fix any bugs (see "known issues")
 * Push to master and write docs - I just wrote a BASIC! :)
 
 # Goals/plans for 0.2
 
-* LOAD <string>
-* SAVE <string>
-* CD <string>
-* SYS <string>
-* REVERSE like before
-* BG like before
-* FG like before
-* RESET like before
+* REVERSE ON/OFF
+* BG <expression>
+* FG <expression>
+* BOLD ON/OFF
+* BLINK ON/OFF
 
 # If I make it to 0.3 :)
 
@@ -55,6 +57,7 @@ RUN
 
 # Known issues
 
+* For some reason, when you run LIST, the LIST command ends up at line...6400?  There are only 6399 lines, so I don't get that at all.
 * The bug with the math functions is still not fixed.
 	10 INPUT A
 	20 INPUT B

@@ -1,5 +1,21 @@
 #include "main.h"
 
+bool is_cd(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "CD")) return false;
+	temp = line + 3;
+	while(temp[0] == ' ') temp++;
+	return is_string(temp, &temp);
+}
+
+bool is_esc(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "ESC")) return false;
+	temp = line + 3;
+	while(temp[0] == ' ') temp++;
+	return is_string(temp, &temp);
+}
+
 bool is_expr(Line line, char** position) {
 	/* Variables */
 	char* pos;
@@ -230,7 +246,8 @@ bool is_statement(Line line) {
 	) return true;
 	
 	/* The others have specific requirements, so check for each of those */
-	return is_esc(line)
+	return is_cd(line)
+		|| is_esc(line)
 		|| is_gosub(line)
 		|| is_goto(line)
 		|| is_if(line)
@@ -293,14 +310,6 @@ bool is_var_list(Line line, char** position) {
 	/* And we're done */
 	*position = pos;
 	return result;
-}
-
-bool is_esc(Line line) {
-	char* temp;
-	if (!STRING_STARTS_WITH(line, "ESC")) return false;
-	temp = line + 3;
-	while(temp[0] == ' ') temp++;
-	return is_string(temp, &temp);
 }
 
 // End of validation functions

@@ -14,6 +14,10 @@ void run(Program program, VarList variables, Line line, bool running) {
 	Line copy;
 	
 	/* And figure out what to do from there */
+	if (STRING_STARTS_WITH(line, "CD")) {
+		run_cd(line + 2);
+		return;
+	}
 	if (STRING_EQUALS(line, "CLEAR")) {
 		CLEAR_SCREEN();
 		return;
@@ -122,6 +126,31 @@ void run(Program program, VarList variables, Line line, bool running) {
 	printf("?SYNTAX ERROR");
 	if (!running) return;
 	printf(" IN %ld\n", programCounter);
+}
+
+void run_cd(char* line) {
+	/* Declare vars */
+	Line copy;
+	char* temp;
+	size_t i;
+	
+	/* Set default values */
+	memset(copy, 0, LINE_SIZE);
+	temp = line;
+	i = 0;
+	
+	/* Move past spaces and the first quote */
+	while (temp[0] == ' ' || temp[0] == '"') temp++;
+	
+	/* Copy up to the closing quote */
+	while(temp[0] != '"' && temp[0] != '\0') {
+		copy[i] = temp[0];
+		temp++;
+		i++;
+	}
+	
+	/* And here we go... */
+	GoToFolder(copy);
 }
 
 void run_esc(char* line) {
