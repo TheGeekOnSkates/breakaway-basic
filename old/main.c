@@ -6,7 +6,6 @@ extern Variable* firstVar, * firstAlias;
 
 int main(int argc, const char** argv) {
 	/* Declare variables */
-	char buffer[BUFFER_MAX];
 	char* temp = NULL;
 	size_t i = 0;
 	FILE* config = NULL;
@@ -24,16 +23,6 @@ int main(int argc, const char** argv) {
 	for(; i<PROGRAM_MAX; i++) {
 		subs[i] = -1;
 	}
-	
-	/* Set a couple aliases */
-	firstAlias = CreateVariable("ECHO=echo");
-	
-	/* Show the title message */
-	printf("\033[H\033[J");
-	PrintCentered("**** BREAKAWAY BASIC 2022.07.30.1 ****");
-	NewLine();
-	sprintf(buffer, "%lu BYTES FREE", GetBytesFree());
-	PrintCentered(buffer);
 	
 	/* If there is a config file, LOAD and RUN it */
 	config = fopen(configPath, "r");

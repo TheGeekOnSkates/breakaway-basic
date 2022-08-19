@@ -17,10 +17,13 @@
 /**** PRE-PROCESSOR MACROS                                           ****/
 /************************************************************************/
 
-/* 80 chars per line */
+/** Tell the OS-dependent code we're building for Linux */
+#define Linux true
+
+/** 80 chars per line */
 #define LINE_SIZE 80
 
-/* 6400 lines * 80 chars per line, 500 KB */
+/** 6400 lines * 80 chars per line, 500 KB */
 #define PROGRAM_SIZE 6400
 
 /** Because for 0.1, names are letters A-Z */
@@ -28,6 +31,9 @@
 
 /** Clears the screen */
 #define CLEAR_SCREEN() printf("\033[H\033[J")
+
+/** Resets the terminal */
+#define RESET() printf("\033[0m")
 
 /**
  * Checks if two strings contain the same text
@@ -63,6 +69,54 @@ typedef char Line[LINE_SIZE];
 typedef Line Program[PROGRAM_SIZE];
 typedef Line Variable;
 typedef Variable VarList[26];	/* Again, that limit might not last long lol */
+
+
+
+/************************************************************************/
+/**** OS-DEPENDENT FUNCTIONS (defined in the "os- folder)            ****/
+/************************************************************************/
+
+#ifdef Linux
+	#include <unistd.h>
+	#include <fcntl.h>
+	#include <termios.h>
+	#include <sys/resource.h>
+	#include <sys/ioctl.h>
+	#include <readline/readline.h>
+	#include <readline/history.h>
+#endif
+
+/**
+ * For the "CD" command (which does the same thing as in most other OSes)
+ * @param[in] The folder to go to
+ */
+bool GoToFolder(char* folder);
+
+/**
+ * Gets the screen size
+ * @param[out] The number of rows, in characters
+ * @param[out] The number of columns, in characters
+ */
+void GetScreenSize(int* rows, int* columns);
+
+/**
+ * Gets the total free memory on the system
+ * @returns The total bytes free (like on Commodore stuff)
+ * @remarks This is just for laughs, of course; the PET, VIC, C64 etc.
+ * all had memory in the KB, so this was a much bigger deal back then.
+ * And today there's virtual memory, disk space vs. RAM, etc.  I have
+ * long since forgotten what those system calls are getting, but I
+ * think it's the RAM (cuz that's what it was on most 8-bit computers) :)
+ */
+uint64_t GetBytesFree(void);
+
+/**
+ * Turns blocking getchar on or off
+ * @param[in] True to turn blocking on, false to turn it off
+ * @remarks Used for checking for the Escape key, and probably
+ * in GET (once I've done that)
+ */
+void SetBlocking(bool setting);
 
 
 
@@ -198,6 +252,7 @@ void run(Program program, VarList variables, Line line, bool running);
 void run_list(Program program, Line line);
 void run_print(Program program, Line line);
 void eval_expr(Line line, VarList variables);
+void print_centered(const char* string);
 void shift_left(char* string, size_t start, size_t length);
 void replace_with_float(char* line, size_t from, size_t to, float value);
 void strip_spaces(char* string);

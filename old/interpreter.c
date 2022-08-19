@@ -425,42 +425,6 @@ void Interpret(char* buffer) {
 	char* token = NULL, input[BUFFER_MAX];
 	int tempInt = 0, x = -1, y = -1, x2 = -1, y2 = -1;
 	char varValue[BUFFER_MAX];
-	#if DEBUG_MODE
-	size_t i = 0;
-	#endif
-	
-	/* If it's NULL, do nothing. */
-	if (buffer == NULL) {
-		lastError = NO_ERROR;
-		return;
-	}
-	
-	/* Move past any leading spaces */
-	while(buffer[0] == ' ') buffer++;
-	
-	/* Handle obvious syntax errors */
-	if (strchr("`~!@#$%^&*()_+-=\\|/<>", buffer[0]) != NULL) {
-		lastError = SYNTAX_ERROR;
-		return;
-	}
-	
-	/* If the user deletes a line, the pointer is just a new line
-	NOTE: Kinda makes me wonder about my NewLine() function... I use
-	a lot of \n characters in my code, but on other systems that
-	wouldn't look the same.  But that's a 2.0 issue when I really
-	care deeply about portability. :D */
-	if (buffer[0] == '\n' || buffer[0] == '\r' || STRING_EQUALS(buffer, "\r\n")) return;
-	
-	/* Those checks aside, the next step to do is... */
-	ReplaceAliases(buffer);
-	#if DEBUG_MODE
-	printf("After ReplaceAliases:  \"%s\"\n", buffer);
-	#endif
-	
-	ReplaceFunctions(buffer);
-	#if DEBUG_MODE
-	printf("After ReplaceFunctions:  \"%s\"\n", buffer);
-	#endif
 	
 	/* ALIAS NAME = value */
 	if (STRING_STARTS_WITH(buffer, "ALIAS ")) {
@@ -537,24 +501,10 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
-	/* END (in program mode) is handled by the RunOrContinue function */
-	if (STRING_EQUALS(buffer, "END")) {
-		lastError = SYNTAX_ERROR;
-		return;
-	}
-	
 	/* ESC string - ANSI escape code */
 	if (STRING_STARTS_WITH(buffer, "ESC ")) {
 		printf("\033%s", buffer + 4);
 		return;
-	}
-	
-	/* EXIT - exit Breakaway Basic */
-	if (STRING_EQUALS(buffer, "EXIT")) {
-		printf("\033[0m");		/* RESET */
-		printf("\033[H\033[J");		/* CLEAR */
-		FreeProgram(currentProgram);
-		exit(0);
 	}
 	
 	/* FAINT ON/OFF - text dim/faint colors */

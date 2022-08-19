@@ -2,6 +2,7 @@
 
 int main() {
 	/* Declare variables */
+	char title[480];
 	Program code;
 	VarList variables;
 	Line buffer;
@@ -12,7 +13,9 @@ int main() {
 	
 	/* Title */
 	CLEAR_SCREEN();
-	printf("BREAKAWAY BASIC 0.1\n");
+	print_centered("**** BREAKAWAY BASIC  0.1 ****\n");
+	sprintf(title, "%lu BYTES FREE\n", GetBytesFree());
+	print_centered(title);
 	printf("READY.\n");
 	
 	/* Main event loop */

@@ -190,4 +190,15 @@ void divide(char* line, size_t length) {
 	}
 }
 
+bool parens_match(char* string) {
+	size_t i, length, extras;
+	length = strlen(string);
+	extras = 0;
+        for (i = 0; i<length; i++) {
+                if (string[i] == '(') extras++;
+                else if (string[i] == ')') extras--;
+        }
+        return extras == 0;
+}
+
 // End of math functions

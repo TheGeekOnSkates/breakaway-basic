@@ -38,4 +38,15 @@ void strip_spaces(char* string) {
 	}
 }
 
+
+void print_centered(const char* string) {
+	int rows = 48, columns = 25;
+	size_t i = 0, length = 40;
+	
+	GetScreenSize(&rows, &columns);
+	length = (columns / 2) - strlen(string) / 2;
+	for (i=0; i<length; i++) printf(" ");
+	printf("%s", string);
+}
+
 // End of string functions

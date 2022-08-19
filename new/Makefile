@@ -1,6 +1,6 @@
 linux:
-	clear && gcc ./*.c -obasic -Wall || exit 1
-	./basic
+	clear && gcc ./*.c ./os/*.c -obreakaway-basic -Wall || exit 1
+	./breakaway-basic
 
 debug:
-	clear && gcc ./*.c -obasic -Wall || exit 1
+	clear && gcc ./*.c ./os/*.c -obreakaway-basic -Wall || exit 1
