@@ -89,6 +89,10 @@ void run(Program program, VarList variables, Line line, bool running) {
 		run_list(program, line + 4);
 		return;
 	}
+	if (STRING_STARTS_WITH(line, "LOAD")) {
+		run_load(program, variables, line + 4);
+		return;
+	}
 	if (STRING_EQUALS(line, "NEW")) {
 		memset(program, 0, PROGRAM_SIZE * LINE_SIZE);
 		memset(variables, 0, 26);
@@ -119,6 +123,10 @@ void run(Program program, VarList variables, Line line, bool running) {
 		programCounter = subs[subCounter];
 		keepRunning = true;
 		if (!running) run_program(program, variables);
+		return;
+	}
+	if (STRING_STARTS_WITH(line, "SAVE")) {
+		run_save(program, line + 4);
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "SYS")) {
@@ -180,6 +188,86 @@ void run_esc(char* line) {
 	
 	/* And here we go... */
 	printf("\033%s", copy);
+}
+
+void run_load(Program program, VarList variables, char* line) {
+	/* Declare vars */
+	Line copy, code;
+	char* temp;
+	size_t i;
+	FILE* file;
+	
+	/* Set default values */
+	memset(copy, 0, LINE_SIZE);
+	temp = line;
+	i = 0;
+	
+	/* Move past spaces and the first quote */
+	while (temp[0] == ' ' || temp[0] == '"') temp++;
+	
+	/* Copy up to the closing quote */
+	while(temp[0] != '"' && temp[0] != '\0') {
+		copy[i] = temp[0];
+		temp++;
+		i++;
+	}
+	
+	/* And here we go... */
+	file = NULL;
+	file = fopen(copy, "r");
+	if (file == NULL) {
+		perror("?ERROR OPENING FILE");
+		return;
+	}
+	while(true) {
+		memset(code, 0, LINE_SIZE);
+		fgets(code, LINE_SIZE, file);
+		if (feof(file)) break;
+		if (ferror(file)) {
+			perror("?ERROR READING FILE");
+			fclose(file);
+			return;
+		}
+		parse(program, variables, code);
+	}
+	fclose(file);
+}
+
+
+void run_save(Program program, char* line) {
+	/* Declare vars */
+	Line copy;
+	char* temp;
+	size_t i;
+	FILE* file;
+	
+	/* Set default values */
+	memset(copy, 0, LINE_SIZE);
+	temp = line;
+	i = 0;
+	
+	/* Move past spaces and the first quote */
+	while (temp[0] == ' ' || temp[0] == '"') temp++;
+	
+	/* Copy up to the closing quote */
+	while(temp[0] != '"' && temp[0] != '\0') {
+		copy[i] = temp[0];
+		temp++;
+		i++;
+	}
+	
+	/* And here we go... */
+	file = NULL;
+	file = fopen(copy, "w");
+	if (file == NULL) {
+		perror("?ERROR OPENING FILE");
+		return;
+	}
+	for (i=0; i<PROGRAM_SIZE; i++) {
+		if (program[i][0] == '\0') continue;
+		fprintf(file, "%ld %s\n", i, program[i]);
+	}
+	fclose(file);
 }
 
 void run_sys(char* line) {

@@ -254,7 +254,9 @@ bool is_statement(Line line) {
 		|| is_input(line)
 		|| is_let(line)
 		|| is_list(line)
+		|| is_load(line)
 		|| is_print(line)
+		|| is_save(line)
 		|| is_sys(line);
 }
 
@@ -311,6 +313,22 @@ bool is_var_list(Line line, char** position) {
 	/* And we're done */
 	*position = pos;
 	return result;
+}
+
+bool is_load(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "LOAD")) return false;
+	temp = line + 4;
+	while(temp[0] == ' ') temp++;
+	return is_string(temp, &temp);
+}
+
+bool is_save(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "SAVE")) return false;
+	temp = line + 4;
+	while(temp[0] == ' ') temp++;
+	return is_string(temp, &temp);
 }
 
 bool is_sys(Line line) {

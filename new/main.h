@@ -169,7 +169,21 @@ bool is_goto(Line line);
 bool is_if(Line line);
 
 /**
- * All these check if the string is a SYS statement.
+ * All these check if the string is a LOAD statement.
+ * @param[in] The line to be tested
+ * @returns True if it is, false if it isn't
+ */
+bool is_load(Line line);
+
+/**
+ * All these check if the string is a SAVE statement.
+ * @param[in] The line to be tested
+ * @returns True if it is, false if it isn't
+ */
+bool is_save(Line line);
+
+/**
+ * All these check if the string is an SYS statement.
  * @param[in] The line to be tested
  * @returns True if it is, false if it isn't
  */
@@ -265,6 +279,8 @@ void run(Program program, VarList variables, Line line, bool running);
  */
 void run_program(Program program, VarList variables) ;
 
+void run_load(Program program, VarList variables, char* line);
+void run_save(Program program, char* line);
 void run_list(Program program, Line line);
 void run_print(Program program, Line line);
 void run_cd(char* line);
