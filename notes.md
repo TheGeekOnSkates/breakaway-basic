@@ -1,43 +1,4 @@
-# BREAKAWAY BASIC OVERHAUL
-
-## Completed functions
-
-BG <expression>
-BLINK ON/OFF
-BOLD ON/OFF
-CD <string>
-CLEAR
-END
-ESC <string>
-EXIT
-FG <expression>
-GOSUB <expression>
-GOTO <expression>
-HIDDEN ON/OFF
-IF <conditions> THEN <number or statement>
-INPUT <variable>
-ITALIC ON/OFF
-LET <variable> = <expression>
-LIST [<number>[ - <number>]]
-LOAD <string>
-MOVE <number> <number>
-NEW
-PRINT <expression>[, <expression>...]
-REM <comment>
-RESET
-RETURN
-REVERSE ON/OFF
-RUN
-SAVE <string>
-SYS <string>
-UNDERLINE ON/OFF
-
-## TO-DO
-
-* Write the docs, testing the functions as I go (the tests will end up as examples)
-* Push to master
-
-# If I make it to 0.2 :)
+# Thoughts / plans for version 0.2
 
 * Set up LET so I can just do i.e. X = 7
 * Set up SYS to set an "RC" variable (maybe make it "RC()" since I'll be doing that later)
@@ -45,8 +6,9 @@ UNDERLINE ON/OFF
 * Add in all my other mathing work - meaningless functions like ABS, ATN, COS, TAN, ETC, ETC, ETC, that some people will appreciate.
 * Maybe add some stuff I haven't yet - like  ROWS(), COLUMNS(), and anything else that's easy
 
-# Pipe dreaming about version 1.0
+# If I make it to version 1.0
 
+* Use GNU readline for Linux (If I ever build for DOS or something else that doesn't have readline, that system can use fgets like I am now).
 * Aliases - that was really cool on the old version
 * Variables with names longer than 1 character (unnecessary, but useful).
 * Variables ending in $ being strings

@@ -305,7 +305,8 @@ bool is_statement(Line line) {
 	) return true;
 	
 	/* The others have specific requirements, so check for each of those */
-	return is_blink(line)
+	return is_bg(line)
+		|| is_blink(line)
 		|| is_cd(line)
 		|| is_esc(line)
 		|| is_fg(line)

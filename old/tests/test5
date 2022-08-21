@@ -1,6 +1,0 @@
-10 CLEAR
-20 SYS echo -n "Name:   "
-30 INPUT NAME
-40 SYS echo -n "Hey there, "
-50 TEST NAME
-60 SYS echo ", nice to meet you."

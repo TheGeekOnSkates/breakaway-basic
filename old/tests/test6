@@ -1,8 +1,0 @@
-10 CLEAR
-20 LET X = 2
-30 LET Y = 5
-40 IF X < Y THEN 60 ELSE 80
-50 END
-60 echo "X is less than Y."
-70 END
-80 echo "X is not less than Y."

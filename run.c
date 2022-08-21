@@ -61,7 +61,6 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	if (STRING_EQUALS(line, "END")) {
 		keepRunning = false;
-		printf("READY.\n");
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "ESC")) {
