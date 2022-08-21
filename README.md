@@ -2,7 +2,9 @@
 
 ## Overview
 
-Breakaway BASIC is a shell for Linux (and maybe someday, DOS and other systems) inspired by the 8-bit BASICs of the 1970s and 80s.
+Breakaway BASIC is a shell for Linux (and maybe someday, DOS and other systems) inspired by the 8-bit BASICs of the 1970s and 80s.  Its design was meant to be simpler than other shells (yes, I'm cmparing it to Bash again, lol), fully functional for scripting but also just fun to play with.  It could be used to create games, or it could be used to write scripts that actually do useful stuff.
+
+It gets its name from hockey, of course (look at my nickname if you don't get why that's so obvious, lol).  A "breakaway" is one of the most exciting things you could see at a hockey game.  It's when a player manages to get past all the opposing team's defenders, so it's just him/her vs. the goalie.  Breakaways are rare, but they're always described as fast, cool, and sometimes game-changing - all things I would like this BASIC to be. :)
 
 ## Language reference
 
@@ -88,13 +90,49 @@ Exits Breakaway BASIC.
 Sets the foreground color (text color).  See the `BG` instruction for more info (a list of colors, and also how to use it).  Here's another example:
 
 ```
+10 CLEAR
+20 FG 4
+30 PRINT "BREAKAWAY ";
+40 FG 3
+50 PRINT "BASIC"
+60 RESET
 ```
 
 ### GOSUB <expression>
 
+Jumps to a line number, and doesn't go back from there until it finds a `RETURN` instruction.  For example:
+
+```
+10 PRINT "BEFORE GOSUB"
+20 GOSUB 100
+30 PRINT "AFTER GOSUB"
+40 END
+100 PRINT "SEE HOW IT SKIPPED TO LINE 100?"
+110 RETURN
+```
+
 ### GOTO <expression>
 
+Jumps to a line number.  One classic example (and if you ever played with any BASIC I'm sure you've done it) is this:
+
+```
+10 PRINT "BREAKAWAY!  ";
+20 GOTO 10
+```
+
+Note that for version 0.1, the only way to stop this infinite loop is to exit Breakaway BASIC.  This change will (Lord willing) be fixed in version 0.2. :)
+
 ### HIDDEN ON/OFF
+
+This works kind of like invisible ink: whatever you type will not be shown if this is turned on.  For example:
+
+```
+10 PRINT "TYPE A NUMBER, AND I WILL READ YOUR MIND..."
+20 HIDDEN ON
+30 INPUT N
+40 HIDDEN OFF
+50 PRINT "THE NUMBER IS:", N
+```
 
 ### IF <conditions> THEN <number or statement>
 

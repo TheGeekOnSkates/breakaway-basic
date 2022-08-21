@@ -15,7 +15,10 @@ void run(Program program, VarList variables, Line line, bool running) {
 	
 	/* And figure out what to do from there */
 	if (STRING_STARTS_WITH(line, "BG")) {
-		temp = atoi(line + 2);
+		line += 2;
+		strncpy(copy, line, LINE_SIZE);
+		eval_expr(copy, variables);
+		temp = atoi(copy);
 		if (temp < 0 || temp > PROGRAM_SIZE) {
 			printf("?SYNTAX ERROR");
 			if (running) printf (" IN %ld", programCounter);
@@ -68,11 +71,15 @@ void run(Program program, VarList variables, Line line, bool running) {
 		return;
 	}
 	if (STRING_EQUALS(line, "EXIT")) {
+		RESET();
 		CLEAR_SCREEN();
 		exit(0);
 	}
 	if (STRING_STARTS_WITH(line, "FG")) {
-		temp = atoi(line + 2);
+		line += 2;
+		strncpy(copy, line, LINE_SIZE);
+		eval_expr(copy, variables);
+		temp = atoi(copy);
 		if (temp < 0 || temp > PROGRAM_SIZE) {
 			printf("?SYNTAX ERROR");
 			if (running) printf (" IN %ld", programCounter);

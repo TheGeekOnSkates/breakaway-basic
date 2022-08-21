@@ -5,7 +5,7 @@ bool is_bg(Line line) {
 	if (!STRING_STARTS_WITH(line, "BG")) return false;
 	temp = line + 2;
 	while(temp[0] == ' ') temp++;
-	return is_number(temp, &temp);
+	return is_number(temp, &temp) || is_var(temp, &temp);
 }
 
 bool is_blink(Line line) {

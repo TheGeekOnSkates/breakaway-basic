@@ -1,6 +1,7 @@
 # Thoughts / plans for version 0.2
 
-* Set up LET so I can just do i.e. X = 7
+* Set up the Escape key to END a program, like the old one did
+* Set up LET so I can just do i.e. X = 7 (debating about this, cuz what if users want to run a command like ./my-script name="some file"?  The quotes make it hard to use `SYS`, and the = means it would be treated like a `LET`... maybe this should wait till after I have string-expressions and CHR$ and all that. :)
 * Set up SYS to set an "RC" variable (maybe make it "RC()" since I'll be doing that later)
 * Add support for parens again (already started); for people like me, who are not Algebrainiacs, parens help.  3 * 4 / 2 is not as clear to me as 3 * (4 / 2).
 * Add in all my other mathing work - meaningless functions like ABS, ATN, COS, TAN, ETC, ETC, ETC, that some people will appreciate.
