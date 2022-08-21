@@ -1,10 +1,23 @@
 #include "main.h"
 
 void replace_with_float(char* line, size_t from, size_t to, float value) {
-	char temp[10];
-	memset(temp, 0, 10);
-	snprintf(temp, 10, "%g", value);
-	printf("Now we have: '%s'", temp);
+	char temp[15];
+	Line copy;
+	size_t i, length;
+	
+	memset(temp, 0, 15);
+	memset(copy, 0, LINE_SIZE);
+	
+	snprintf(temp, 15, "%g", value);
+	length = strlen(temp);
+	
+	for (i=0; i<from; i++)
+		copy[i] = line[i];	
+	for (i=from; i<from + length; i++)
+		copy[i] = temp[i - from];
+	strncat(copy, line + to, LINE_SIZE - 1);
+	strncpy(line, copy, LINE_SIZE);
+	
 /*
 	char temp[LINE_SIZE * 2];
 	memset(temp, 32, LINE_SIZE * 2);
@@ -13,7 +26,7 @@ void replace_with_float(char* line, size_t from, size_t to, float value) {
 	snprintf(temp + from - 1, LINE_SIZE * 2, "%g", value);
 	printf("\"%s\" (%ld)\n", temp, strlen(temp));
 	strncat(temp, line + to, LINE_SIZE);
-	strncpy(line, temp, LINE_SIZE);
+	
 */
 }
 

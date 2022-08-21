@@ -60,13 +60,6 @@ UNDERLINE ON/OFF
 # Known issues
 
 * For some reason, when you run LIST, the LIST command ends up at line...6400?  There are only 6399 lines, so I don't get that at all.
-* The math bug is almost fixed; it's not printing funky garbage chars anymore, but if I do this:
-	10 LET A = 5
-	20 LET B = 7
-	30 PRINT A * B
-It crashes.  Valgrind has not been much help yet, but hopefully, eventually, sense will come.
-
-* Math sucks ice :)
 
 
 ## How to add new instructions
@@ -74,34 +67,3 @@ It crashes.  Valgrind has not been much help yet, but hopefully, eventually, sen
 1. Define an is_* function for it
 2. Add a check for it to is_statement
 3. Add a check for it in RUN to make it do whatever it's supposed to do
-
-## Latest intel on the stupid mathing bug (which may actually be a stupid string-replace bug)
-
-The issue is definitely in replace_with_float, and apparently is some kind of infinite loop?  What the puck?!  Obviously, the issue has something to do with something that *CALLS* replace_with_float... but hot dang!  This stupid bug is a real son of a bit shift operator!  What the?!  WHAT THE?!   Siiiiiiiigh.... okay, here's my latest valgrind data dump.  Stupid.
-
-
-
-==51359== Invalid write of size 1
-==51359==    at 0x483F5D4: __strncpy_sse2_unaligned (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==51359==    by 0x10D92A: replace_with_float (strings.c:8)
-==51359==  Address 0x1fff001000 is not stack'd, malloc'd or (recently) free'd
-==51359== 
-==51359== 
-==51359== Process terminating with default action of signal 11 (SIGSEGV): dumping core
-==51359==  Access not within mapped region at address 0x1FFF001000
-==51359==    at 0x483F5D4: __strncpy_sse2_unaligned (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==51359==    by 0x10D92A: replace_with_float (strings.c:8)
-==51359==  If you believe this happened as a result of a stack
-==51359==  overflow in your program's main thread (unlikely but
-==51359==  possible), you can try to increase the size of the
-==51359==  main thread stack using the --main-stacksize= flag.
-==51359==  The main thread stack size used in this run was 8388608.
-==51359== 
-==51359== HEAP SUMMARY:
-==51359==     in use at exit: 0 bytes in 0 blocks
-==51359==   total heap usage: 4 allocs, 4 frees, 6,616 bytes allocated
-==51359== 
-==51359== All heap blocks were freed -- no leaks are possible
-==51359== 
-==51359== For lists of detected and suppressed errors, rerun with: -s
-==51359== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)

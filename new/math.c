@@ -24,9 +24,7 @@ size_t count_math_symbols(Line line, char symbol) {
 
 void eval_expr(Line line, VarList variables) {
 	replace_vars_with_values(line, variables);
-	printf("After replace_vars... '%s'\n", line);
 	multiply(line, LINE_SIZE);
-	printf("After multiply: '%s'\n", line);
 	divide(line, LINE_SIZE);
 	add(line, LINE_SIZE);
 	subtract(line, LINE_SIZE);
@@ -185,8 +183,6 @@ void multiply(char* line, size_t length) {
 			end = get_end(line, i);
 			left = atof(line + start);
 			right = atof(line + i + 1);
-			printf("start = %ld, end = %ld\n", start, end);
-			printf("left = %g, right = %g\n", left, right);
 			replace_with_float(line, start, end, left * right);
 		}
 		
