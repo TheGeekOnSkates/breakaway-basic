@@ -125,20 +125,6 @@ void SetBlocking(bool setting);
 /************************************************************************/
 
 /**
- * Checks if a line is a CD statement
- * @param[in] The line the user just typed
- * @returns True if it is, false if it isn't
- */
-bool is_cd(Line line);
-
-/**
- * Checks if a line is an ESC statement
- * @param[in] The line the user just typed
- * @returns True if it is, false if it isn't
- */
-bool is_esc(Line line);
-
-/**
  * Checks if a line is a valid expression
  * @param[in] The line the user just typed
  * @param[in, out] Pointer to the start of the string; when this function is
@@ -148,81 +134,29 @@ bool is_esc(Line line);
 bool is_expr(Line line, char** position);
 
 /**
- * All these check if the string is a GOSUB statement.
- * @param[in] The line to be tested
- * @returns True if it is, false if it isn't
- */
-bool is_gosub(Line line);
-
-/**
- * All these check if the string is a GOTO statement.
- * @param[in] The line to be tested
- * @returns True if it is, false if it isn't
- */
-bool is_goto(Line line);
-
-/**
- * All these check if the string is an IF statement.
- * @param[in] The line to be tested
- * @returns True if it is, false if it isn't
- */
-bool is_if(Line line);
-
-/**
- * All these check if the string is a LOAD statement.
- * @param[in] The line to be tested
- * @returns True if it is, false if it isn't
- */
-bool is_load(Line line);
-
-/**
- * All these check if the string is a SAVE statement.
- * @param[in] The line to be tested
- * @returns True if it is, false if it isn't
- */
-bool is_save(Line line);
-
-/**
- * All these check if the string is an SYS statement.
- * @param[in] The line to be tested
- * @returns True if it is, false if it isn't
- */
-bool is_sys(Line line);
-
-/**
- * All these check if the string is an INPUT statement.
- * @param[in] The line to be tested
- * @returns True if it is, false if it isn't
- */
-bool is_input(Line line);
-
-/**
- * All these check if the string is a LET statement.
- * @param[in] The line to be tested
- * @returns True if it is, false if it isn't
- */
-bool is_let(Line line);
-
-/**
- * All these check if the string is a LIST statement.
- * @param[in] The line to be tested
- * @returns True if it is, false if it isn't
- */
-bool is_list(Line line);
-
-/**
- * All these check if the string is a PRINT statement.
- * @param[in] The line to be tested
- * @returns True if it is, false if it isn't
- */
-bool is_print(Line line);
-
-/**
  * Checks if a line of code is a valid statement
  * @param[in] The line the user just typed
  * @returns True if it is, false if it isn't
  */
 bool is_statement(Line line);
+
+/**
+ * These all check if a string is a specific statement
+ * @param[in] The line the user just typed
+ * @returns True if it is, false if it isn't
+ */
+bool is_cd(Line line);
+bool is_esc(Line line);
+bool is_gosub(Line line);
+bool is_goto(Line line);
+bool is_if(Line line);
+bool is_input(Line line);
+bool is_let(Line line);
+bool is_list(Line line);
+bool is_load(Line line);
+bool is_print(Line line);
+bool is_save(Line line);
+bool is_sys(Line line);
 
 /**
  * Checks if a line is a valid variable name
@@ -248,9 +182,18 @@ bool is_number(Line line, char** position);
 static inline bool is_digit(char ch) {
 	return ch >= '0' && ch <= '9';
 }
+
 static inline bool is_math_action(char ch) {
 	return ch == '+' || ch == '-' || ch == '*' || ch == '/';
 }
+
+/**
+ * And these all check for types of tokens
+ * @param[in] The line to be tested
+ * @param[in, out] Same as line, except it gets moved
+  * to the first character _after_ the string/expr_list/etc.
+ * @returns True if it is, false if it isn't
+ */
 bool is_string(Line line, char** position);
 bool is_relop(Line line, char** position);
 bool is_expr_list(Line line, char** position);
@@ -279,6 +222,14 @@ void run(Program program, VarList variables, Line line, bool running);
  */
 void run_program(Program program, VarList variables) ;
 
+
+/**
+ * These all run specific instructions
+ * @param[in] The memory where the user's code is stored
+ * @param[in] The memory where variable valeus are stored 
+ * (for the ones with VarList parameters)
+ * @param[in, out] The line the user just typed (this pointer moves)
+ */
 void run_load(Program program, VarList variables, char* line);
 void run_save(Program program, char* line);
 void run_list(Program program, Line line);
@@ -289,6 +240,31 @@ void run_let(char* line, VarList variables);
 void run_if(Program program, char* line, VarList variables, bool running);
 void run_input(char* line, VarList variables);
 void run_sys(char* line);
+
+
+
+/************************************************************************/
+/**** MATH FUNCTIONS (defined in math.c)                             ****/
+/************************************************************************/
+
+void eval_expr(Line line, VarList variables);
+void multiply(char* line, size_t length);
+void divide(char* line, size_t length);
+void add(char* line, size_t length);
+void subtract(char* line, size_t length);
+
+
+
+/************************************************************************/
+/**** STRING FUNCTIONS (defined in strings.c)                        ****/
+/************************************************************************/
+
+void print_centered(const char* string);
+void shift_left(char* string, size_t start, size_t length);
+void replace_with_float(char* line, size_t from, size_t to, float value);
+void replace_with_string(char* line, size_t start, size_t end, char* replacement);
+void strip_spaces(char* string);
+
 
 
 /************************************************************************/
@@ -310,19 +286,9 @@ void parse(Program program, VarList variables, Line line);
  */
 void set_line(Program program, Line line);
 
-void eval_expr(Line line, VarList variables);
-void print_centered(const char* string);
-void shift_left(char* string, size_t start, size_t length);
-void replace_with_float(char* line, size_t from, size_t to, float value);
-void strip_spaces(char* string);
 size_t get_start(char* line, size_t symbol);
 size_t get_end(char* line, size_t symbol);
-void replace_with_string(char* line, size_t start, size_t end, char* replacement);
 size_t count_math_symbols(Line line, char symbol);
-void multiply(char* line, size_t length);
-void divide(char* line, size_t length);
-void add(char* line, size_t length);
-void subtract(char* line, size_t length);
 void replace_vars_with_values(Line line, VarList variables);
 
 #endif

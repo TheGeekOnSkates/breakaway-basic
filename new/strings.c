@@ -4,11 +4,8 @@ void replace_with_float(char* line, size_t from, size_t to, float value) {
 	char temp[LINE_SIZE];
 	memset(temp, 0, LINE_SIZE);
 	strncpy(temp, line, from - 1);
-	printf("'%s'\n", temp);
-	snprintf(temp + from - 1, LINE_SIZE, "%g%s", value, line + to);
-	printf("'%s'\n", temp);
+	snprintf(temp + from - 1, LINE_SIZE, "%g%s", value, line + from + to);
 	strncpy(line, temp, LINE_SIZE);
-	printf("'%s'\n", temp);
 }
 
 void replace_with_string(char* line, size_t start, size_t end, char* replacement) {

@@ -30,16 +30,17 @@ SYS <string>
 * BOLD ON/OFF
 * BLINK ON/OFF
 * UNDERLINE ON/OFF
+* ITALIC ON/OFF
 * RESET
 * Continue to clean up main.h and all those .c files
-* Write tests for all 20 instructions
-* Fix any bugs (see "known issues")
-* Push to master and write docs - I just wrote a BASIC! :)
+* Write tests for all instructions
+* Fix the bugs (see below)
+* WTFM :)
+* Push to master
 
 # If I make it to 0.2 :)
 
 * Set up LET so I can just do i.e. X = 7
-* Set up SYS so I can just do i.e. ls -la
 * Set up SYS to set an "RC" variable (maybe make it "RC()" since I'll be doing that later)
 * Add support for parens again (already started); for people like me, who are not Algebrainiacs, parens help.  3 * 4 / 2 is not as clear to me as 3 * (4 / 2).
 * Add in all my other mathing work - meaningless functions like ABS, ATN, COS, TAN, ETC, ETC, ETC, that some people will appreciate.
@@ -47,8 +48,9 @@ SYS <string>
 
 # Pipe dreaming about version 1.0
 
-* Variables ending in $ being strings
 * Aliases - that was really cool on the old version
+* Variables with names longer than 1 character (unnecessary, but useful).
+* Variables ending in $ being strings
 * Support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
 * FOR <expr> TO <expr> STEP <expression>
 * NEXT (can't have FOR without it) :)
@@ -65,6 +67,7 @@ SYS <string>
 I can even reproduce it without variables:
 	PRINT 3.141 * 1.234
 Definitely seems to be the replace_with_* functions
+**EDIT:** Seems to be fixed; the issue was with get_end.  However, I still need to test the BASIC code above.
 
 * Math sucks ice :)
 
@@ -74,6 +77,3 @@ Definitely seems to be the replace_with_* functions
 1. Define an is_* function for it
 2. Add a check for it to is_statement
 3. Add a check for it in RUN to make it do whatever it's supposed to do
-
-
-

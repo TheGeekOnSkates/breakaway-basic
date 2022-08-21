@@ -246,7 +246,7 @@ bool is_statement(Line line) {
 	) return true;
 	
 	/* The others have specific requirements, so check for each of those */
-	return is_cd(line)
+	if (is_cd(line)
 		|| is_esc(line)
 		|| is_gosub(line)
 		|| is_goto(line)
@@ -257,7 +257,10 @@ bool is_statement(Line line) {
 		|| is_load(line)
 		|| is_print(line)
 		|| is_save(line)
-		|| is_sys(line);
+		|| is_sys(line)
+	) return true;
+
+	return true;	/* Changed so users can run system commands */
 }
 
 bool is_string(Line line, char** position) {

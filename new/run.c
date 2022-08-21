@@ -134,10 +134,8 @@ void run(Program program, VarList variables, Line line, bool running) {
 		return;
 	}
 	
-	/* If it gets here, the user goofed */
-	printf("?SYNTAX ERROR");
-	if (!running) return;
-	printf(" IN %ld\n", programCounter);
+	/* If it gets here, treat the instruction as a system command */
+	system(line);
 }
 
 void run_cd(char* line) {

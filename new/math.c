@@ -27,7 +27,9 @@ void eval_expr(Line line, VarList variables) {
 	size_t length = strlen(line);
 	
 	/* And for now, these are all the steps involved. */
+	printf("When we start... '%s'\n", line);
 	replace_vars_with_values(line, variables);
+	printf("After replace_vars... '%s'\n", line);
 	multiply(line, length);
 	divide(line, length);
 	add(line, length);
@@ -59,6 +61,7 @@ size_t get_start(char* line, size_t symbol) {
 	if (line[symbol] == '+' || line[symbol] == '-') symbol--;
 	
 	/* And we're done */
+	symbol--;
 	return symbol <= 0 ? 0 : symbol;
 }
 
@@ -73,14 +76,15 @@ size_t get_end(char* line, size_t symbol) {
 	if (line[symbol] == '+' || line[symbol] == '-') symbol++;
 	
 	/* Move past digits */
-	while (is_digit(line[symbol]) && line[symbol] != '\0') symbol++;
+	while (is_digit(line[symbol])) symbol++;
 	
 	/* Here we might have reached the end of the string, or there is
 	something other than a decimal point after the numbers */
-	if (line[symbol] != '.' && line[symbol] != '\0') return symbol;
+	if (line[symbol] != '.') return symbol;
+	symbol++;
 	
 	/* If the next char was a decimal point, expect more digits */
-	while (is_digit(line[symbol]) && line[symbol] != '\0') symbol++;
+	while (is_digit(line[symbol])) symbol++;
 	
 	/* And we're done */
 	return symbol;
