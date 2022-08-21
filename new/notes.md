@@ -2,11 +2,15 @@
 
 ## Completed functions
 
+BG <expression>
+BLINK ON/OFF
+BOLD ON/OFF
 CD <string>
 CLEAR
 END
 ESC <string>
 EXIT
+FG <expression>
 GOSUB <expression>
 GOTO <expression>
 IF <conditions> THEN <number or statement>
@@ -17,25 +21,19 @@ LOAD <string>
 NEW
 PRINT <expression>[, <expression>...]
 REM <comment>
-REVERSE ON/OFF
+RESET
 RETURN
+REVERSE ON/OFF
 RUN
 SAVE <string>
 SYS <string>
 
 ## TO-DO
 
-* BG <expression>
-* FG <expression>
-* BOLD ON/OFF
-* BLINK ON/OFF
 * UNDERLINE ON/OFF
 * ITALIC ON/OFF
-* RESET
-* Continue to clean up main.h and all those .c files
-* Write tests for all instructions
 * Fix the bugs (see below)
-* WTFM :)
+* Write the docs, testing the functions as I go (the tests will end up as examples)
 * Push to master
 
 # If I make it to 0.2 :)

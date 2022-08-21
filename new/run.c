@@ -14,11 +14,34 @@ void run(Program program, VarList variables, Line line, bool running) {
 	Line copy;
 	
 	/* And figure out what to do from there */
+	if (STRING_STARTS_WITH(line, "BG")) {
+		temp = atoi(line + 2);
+		if (temp < 0 || temp > PROGRAM_SIZE) {
+			printf("?SYNTAX ERROR");
+			if (running) printf (" IN %ld", programCounter);
+			printf("\n");
+			keepRunning = false;
+		}
+		printf("\033[4%ldm", temp);
+		return;
+	}
 	if (STRING_STARTS_WITH(line, "BLINK")) {
 		if (STRING_CONTAINS(line, "ON"))
 			printf("\033[5m");
 		else if (STRING_CONTAINS(line, "OFF"))
 			printf("\033[25m");
+		else {
+			printf("?SYNTAX ERROR");
+			if (running) printf(" IN %ld", programCounter);
+			printf("\n");
+		}
+		return;
+	}
+	if (STRING_STARTS_WITH(line, "BOLD")) {
+		if (STRING_CONTAINS(line, "ON"))
+			printf("\033[1m");
+		else if (STRING_CONTAINS(line, "OFF"))
+			printf("\033[22m");
 		else {
 			printf("?SYNTAX ERROR");
 			if (running) printf(" IN %ld", programCounter);
@@ -45,6 +68,17 @@ void run(Program program, VarList variables, Line line, bool running) {
 	if (STRING_EQUALS(line, "EXIT")) {
 		CLEAR_SCREEN();
 		exit(0);
+	}
+	if (STRING_STARTS_WITH(line, "FG")) {
+		temp = atoi(line + 2);
+		if (temp < 0 || temp > PROGRAM_SIZE) {
+			printf("?SYNTAX ERROR");
+			if (running) printf (" IN %ld", programCounter);
+			printf("\n");
+			keepRunning = false;
+		}
+		printf("\033[3%ldm", temp);
+		return;
 	}
 	if (STRING_STARTS_WITH(line, "GOSUB")) {
 		temp = atoi(line + 5);

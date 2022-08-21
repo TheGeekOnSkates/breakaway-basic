@@ -438,34 +438,6 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
-	/* BG number - set the background */
-	if (STRING_STARTS_WITH(buffer, "BG ")) {
-		buffer += 3;
-		ReplaceVariablesWithValues(buffer);
-		if (buffer[0] < '0' || buffer[0] > '9')
-			lastError = SYNTAX_ERROR;
-		else {
-			printf("\033[4%dm", atoi(buffer));
-		}
-		return;
-	}
-	
-	/* BOLD ON/OFF - bold text */
-	if (STRING_EQUALS(buffer, "BOLD ON")) {
-		printf("\033[1m");
-		return;
-	}
-	if (STRING_EQUALS(buffer, "BOLD OFF")) {
-		printf("\033[22m");
-		return;
-	}
-	
-	/* CD or cd - like in every modern OS */
-	if (STRING_STARTS_WITH(buffer, "CD ") || STRING_STARTS_WITH(buffer, "cd ")) {
-		GoToFolder(buffer + 3);
-		return;
-	}
-
 	/* CLEAR ALIASES */
 	if (STRING_EQUALS(buffer, "CLEAR ALIASES")) {
 		FreeVariables(firstAlias);
@@ -501,18 +473,6 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
-	/* FG number - set the text foreground color */
-	if (STRING_STARTS_WITH(buffer, "FG ")) {
-		buffer += 3;
-		ReplaceVariablesWithValues(buffer);
-		if (buffer[0] < '0' || buffer[0] > '9')
-			lastError = SYNTAX_ERROR;
-		else {
-			printf("\033[3%dm", atoi(buffer));
-		}
-		return;
-	}
-
 	/* GET variable */
 	if (STRING_STARTS_WITH(buffer, "GET ")) {
 		if (!programMode) {

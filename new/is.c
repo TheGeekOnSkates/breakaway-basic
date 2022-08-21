@@ -1,9 +1,25 @@
 #include "main.h"
 
+bool is_bg(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "BG")) return false;
+	temp = line + 2;
+	while(temp[0] == ' ') temp++;
+	return is_number(temp, &temp);
+}
+
 bool is_blink(Line line) {
 	char* temp;
 	if (!STRING_STARTS_WITH(line, "BLINK")) return false;
 	temp = line + 5;
+	while(temp[0] == ' ') temp++;
+	return STRING_EQUALS(temp, "ON") || STRING_EQUALS(temp, "OFF");
+}
+
+bool is_bold(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "BOLD")) return false;
+	temp = line + 4;
 	while(temp[0] == ' ') temp++;
 	return STRING_EQUALS(temp, "ON") || STRING_EQUALS(temp, "OFF");
 }
@@ -81,6 +97,14 @@ bool is_expr_list(Line line, char** position) {
 	/* And we're done */
 	*position = pos;
 	return result;
+}
+
+bool is_fg(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "FG")) return false;
+	temp = line + 2;
+	while(temp[0] == ' ') temp++;
+	return is_number(temp, &temp);
 }
 
 bool is_gosub(Line line) {
@@ -258,6 +282,7 @@ bool is_statement(Line line) {
 	if (is_blink(line)
 		|| is_cd(line)
 		|| is_esc(line)
+		|| is_fg(line)
 		|| is_gosub(line)
 		|| is_goto(line)
 		|| is_if(line)
