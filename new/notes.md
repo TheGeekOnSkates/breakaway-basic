@@ -34,7 +34,6 @@ UNDERLINE ON/OFF
 
 ## TO-DO
 
-* Fix the bugs (see below)
 * Write the docs, testing the functions as I go (the tests will end up as examples)
 * Push to master
 
@@ -56,11 +55,6 @@ UNDERLINE ON/OFF
 * NEXT (can't have FOR without it) :)
 * Variables with parens being arrays
 * Sound (technically possible with SYS "play somesound.wav" but a built-in API would be nice).
-
-# Known issues
-
-* For some reason, when you run LIST, the LIST command ends up at line...6400?  There are only 6399 lines, so I don't get that at all.
-
 
 ## How to add new instructions
 

@@ -505,7 +505,7 @@ void run_let(char* line, VarList variables) {
 void run_list(Program program, Line line) {
 	/* Declare vars */
 	char* temp;
-	size_t i, from = 0, to = PROGRAM_SIZE;
+	size_t i, from = 0, to = PROGRAM_SIZE - 1;
 	
 	/* If there's a number after LIST, get it */
 	temp = line;
