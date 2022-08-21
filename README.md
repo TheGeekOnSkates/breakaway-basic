@@ -6,9 +6,18 @@ Breakaway BASIC is a shell for Linux (and maybe someday, DOS and other systems) 
 
 It gets its name from hockey, of course (look at my nickname if you don't get why that's so obvious, lol).  A "breakaway" is one of the most exciting things you could see at a hockey game.  It's when a player manages to get past all the opposing team's defenders, so it's just him/her vs. the goalie.  Breakaways are rare, but they're always described as fast, cool, and sometimes game-changing - all things I would like this BASIC to be. :)
 
+## Change log
+
+### 0.1
+
+The first release was just a superset of "Tiny BASIC", the main additions being things like ASCII art functions and LOAD/SAVE.
+
+
+==============================================================================
+
 ## Language reference
 
-### BG <expression>
+### BG {expression}
 
 Sets the background color, if your terminal supports that (most do)).  After you run it, any text you type will have the background color you set.  One cool thing you can do is use this to set the background color of the entire screen.  For example:
 
@@ -50,7 +59,7 @@ Turns bold text on or off.  For example:
 40 PRINT "THIS TEXT WILL NOT."
 ```
 
-### CD <string>
+### CD {string}
 
 Changes the folder you're working in (most systems call this the "working directory").  Note that this is the _only_ way to change directory in Breakaway BASIC.  Here's how it works:
 
@@ -68,11 +77,11 @@ Ends the program.  For example:
 10 CLEAR  
 20 PRINT "GUESS A NUMBER:  ";
 30 INPUT N
-40 IF N <> 7 THEN END
+40 IF N {} 7 THEN END
 50 PRINT "YOU GUESSED IT!  7!"
 ```
 
-### ESC <string>
+### ESC {string}
 
 Prints an ANSI escape code followed by whatever text you put in the string.  In fact, this is what `FG`, `BG`, `CLEAR`, `RESET`, `BLINK`, etc. use.  So if Breakaway BASIC doesn't have an instruction for an escape code you want to use, you can use it with the `ESC` instruction.  For example:
 
@@ -85,7 +94,7 @@ Prints an ANSI escape code followed by whatever text you put in the string.  In 
 
 Exits Breakaway BASIC.
 
-### FG <expression>
+### FG {expression}
 
 Sets the foreground color (text color).  See the `BG` instruction for more info (a list of colors, and also how to use it).  Here's another example:
 
@@ -98,7 +107,7 @@ Sets the foreground color (text color).  See the `BG` instruction for more info 
 60 RESET
 ```
 
-### GOSUB <expression>
+### GOSUB {expression}
 
 Jumps to a line number, and doesn't go back from there until it finds a `RETURN` instruction.  For example:
 
@@ -111,7 +120,7 @@ Jumps to a line number, and doesn't go back from there until it finds a `RETURN`
 110 RETURN
 ```
 
-### GOTO <expression>
+### GOTO {expression}
 
 Jumps to a line number.  One classic example (and if you ever played with any BASIC I'm sure you've done it) is this:
 
@@ -134,25 +143,77 @@ This works kind of like invisible ink: whatever you type will not be shown if th
 50 PRINT "THE NUMBER IS:", N
 ```
 
-### IF <conditions> THEN <number or statement>
+### IF {conditions} THEN {number or statement}
 
-### INPUT <variable>
+Checks if the condition is true, and if so, goes to the number or runs the statement.  For example:
+
+```
+10 INPUT A
+20 IF A < 7 THEN PRINT "TOO SMALL"
+30 IF A > 7 THEN PRINT "TOO BIG"
+40 REM "<>" MEANS "NOT IS NOT EQUAL TO" LIKE IN OTHER BASICS
+50 IF A <> 7 THEN 80
+60 IF A = 7 THEN PRINT "YOU GUESSED IT."
+70 END
+80 PRINT "PLEASE TRY AGAIN."
+```
+
+### INPUT {variable}
+
+Asks you to enter some information, and saves it to a variable.  For now (version 0.1), only numbers are supported.  For an example, see `IF` above.  For more info on variables, see `LET` below.
 
 ### ITALIC ON/OFF
 
-### LET <variable> = <expression>
+Turns italics on or off on terminals that support it.  For example:
 
-### LIST [<number>[ - <number>]]
+```
+10 ITALIC ON
+20 PRINT "THIS TEXT WILL BE IN ITALICS."
+30 ITALIC OFF
+40 PRINT "BUT THIS WON'T.""
+```
 
-### LOAD <string>
+### LET {variable} = {expression}
 
-### MOVE <number> <number>
+Sets a variable.  Variables (as of version 0.1) can only be capital letters, just one character (longer names are not yet supported).  For example:
+
+```
+```
+
+### LIST [{number}[ - {number}]]
+
+### LOAD {string}
+
+### MOVE {number or variable} {number or variable}
+
+Moves the cursor to the given coordinates.  The first number is the horizontal ("X") coordinate, and the second number is the vertical ("Y") coordinate.  For example:
+
+```
+10 REM MOVE THE CURSOR TO 30, 20
+20 REM OR IF YOU LIKE, ROW 20, COLUMN 30
+30 LET X = 30
+40 LET Y = 20
+50 MOVE X Y
+```
 
 ### NEW
 
-### PRINT <expression>[, <expression>...]
+Clears the program memory and any variables you may have set, so you are left with a clean slate (a "new" program).
 
-### REM <comment>
+### PRINT {expression}[, {expression}...]
+
+Prints (displays) data on the screen.  I've used it all through this reference, but here are some more examples:
+
+```
+10 PRINT "2 + 2 = ", 2+2
+20 PRINT "CHECK THIS OUT - ";
+30 PRINT "THE SEMICOLON AT THE END TELLS BASIC NOT TO DO A LINE BREAK."
+40 PRINT "ENTER A NUMBER:  ";
+50 INPUT N
+60 PRINT N,"SQUARED = ", N * N
+```
+
+### REM {comment}
 
 A comment is like a note to yourself, so you know what your code is doing if you come back to it after a long time away.  For example:
 
@@ -162,18 +223,50 @@ A comment is like a note to yourself, so you know what your code is doing if you
 30 CLEAR
 ```
 
-
-
 ### RESET
+
+Resets the terminal's text output to its default setting, undoing commands like `BOLD`, `BLINK`, `FG`, `BG`, etc.  This way you can turn them all off without having to write a bunch of lines like `UNDERLINE OFF`, `REVERSE OFF` etc.
 
 ### RETURN
 
+Goes to wherever the program left off after it found a `GOSUB` instruction ("returning" to where it was before).  See `GOSUB` for more info and an example.
+
 ### REVERSE ON/OFF
+
+Turns reverse text on/off (so for example, on most terminals it will cause text output to be black on white, not white on black).
+
+```
+10 REVERSE ON
+20 PRINT "THIS TEXT WILL BE REVERSED."
+30 REVERSE OFF
+40 PRINT "THIS WON'T."
+```
 
 ### RUN
 
-### SAVE <string>
+Runs your program.
 
-### SYS <string>
+### SAVE {string}
+
+Saves your program to a file (the string is the file name).
+
+### SYS {string}
+
+Runs a system command.  For example:
+
+```
+10 REM LIST STUFF IN THE CURRENT FOLDER
+20 CLEAR
+30 SYS "ls -la"
+```
 
 ### UNDERLINE ON/OFF
+
+Turns underline text on/off
+
+```
+10 UNDERLINE ON
+20 PRINT "THIS WILL BE UNDERLINED."
+30 UNDERLINE OFF
+40 PRINT "THIS WON'T."
+```

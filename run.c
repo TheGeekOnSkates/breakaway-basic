@@ -179,7 +179,10 @@ void run(Program program, VarList variables, Line line, bool running) {
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "MOVE")) {
-		run_move(line + 4);
+		line += 4;
+		strncpy(copy, line, LINE_SIZE);
+		replace_vars_with_values(copy, variables);
+		run_move(copy);
 		return;
 	}
 	if (STRING_EQUALS(line, "NEW")) {

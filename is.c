@@ -225,9 +225,10 @@ bool is_move(Line line) {
 	if (!STRING_STARTS_WITH(line, "MOVE")) return false;
 	temp = line + 4;
 	while(temp[0] == ' ') temp++;
-	if (!is_number(temp, &temp)) return false;
+	if (!is_number(temp, &temp) && !is_var(temp, &temp))
+		return false;
 	while(temp[0] == ' ') temp++;
-	return is_number(temp, &temp);
+	return is_number(temp, &temp) || is_var(temp, &temp);
 }
 
 bool is_number(Line line, char** position) {
@@ -416,7 +417,7 @@ bool is_sys(Line line) {
 
 bool is_underline(Line line) {
 	char* temp;
-	if (!STRING_STARTS_WITH(line, "IS_UNDERLINE")) return false;
+	if (!STRING_STARTS_WITH(line, "UNDERLINE")) return false;
 	temp = line + 9;
 	while(temp[0] == ' ') temp++;
 	return STRING_EQUALS(temp, "ON") || STRING_EQUALS(temp, "OFF");
