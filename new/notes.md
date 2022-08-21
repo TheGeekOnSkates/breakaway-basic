@@ -15,6 +15,7 @@ GOSUB <expression>
 GOTO <expression>
 IF <conditions> THEN <number or statement>
 INPUT <variable>
+ITALIC ON/OFF
 LET <variable> = <expression>
 LIST [<number>[ - <number>]]
 LOAD <string>
@@ -27,11 +28,12 @@ REVERSE ON/OFF
 RUN
 SAVE <string>
 SYS <string>
+UNDERLINE ON/OFF
 
 ## TO-DO
 
-* UNDERLINE ON/OFF
-* ITALIC ON/OFF
+* HIDDEN ON/OFF
+* MOVE <number> <number>
 * Fix the bugs (see below)
 * Write the docs, testing the functions as I go (the tests will end up as examples)
 * Push to master

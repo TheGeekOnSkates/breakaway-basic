@@ -160,6 +160,14 @@ bool is_input(Line line) {
 	return is_var(line, &line);
 }
 
+bool is_italic(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "ITALIC")) return false;
+	temp = line + 6;
+	while(temp[0] == ' ') temp++;
+	return STRING_EQUALS(temp, "ON") || STRING_EQUALS(temp, "OFF");
+}
+
 bool is_let(Line line) {
 	char* temp;
 	
@@ -384,6 +392,14 @@ bool is_sys(Line line) {
 	temp = line + 3;
 	while(temp[0] == ' ') temp++;
 	return is_string(temp, &temp);
+}
+
+bool is_underline(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "IS_UNDERLINE")) return false;
+	temp = line + 9;
+	while(temp[0] == ' ') temp++;
+	return STRING_EQUALS(temp, "ON") || STRING_EQUALS(temp, "OFF");
 }
 
 // End of validation functions

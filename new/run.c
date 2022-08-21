@@ -21,8 +21,9 @@ void run(Program program, VarList variables, Line line, bool running) {
 			if (running) printf (" IN %ld", programCounter);
 			printf("\n");
 			keepRunning = false;
+			printf("READY.\n");
 		}
-		printf("\033[4%ldm", temp);
+		else printf("\033[4%ldm", temp);
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "BLINK")) {
@@ -59,6 +60,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	if (STRING_EQUALS(line, "END")) {
 		keepRunning = false;
+		printf("READY.\n");
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "ESC")) {
@@ -76,8 +78,9 @@ void run(Program program, VarList variables, Line line, bool running) {
 			if (running) printf (" IN %ld", programCounter);
 			printf("\n");
 			keepRunning = false;
+			printf("READY.\n");
 		}
-		printf("\033[3%ldm", temp);
+		else printf("\033[3%ldm", temp);
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "GOSUB")) {
@@ -87,12 +90,14 @@ void run(Program program, VarList variables, Line line, bool running) {
 			if (running) printf (" IN %ld", programCounter);
 			printf("\n");
 			keepRunning = false;
+			printf("READY.\n");
 		}
 		else if (subCounter + 1 == PROGRAM_SIZE) {
 			/* Should never happen, but if so, handle it gracefully  :D */
 			printf("?TOO MANY SUBS ERROR");
 			if (running) printf (" IN %ld", programCounter);
 			printf("\n");
+			printf("READY.\n");
 		}
 		else {
 			subs[subCounter] = programCounter;
@@ -110,6 +115,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			if (running) printf (" IN %ld", programCounter);
 			printf("\n");
 			keepRunning = false;
+			printf("READY.\n");
 		}
 		else {
 			programCounter = temp - 1;
@@ -123,6 +129,19 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	if (STRING_STARTS_WITH(line, "INPUT")) {
 		run_input(line + 5, variables);
+		return;
+	}
+	if (STRING_STARTS_WITH(line, "ITALIC")) {
+		if (STRING_CONTAINS(line, "ON"))
+			printf("\033[3m");
+		else if (STRING_CONTAINS(line, "OFF"))
+			printf("\033[23m");
+		else {
+			printf("?SYNTAX ERROR");
+			if (running) printf(" IN %ld", programCounter);
+			printf("\n");
+			printf("READY.\n");
+		}
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "LET")) {
@@ -193,6 +212,19 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	if (STRING_STARTS_WITH(line, "SYS")) {
 		run_sys(line + 3);
+		return;
+	}
+	if (STRING_STARTS_WITH(line, "UNDERLINE")) {
+		if (STRING_CONTAINS(line, "ON"))
+			printf("\033[4m");
+		else if (STRING_CONTAINS(line, "OFF"))
+			printf("\033[24m");
+		else {
+			printf("?SYNTAX ERROR");
+			if (running) printf(" IN %ld", programCounter);
+			printf("\n");
+			printf("READY.\n");
+		}
 		return;
 	}
 	

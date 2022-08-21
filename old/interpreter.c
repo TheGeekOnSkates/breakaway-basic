@@ -610,40 +610,6 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
-	/* ITALIC ON/OFF - italic text */
-	if (STRING_EQUALS(buffer, "ITALIC ON")) {
-		printf("\033[3m");
-		return;
-	}
-	if (STRING_EQUALS(buffer, "ITALIC OFF")) {
-		printf("\033[23m");
-		return;
-	}
-	
-	/* LET var = value */
-	if (STRING_STARTS_WITH(buffer, "LET ")) {
-		RunLET(buffer + 4);
-		return;
-	}
-	
-	/* LIST HISTORY */
-	if (STRING_EQUALS(buffer, "LIST HISTORY")) {
-		ListHistory();
-		return;
-	}
-	
-	/* LIST [line numbers] - List the contents of the program */
-	if (STRING_STARTS_WITH(buffer, "LIST")) {
-		ListProgram(currentProgram, buffer + 4);
-		return;
-	}
-	
-	/* LOAD - Load a file */
-	if (STRING_STARTS_WITH(buffer, "LOAD ")) {
-		LoadFile(buffer + 5);
-		return;
-	}
-	
 	/* MOVE x y - Move the cursor */
 	if (STRING_STARTS_WITH(buffer, "MOVE ")) {
 		buffer += 5;
@@ -655,87 +621,9 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
-	/* NEW - clear contents of program */
-	if (STRING_EQUALS(buffer, "NEW")) {
-		RunNEW();
-		return;
-	}
-	
-	/* PRINT */
-	if (STRING_STARTS_WITH(buffer, "PRINT ")) {
-		RunPRINT(buffer + 6);
-		return;
-	}
-	
-	/* REM - comment - do nothing */
-	if (STRING_STARTS_WITH(buffer, "REM")) return;
-	
-	/* RESET - reset the terminal settings */
-	if (STRING_EQUALS(buffer, "RESET")) {
-		printf("\033[0m");
-		return;
-	}
-
-	/* RETURN - return from subrouting */
-	if (STRING_EQUALS(buffer, "RETURN")) {
-		tempInt = subs[currentSub - 1]; //+ 1;
-		#if DEBUG_MODE
-		printf("RETURN: ");
-		for(i=0; i<PROGRAM_MAX; i++) {
-			if (subs[i] == -1) {
-				printf("\n");
-				break;
-			}
-			printf("%ld ", subs[i]);
-		}
-		printf("Returning to line %d\n", tempInt);
-		#endif
-		if (tempInt == 0) return;
-		currentLine = tempInt;
-		subs[currentSub] = -1;
-		if (currentSub > 0) currentSub--;
-		return;
-	}
-	
 	/* REVERSE ON/OFF */
 	if (STRING_STARTS_WITH(buffer, "RENUMBER ")) {
 		RenumberProgram(currentProgram, buffer + 9);
-		return;
-	}
-	
-	/* RUN - self-explanatory :) */
-	if (STRING_EQUALS(buffer, "RUN")) {
-		currentLine = 0;
-		RunOrContinue();
-		return;
-	}
-	
-	/* SAVE - Save a file */
-	if (STRING_STARTS_WITH(buffer, "SAVE ")) {
-		SaveFile(buffer + 5);
-		return;
-	}
-	
-	/* SYS - run an external command */
-	if (STRING_STARTS_WITH(buffer, "SYS ")) {
-		token = buffer + 4;
-		RunSYS(token);
-		return;
-	}
-	
-	/* UNDERLINE ON/OFF - underlined text */
-	if (STRING_EQUALS(buffer, "UNDERLINE ON")) {
-		printf("\033[4m");
-		return;
-	}
-	if (STRING_EQUALS(buffer, "UNDERLINE OFF")) {
-		printf("\033[24m");
-		return;
-	}
-	
-	/* Line number - Add it to the program */
-	if (buffer[0] >= '0' && buffer[0] <= '9') {
-		AddToProgram(currentProgram, buffer);
 		return;
 	}
 	
