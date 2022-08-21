@@ -60,14 +60,11 @@ SYS <string>
 # Known issues
 
 * For some reason, when you run LIST, the LIST command ends up at line...6400?  There are only 6399 lines, so I don't get that at all.
-* The bug with the math functions is still not fixed.
-	10 INPUT A
-	20 INPUT B
+* The math bug is almost fixed; it's not printing funky garbage chars anymore, but if I do this:
+	10 LET A = 5
+	20 LET B = 7
 	30 PRINT A * B
-I can even reproduce it without variables:
-	PRINT 3.141 * 1.234
-Definitely seems to be the replace_with_* functions
-**EDIT:** Seems to be fixed; the issue was with get_end.  However, I still need to test the BASIC code above.
+It crashes.  Valgrind has not been much help yet, but hopefully, eventually, sense will come.
 
 * Math sucks ice :)
 
@@ -77,3 +74,30 @@ Definitely seems to be the replace_with_* functions
 1. Define an is_* function for it
 2. Add a check for it to is_statement
 3. Add a check for it in RUN to make it do whatever it's supposed to do
+
+## Latest intel on the stupid mathing bug (which may actually be a stupid string-replace bug)
+
+==46467== Conditional jump or move depends on uninitialised value(s)
+==46467==    at 0x10B0FC: replace_vars_with_values
+
+==46467== Use of uninitialised value of size 8
+==46467==    at 0x48BADBB: ____strtod_l_internal (strtod_l.c:611)
+==46467==    by 0x10B0AA: replace_vars_with_values
+
+==46467== Conditional jump or move depends on uninitialised value(s)
+==46467==    at 0x483EFA9: __strlen_sse2 (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==46467==    by 0x48E6E94: __vfprintf_internal (vfprintf-internal.c:1688)
+==46467==    by 0x48FA119: __vsnprintf_internal (vsnprintf.c:114)
+==46467==    by 0x48CFF75: snprintf (snprintf.c:31)
+==46467==    by 0x10CA75: replace_with_float
+
+-------------------------------------------------------------------------------------------------
+THEN THE ACTUAL CRASH...
+
+==46467== Invalid write of size 1
+==46467==    at 0x483F5D4: __strncpy_sse2_unaligned (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==46467==    by 0x10CA3A: replace_with_float
+
+==46467==  Access not within mapped region at address 0x1FFF001000
+==46467==    at 0x483F5D4: __strncpy_sse2_unaligned (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==46467==    by 0x10CA3A: replace_with_float
