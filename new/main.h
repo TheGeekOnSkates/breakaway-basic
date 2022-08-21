@@ -145,6 +145,7 @@ bool is_statement(Line line);
  * @param[in] The line the user just typed
  * @returns True if it is, false if it isn't
  */
+bool is_blink(Line line);
 bool is_cd(Line line);
 bool is_esc(Line line);
 bool is_gosub(Line line);

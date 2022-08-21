@@ -1,5 +1,13 @@
 #include "main.h"
 
+bool is_blink(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "BLINK")) return false;
+	temp = line + 5;
+	while(temp[0] == ' ') temp++;
+	return STRING_EQUALS(temp, "ON") || STRING_EQUALS(temp, "OFF");
+}
+
 bool is_cd(Line line) {
 	char* temp;
 	if (!STRING_STARTS_WITH(line, "CD")) return false;
@@ -241,12 +249,14 @@ bool is_statement(Line line) {
 		|| STRING_EQUALS(line, "LIST")
 		|| STRING_EQUALS(line, "NEW")
 		|| STRING_EQUALS(line, "RETURN")
+		|| STRING_EQUALS(line, "RESET")
 		|| STRING_STARTS_WITH(line, "REM")
 		|| STRING_EQUALS(line, "RUN")
 	) return true;
 	
 	/* The others have specific requirements, so check for each of those */
-	if (is_cd(line)
+	if (is_blink(line)
+		|| is_cd(line)
 		|| is_esc(line)
 		|| is_gosub(line)
 		|| is_goto(line)

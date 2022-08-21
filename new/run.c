@@ -14,6 +14,18 @@ void run(Program program, VarList variables, Line line, bool running) {
 	Line copy;
 	
 	/* And figure out what to do from there */
+	if (STRING_STARTS_WITH(line, "BLINK")) {
+		if (STRING_CONTAINS(line, "ON"))
+			printf("\033[5m");
+		else if (STRING_CONTAINS(line, "OFF"))
+			printf("\033[25m");
+		else {
+			printf("?SYNTAX ERROR");
+			if (running) printf(" IN %ld", programCounter);
+			printf("\n");
+		}
+		return;
+	}
 	if (STRING_STARTS_WITH(line, "CD")) {
 		run_cd(line + 2);
 		return;
@@ -106,18 +118,22 @@ void run(Program program, VarList variables, Line line, bool running) {
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "REM")) return;
+	if (STRING_EQUALS(line, "RESET")) {
+		RESET();
+		return;
+	}
 	if (STRING_STARTS_WITH(line, "REVERSE")) {
-			if (STRING_CONTAINS(line, "ON"))
-				printf("\033[7m");
-			else if (STRING_CONTAINS(line, "OFF"))
-				printf("\033[27m");
-			else {
-				printf("?SYNTAX ERROR");
-				if (running) printf(" IN %ld", programCounter);
-				printf("\n");
-			}
-			return;
+		if (STRING_CONTAINS(line, "ON"))
+			printf("\033[7m");
+		else if (STRING_CONTAINS(line, "OFF"))
+			printf("\033[27m");
+		else {
+			printf("?SYNTAX ERROR");
+			if (running) printf(" IN %ld", programCounter);
+			printf("\n");
 		}
+		return;
+	}
 	if (STRING_EQUALS(line, "RUN")) {
 		programCounter = 0;
 		keepRunning = true;

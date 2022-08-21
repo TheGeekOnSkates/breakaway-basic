@@ -450,16 +450,6 @@ void Interpret(char* buffer) {
 		return;
 	}
 	
-	/* BLINK ON/OFF - text blink mode on */
-	if (STRING_EQUALS(buffer, "BLINK ON")) {
-		printf("\033[5m");
-		return;
-	}
-	if (STRING_EQUALS(buffer, "BLINK OFF")) {
-		printf("\033[25m");
-		return;
-	}
-	
 	/* BOLD ON/OFF - bold text */
 	if (STRING_EQUALS(buffer, "BOLD ON")) {
 		printf("\033[1m");
