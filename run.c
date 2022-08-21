@@ -5,6 +5,7 @@ bool keepRunning = true;
 size_t subs[PROGRAM_SIZE];
 size_t subCounter = 0;
 bool thereWasAnError;
+int rc = 0;
 
 void run(Program program, VarList variables, Line line, bool running) {
 	/* Declare vars */
@@ -256,7 +257,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	
 	/* If it gets here, treat the instruction as a system command */
-	system(line);
+	rc = system(line);
 }
 
 void run_cd(char* line) {

@@ -8,6 +8,10 @@ It gets its name from hockey, of course (look at my nickname if you don't get wh
 
 ## Change log
 
+### 0.2
+
+* Set up the `RC()` function to get the return value of the last `SYS` instruction
+
 ### 0.1
 
 The first release was just a superset of "Tiny BASIC", the main additions being things like ASCII art functions and LOAD/SAVE.

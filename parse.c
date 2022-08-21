@@ -1,5 +1,7 @@
 #include "main.h"
 
+extern int rc;
+
 void parse(Program program, VarList variables, Line line) {
 	/* Declare variables */
 	char* temp;
@@ -22,5 +24,5 @@ void parse(Program program, VarList variables, Line line) {
 	/* Otherwise, it's either a statement or a syntax error :) */
 	if (is_statement(line))
 		run(program, variables, line, false);
-	else system(line);
+	else rc = system(line);
 }

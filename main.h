@@ -199,12 +199,13 @@ static inline bool is_math_action(char ch) {
  * And these all check for types of tokens
  * @param[in] The line to be tested
  * @param[in, out] Same as line, except it gets moved
-  * to the first character _after_ the string/expr_list/etc.
+ * to the first character _after_ the string/expr_list/etc.
  * @returns True if it is, false if it isn't
  */
 bool is_string(Line line, char** position);
 bool is_relop(Line line, char** position);
 bool is_expr_list(Line line, char** position);
+bool is_function(Line line, char** position);
 bool is_var_list(Line line, char** position);
 
 
@@ -273,6 +274,15 @@ void shift_left(char* string, size_t start, size_t length);
 void replace_with_float(char* line, size_t from, size_t to, float value);
 void replace_with_string(char* line, size_t start, size_t end, char* replacement);
 void strip_spaces(char* string);
+
+
+
+/************************************************************************/
+/**** FUNCTIONS (defined in functions.c)                             ****/
+/************************************************************************/
+
+/** Replaces RC() with the return code of the last SYS call */
+void replace_rc(Line line);
 
 
 

@@ -43,7 +43,7 @@ bool is_esc(Line line) {
 bool is_expr(Line line, char** position) {
 	/* Variables */
 	char* pos;
-	bool result = is_number(line, position) || is_var(line, position);
+	bool result = is_number(line, position) || is_var(line, position) || is_function(line, position);
 	
 	/* Skip spaces again */
 	pos = *position;
@@ -62,7 +62,7 @@ bool is_expr(Line line, char** position) {
 		/* Here we get into a kinda weird scenario:
 		What if I enter 3 + 4 * (nothing at the end?)
 		We can't have that, so... */
-		if (!is_number(pos, &pos) && ! is_var(pos, &pos)) {
+		if (!is_number(pos, &pos) && !is_var(pos, &pos) && !is_function(line, &pos)) {
 			*position = pos;
 			return false;
 		}
@@ -105,6 +105,14 @@ bool is_fg(Line line) {
 	temp = line + 2;
 	while(temp[0] == ' ') temp++;
 	return is_number(temp, &temp);
+}
+
+bool is_function(Line line, char** position) {
+	if (STRING_STARTS_WITH(line, "RC()")) {
+		*position += 4;
+		return true;
+	}
+	return false;
 }
 
 bool is_gosub(Line line) {
