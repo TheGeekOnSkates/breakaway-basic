@@ -256,6 +256,7 @@ bool is_statement(Line line) {
 		|| is_list(line)
 		|| is_load(line)
 		|| is_print(line)
+		|| is_reverse(line)
 		|| is_save(line)
 		|| is_sys(line)
 	) return true;
@@ -324,6 +325,14 @@ bool is_load(Line line) {
 	temp = line + 4;
 	while(temp[0] == ' ') temp++;
 	return is_string(temp, &temp);
+}
+
+bool is_reverse(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "REVERSE")) return false;
+	temp = line + 7;
+	while(temp[0] == ' ') temp++;
+	return STRING_EQUALS(temp, "ON") || STRING_EQUALS(temp, "OFF");
 }
 
 bool is_save(Line line) {

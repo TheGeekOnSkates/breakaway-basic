@@ -17,6 +17,7 @@ LOAD <string>
 NEW
 PRINT <expression>[, <expression>...]
 REM <comment>
+REVERSE ON/OFF
 RETURN
 RUN
 SAVE <string>
@@ -24,7 +25,6 @@ SYS <string>
 
 ## TO-DO
 
-* REVERSE ON/OFF
 * BG <expression>
 * FG <expression>
 * BOLD ON/OFF

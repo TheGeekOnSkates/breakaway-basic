@@ -748,14 +748,6 @@ void Interpret(char* buffer) {
 	}
 	
 	/* REVERSE ON/OFF */
-	if (STRING_EQUALS(buffer, "REVERSE ON")) {
-		printf("\033[7m");
-		return;
-	}
-	if (STRING_EQUALS(buffer, "REVERSE OFF")) {
-		printf("\033[27m");
-		return;
-	}
 	if (STRING_STARTS_WITH(buffer, "RENUMBER ")) {
 		RenumberProgram(currentProgram, buffer + 9);
 		return;

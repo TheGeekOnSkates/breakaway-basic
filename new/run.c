@@ -106,6 +106,18 @@ void run(Program program, VarList variables, Line line, bool running) {
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "REM")) return;
+	if (STRING_STARTS_WITH(line, "REVERSE")) {
+			if (STRING_CONTAINS(line, "ON"))
+				printf("\033[7m");
+			else if (STRING_CONTAINS(line, "OFF"))
+				printf("\033[27m");
+			else {
+				printf("?SYNTAX ERROR");
+				if (running) printf(" IN %ld", programCounter);
+				printf("\n");
+			}
+			return;
+		}
 	if (STRING_EQUALS(line, "RUN")) {
 		programCounter = 0;
 		keepRunning = true;
