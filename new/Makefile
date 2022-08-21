@@ -3,4 +3,4 @@ linux:
 	./breakaway-basic
 
 debug:
-	clear && gcc ./*.c ./os/*.c -obreakaway-basic -Wall || exit 1
+	clear && gcc ./*.c ./os/*.c -obreakaway-basic -Wall -g || exit 1

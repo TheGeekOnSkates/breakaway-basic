@@ -13,12 +13,14 @@ EXIT
 FG <expression>
 GOSUB <expression>
 GOTO <expression>
+HIDDEN ON/OFF
 IF <conditions> THEN <number or statement>
 INPUT <variable>
 ITALIC ON/OFF
 LET <variable> = <expression>
 LIST [<number>[ - <number>]]
 LOAD <string>
+MOVE <number> <number>
 NEW
 PRINT <expression>[, <expression>...]
 REM <comment>
@@ -32,8 +34,6 @@ UNDERLINE ON/OFF
 
 ## TO-DO
 
-* HIDDEN ON/OFF
-* MOVE <number> <number>
 * Fix the bugs (see below)
 * Write the docs, testing the functions as I go (the tests will end up as examples)
 * Push to master
@@ -77,27 +77,31 @@ It crashes.  Valgrind has not been much help yet, but hopefully, eventually, sen
 
 ## Latest intel on the stupid mathing bug (which may actually be a stupid string-replace bug)
 
-==46467== Conditional jump or move depends on uninitialised value(s)
-==46467==    at 0x10B0FC: replace_vars_with_values
+The issue is definitely in replace_with_float, and apparently is some kind of infinite loop?  What the puck?!  Obviously, the issue has something to do with something that *CALLS* replace_with_float... but hot dang!  This stupid bug is a real son of a bit shift operator!  What the?!  WHAT THE?!   Siiiiiiiigh.... okay, here's my latest valgrind data dump.  Stupid.
 
-==46467== Use of uninitialised value of size 8
-==46467==    at 0x48BADBB: ____strtod_l_internal (strtod_l.c:611)
-==46467==    by 0x10B0AA: replace_vars_with_values
 
-==46467== Conditional jump or move depends on uninitialised value(s)
-==46467==    at 0x483EFA9: __strlen_sse2 (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==46467==    by 0x48E6E94: __vfprintf_internal (vfprintf-internal.c:1688)
-==46467==    by 0x48FA119: __vsnprintf_internal (vsnprintf.c:114)
-==46467==    by 0x48CFF75: snprintf (snprintf.c:31)
-==46467==    by 0x10CA75: replace_with_float
 
--------------------------------------------------------------------------------------------------
-THEN THE ACTUAL CRASH...
-
-==46467== Invalid write of size 1
-==46467==    at 0x483F5D4: __strncpy_sse2_unaligned (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==46467==    by 0x10CA3A: replace_with_float
-
-==46467==  Access not within mapped region at address 0x1FFF001000
-==46467==    at 0x483F5D4: __strncpy_sse2_unaligned (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
-==46467==    by 0x10CA3A: replace_with_float
+==51359== Invalid write of size 1
+==51359==    at 0x483F5D4: __strncpy_sse2_unaligned (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==51359==    by 0x10D92A: replace_with_float (strings.c:8)
+==51359==  Address 0x1fff001000 is not stack'd, malloc'd or (recently) free'd
+==51359== 
+==51359== 
+==51359== Process terminating with default action of signal 11 (SIGSEGV): dumping core
+==51359==  Access not within mapped region at address 0x1FFF001000
+==51359==    at 0x483F5D4: __strncpy_sse2_unaligned (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==51359==    by 0x10D92A: replace_with_float (strings.c:8)
+==51359==  If you believe this happened as a result of a stack
+==51359==  overflow in your program's main thread (unlikely but
+==51359==  possible), you can try to increase the size of the
+==51359==  main thread stack using the --main-stacksize= flag.
+==51359==  The main thread stack size used in this run was 8388608.
+==51359== 
+==51359== HEAP SUMMARY:
+==51359==     in use at exit: 0 bytes in 0 blocks
+==51359==   total heap usage: 4 allocs, 4 frees, 6,616 bytes allocated
+==51359== 
+==51359== All heap blocks were freed -- no leaks are possible
+==51359== 
+==51359== For lists of detected and suppressed errors, rerun with: -s
+==51359== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)

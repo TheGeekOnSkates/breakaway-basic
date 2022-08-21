@@ -153,15 +153,18 @@ bool is_esc(Line line);
 bool is_fg(Line line);
 bool is_gosub(Line line);
 bool is_goto(Line line);
+bool is_hidden(Line line);
 bool is_if(Line line);
 bool is_input(Line line);
 bool is_let(Line line);
 bool is_list(Line line);
 bool is_load(Line line);
+bool is_move(Line line);
 bool is_print(Line line);
 bool is_reverse(Line line);
 bool is_save(Line line);
 bool is_sys(Line line);
+bool is_underline(Line line);
 
 /**
  * Checks if a line is a valid variable name
@@ -242,6 +245,7 @@ void run_print(Program program, Line line);
 void run_cd(char* line);
 void run_esc(char* line);
 void run_let(char* line, VarList variables);
+void run_move(Line line);
 void run_if(Program program, char* line, VarList variables, bool running);
 void run_input(char* line, VarList variables);
 void run_sys(char* line);

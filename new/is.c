@@ -137,6 +137,14 @@ bool is_goto(Line line) {
 	return is_expr(pos, &pos);
 }
 
+bool is_hidden(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "HIDDEN")) return false;
+	temp = line + 6;
+	while(temp[0] == ' ') temp++;
+	return STRING_EQUALS(temp, "ON") || STRING_EQUALS(temp, "OFF");
+}
+
 bool is_if(Line line) {
 	if (!STRING_STARTS_WITH(line, "IF")) return false;
 	line += 2;
@@ -210,6 +218,16 @@ bool is_list(Line line) {
 		if (!is_number(line, &line)) return false;
 	}
 	return line[0] == '\0';
+}
+
+bool is_move(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "MOVE")) return false;
+	temp = line + 4;
+	while(temp[0] == ' ') temp++;
+	if (!is_number(temp, &temp)) return false;
+	while(temp[0] == ' ') temp++;
+	return is_number(temp, &temp);
 }
 
 bool is_number(Line line, char** position) {
@@ -287,24 +305,25 @@ bool is_statement(Line line) {
 	) return true;
 	
 	/* The others have specific requirements, so check for each of those */
-	if (is_blink(line)
+	return is_blink(line)
 		|| is_cd(line)
 		|| is_esc(line)
 		|| is_fg(line)
 		|| is_gosub(line)
 		|| is_goto(line)
+		|| is_hidden(line)
 		|| is_if(line)
 		|| is_input(line)
+		|| is_italic(line)
 		|| is_let(line)
 		|| is_list(line)
 		|| is_load(line)
+		|| is_move(line)
 		|| is_print(line)
 		|| is_reverse(line)
 		|| is_save(line)
 		|| is_sys(line)
-	) return true;
-
-	return true;	/* Changed so users can run system commands */
+		|| is_underline(line);
 }
 
 bool is_string(Line line, char** position) {

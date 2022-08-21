@@ -2,14 +2,13 @@
 
 void replace_vars_with_values(Line line, VarList variables) {
 	/* Declare vars */
-	size_t i, length;
-	float value;
-	int var;
-	bool in_quotes;
+	size_t i = 0, length = strlen(line);
+	float value = 0;
+	int var = 0;
+	bool in_quotes = false;
 	
 	/* For version 0.1, this is pretty easy stuff.
 	Each variable is just one character, so... */
-	in_quotes = false;
 	for (i=0; i<length; i++) {
 		if (line[i] == '"')
 			in_quotes = !in_quotes;
@@ -19,5 +18,6 @@ void replace_vars_with_values(Line line, VarList variables) {
 		value = atof(variables[var - 'A'] + 2);
 		replace_with_float(line, i, i + 1, value);
 		length = strlen(line);
+		i = 0;
 	}
 }

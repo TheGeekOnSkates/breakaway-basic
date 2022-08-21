@@ -35,6 +35,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			printf("?SYNTAX ERROR");
 			if (running) printf(" IN %ld", programCounter);
 			printf("\n");
+			printf("READY.\n");
 		}
 		return;
 	}
@@ -123,6 +124,19 @@ void run(Program program, VarList variables, Line line, bool running) {
 		}
 		return;
 	}
+	if (STRING_STARTS_WITH(line, "HIDDEN")) {
+		if (STRING_CONTAINS(line, "ON"))
+			printf("\033[8m");
+		else if (STRING_CONTAINS(line, "OFF"))
+			printf("\033[28m");
+		else {
+			printf("?SYNTAX ERROR");
+			if (running) printf(" IN %ld", programCounter);
+			printf("\n");
+			printf("READY.\n");
+		}
+		return;
+	}
 	if (STRING_STARTS_WITH(line, "IF")) {
 		run_if(program, line, variables, running);
 		return;
@@ -156,6 +170,10 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	if (STRING_STARTS_WITH(line, "LOAD")) {
 		run_load(program, variables, line + 4);
+		return;
+	}
+	if (STRING_STARTS_WITH(line, "MOVE")) {
+		run_move(line + 4);
 		return;
 	}
 	if (STRING_EQUALS(line, "NEW")) {
@@ -523,6 +541,30 @@ void run_list(Program program, Line line) {
 		if (temp[0] == '\0') continue;
 		printf(" %ld %s\n", i, temp);
 	}
+}
+
+void run_move(Line line) {
+	int tempInt = 0, x = -1, y = -1, x2 = -1, y2 = -1;
+	tempInt = sscanf(line, "%d %d", &x, &y);
+	if (tempInt != 2 || x < 0 || y < 0) {
+		printf("?SYNTAX ERROR");
+		if (keepRunning)
+			printf(" IN %ld", programCounter);
+		printf("\n");
+		keepRunning = false;
+		printf("READY.\n");
+		return;
+	}
+	GetScreenSize(&y2, &x2);
+	if (x > x2 || y > y2) {
+		printf("?SYNTAX ERROR");
+		if (keepRunning) printf(" IN %ld", programCounter);
+		printf("\n");
+		keepRunning = false;
+		printf("READY.\n");
+		return;
+	}
+	printf("\033[%d;%dH", y, x);
 }
 
 void run_print(Program program, Line line) {
