@@ -306,7 +306,7 @@ void run_load(Program program, VarList variables, char* line) {
 	}
 	while(true) {
 		memset(code, 0, LINE_SIZE);
-		ReadLine(code);
+		fgets(code, LINE_SIZE, file);
 		if (feof(file)) break;
 		if (ferror(file)) {
 			perror("?ERROR READING FILE");
@@ -390,7 +390,7 @@ void run_input(char* line, VarList variables) {
 	super easy cuz only expressions are allowed */
 	memset(buffer, 0, LINE_SIZE);
 	printf("? ");
-	fgets(buffer, LINE_SIZE, stdin);
+	ReadLine(buffer);
 	temp = buffer;
 	if (!is_expr(temp, &temp)) {
 		printf("?INVALID INPUT ERROR\n");

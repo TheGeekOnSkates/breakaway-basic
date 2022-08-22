@@ -1,0 +1,2 @@
+10 PRINT "TESTING, ";
+20 PRINT 1,"-",2,"-",3

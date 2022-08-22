@@ -10,7 +10,7 @@
 
 # Known issues
 
-* I tried to run "20 FG X" (where X was a variable) and it gave a syntax error - look at that code again :)
+* Fix the bug in "LAUGH" (syntax error in 20??)
 * In the Escape shortcut, fix the "BREAK" line; for example, in the classic
 	10 PRINT "BREAKAWAY!  ";
 	20 GOTO 10
