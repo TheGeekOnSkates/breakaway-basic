@@ -1,14 +1,24 @@
-# Functins I'd like to includ in version 0.2
+# To-do's for version 0.2
 
 * ASC(<character>)
 * CHR$(<number>)
-* ROWS()
-* COLUMNS()
+* CONT
+* Add support for parens again (might be necessaryto make ASC and CHR work)
+* And if I'm going _there_, may as well add in all my other mathing work - meaningless functions like ABS, ATN, COS, TAN, ETC, ETC, ETC, that some people will appreciate.
+* Update the docs
+
+# Known issues
+
+* After calling ROWS() or COLUMNS(), something turns "echo" off (something in the "ioctl" function maybe?)
+* In the Escape shortcut, fix the "BREAK" line; for example, in the classic
+	10 PRINT "BREAKAWAY!  ";
+	20 GOTO 10
+  When I hit Escape, it says "BREAK IN 11" or "IN 15" or wherever - get it to point to the last actual line that ran.
+
+
+-----------------------------------------------------------------------------------------------------------------------
 
 # Thoughts / plans for version 0.3
-
-* Add support for parens again
-* Add in all my other mathing work - meaningless functions like ABS, ATN, COS, TAN, ETC, ETC, ETC, that some people will appreciate.
 
 # If I make it to version 1.0
 

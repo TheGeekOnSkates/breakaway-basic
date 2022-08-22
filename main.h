@@ -293,8 +293,14 @@ void strip_spaces(char* string);
 /**** FUNCTIONS (defined in functions.c)                             ****/
 /************************************************************************/
 
+/** Replaces COLUMNS() with the screen width, in characters */
+void replace_columns(Line line);
+
 /** Replaces RC() with the return code of the last SYS call */
 void replace_rc(Line line);
+
+/** Replaces ROWS() with the screen height, in characters */
+void replace_rows(Line line);
 
 
 

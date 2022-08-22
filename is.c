@@ -108,8 +108,16 @@ bool is_fg(Line line) {
 }
 
 bool is_function(Line line, char** position) {
+	if (STRING_STARTS_WITH(line, "COLUMNS()")) {
+		*position += 9;
+		return true;
+	}
 	if (STRING_STARTS_WITH(line, "RC()")) {
 		*position += 4;
+		return true;
+	}
+	if (STRING_STARTS_WITH(line, "ROWS()")) {
+		*position += 6;
 		return true;
 	}
 	return false;
