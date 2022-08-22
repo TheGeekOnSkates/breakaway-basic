@@ -1,5 +1,7 @@
 # To-do's for version 0.2
 
+* ROW() and COLUMN() to get the current cursor position
+* CURSOR ON/OFF (to show/hide the cursor)
 * ASC(<character>)
 * CHR$(<number>)
 * Add support for parens again (might be necessaryto make ASC and CHR work)
@@ -8,6 +10,7 @@
 
 # Known issues
 
+* I tried to run "20 FG X" (where X was a variable) and it gave a syntax error - look at that code again :)
 * In the Escape shortcut, fix the "BREAK" line; for example, in the classic
 	10 PRINT "BREAKAWAY!  ";
 	20 GOTO 10
@@ -18,13 +21,14 @@
 
 # Thoughts / plans for version 0.3
 
+* Aliases - that was really cool on the old version
+* Variables with names longer than 1 character
+* Variables ending in $ being strings
+* Support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
+
 # If I make it to version 1.0
 
-* Aliases - that was really cool on the old version
-* Variables with names longer than 1 character (unnecessary, but useful).
-* Variables ending in $ being strings
 * Set up LET so I can just do i.e. X = 7 (debating about this, cuz what if users want to run a command like ./my-script name="some file"?  The quotes make it hard to use `SYS`, and the = means it would be treated like a `LET`... maybe this should wait till after I have string-expressions and CHR$ and all that. :)
-* Support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
 * FOR <expr> TO <expr> STEP <expression>
 * NEXT (can't have FOR without it) :)
 * Variables with parens being arrays

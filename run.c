@@ -581,7 +581,11 @@ void run_program(Program program, VarList variables) {
 		currentLine = program[programCounter];
 		if (currentLine[0] == '\0') {
 			programCounter++;
-			if (programCounter == PROGRAM_SIZE) return;
+			if (programCounter == PROGRAM_SIZE) {
+				SetBlocking(true);
+				printf("READY.\n");
+				return;
+			}
 			continue;
 		}
 		if (!is_statement(currentLine)) {
