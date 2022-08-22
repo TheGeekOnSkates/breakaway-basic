@@ -1,6 +1,5 @@
 # Thoughts / plans for version 0.2
 
-* Set up the Escape key to END a program, like the old one did
 * Use GNU readline for Linux (If I ever build for DOS or something else that doesn't have readline, that system can use fgets like I am now).
 * Add support for parens again (already started); for people like me, who are not Algebrainiacs, parens help.  3 * 4 / 2 is not as clear to me as 3 * (4 / 2).
 * Add in all my other mathing work - meaningless functions like ABS, ATN, COS, TAN, ETC, ETC, ETC, that some people will appreciate.

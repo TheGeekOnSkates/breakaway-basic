@@ -59,6 +59,12 @@
  */
 #define STRING_CONTAINS(a, b) (strstr(a, b) != NULL)
 
+/**
+ * Checks if blocking mode is on
+ * @returns True if it is, false if it isn't
+ */
+bool IsBlocking(void);
+
 
 
 /************************************************************************/

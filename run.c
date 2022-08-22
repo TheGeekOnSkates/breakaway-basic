@@ -149,7 +149,13 @@ void run(Program program, VarList variables, Line line, bool running) {
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "INPUT")) {
+		if (!running) {
+			printf("?ILLEGAL DIRECT MODE ERROR\n");
+			return;
+		}
+		SetBlocking(true);
 		run_input(line + 5, variables);
+		SetBlocking(false);
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "ITALIC")) {
@@ -257,6 +263,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	
 	/* If it gets here, treat the instruction as a system command */
+	if (!IsBlocking()) return;
 	rc = system(line);
 }
 
@@ -611,9 +618,16 @@ void run_print(Program program, Line line) {
 }
 
 void run_program(Program program, VarList variables) {
-	char* currentLine;
-	
+	char* currentLine, temp;
+
+	SetBlocking(false);
 	while(true) {
+		temp = getchar();
+		if (temp == 27) {
+			printf("BREAK IN %ld\n", programCounter);
+			keepRunning = false;
+			SetBlocking(true);
+		}
 		if (!keepRunning) {
 			printf("READY.\n");
 			return;
@@ -638,6 +652,7 @@ void run_program(Program program, VarList variables) {
 			return;
 		}
 	}
+	SetBlocking(true);
 }
 
 // End of code-running functions
