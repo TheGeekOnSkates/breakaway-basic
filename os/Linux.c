@@ -43,4 +43,15 @@ inline bool GoToFolder(char* folder) {
 	return chdir((const char*)folder) == -1;
 }
 
+void ReadLine(char* buffer) {
+	char* temp = readline("");
+	if (temp == NULL) {
+		printf("?MEMORY ERROR\n");
+		return;
+	}
+	strncpy(buffer, temp, LINE_SIZE);
+	add_history(buffer);
+	free(temp);
+}
+
 #endif

@@ -348,7 +348,7 @@ void run_load(Program program, VarList variables, char* line) {
 	}
 	while(true) {
 		memset(code, 0, LINE_SIZE);
-		fgets(code, LINE_SIZE, file);
+		ReadLine(code);
 		if (feof(file)) break;
 		if (ferror(file)) {
 			perror("?ERROR READING FILE");

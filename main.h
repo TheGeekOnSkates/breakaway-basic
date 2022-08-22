@@ -124,6 +124,12 @@ uint64_t GetBytesFree(void);
  */
 void SetBlocking(bool setting);
 
+/**
+ * Gets input from the user
+ * @param[out] The user's input will be stored here
+ */
+void ReadLine(char* buffer);
+
 
 
 /************************************************************************/

@@ -21,7 +21,7 @@ int main() {
 	/* Main event loop */
 	while(true) {
 		memset(buffer, 0, LINE_SIZE);
-		fgets(buffer, LINE_SIZE, stdin);
+		ReadLine(buffer);
 		parse(code, variables, buffer);
 	}
 	return 0;
