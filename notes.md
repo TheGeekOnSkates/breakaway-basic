@@ -10,6 +10,7 @@
 # Known issues
 
 * After calling ROWS() or COLUMNS(), something turns "echo" off (something in the "ioctl" function maybe?)
+	**SOLVED:** The issue was unrelated to those functions; and ioctl (which needs a better name lol - "yoctyl?" Works if you're a Cicorax or something :D).  Okay seriously, the problem was that if the program ended on an error, SetBlocking(true) wasn't being called.  So I wrote an error handler function (which I was due to do anyway) and the problem seems to be fixed.  But I'm keeping it here as a reminder - if I see errors outside of run.c, they should use that function now.
 * In the Escape shortcut, fix the "BREAK" line; for example, in the classic
 	10 PRINT "BREAKAWAY!  ";
 	20 GOTO 10

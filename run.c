@@ -7,6 +7,14 @@ size_t subCounter = 0;
 bool thereWasAnError;
 int rc = 0;
 
+void show_error(const char* error) {
+	printf("?%s", error);
+	if (keepRunning) printf (" IN %ld", programCounter);
+	printf("\n");
+	keepRunning = false;
+	SetBlocking(true);
+}
+
 void run(Program program, VarList variables, Line line, bool running) {
 	/* Declare vars */
 	thereWasAnError = false;
@@ -20,13 +28,8 @@ void run(Program program, VarList variables, Line line, bool running) {
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy, variables);
 		temp = atoi(copy);
-		if (temp < 0 || temp > PROGRAM_SIZE) {
-			printf("?SYNTAX ERROR");
-			if (running) printf (" IN %ld", programCounter);
-			printf("\n");
-			keepRunning = false;
-			printf("READY.\n");
-		}
+		if (temp < 0 || temp > PROGRAM_SIZE)
+			show_error("SYNTAX ERROR");
 		else printf("\033[4%ldm", temp);
 		return;
 	}
@@ -35,12 +38,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			printf("\033[5m");
 		else if (STRING_CONTAINS(line, "OFF"))
 			printf("\033[25m");
-		else {
-			printf("?SYNTAX ERROR");
-			if (running) printf(" IN %ld", programCounter);
-			printf("\n");
-			printf("READY.\n");
-		}
+		else show_error("SYNTAX ERROR");
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "BOLD")) {
@@ -48,11 +46,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			printf("\033[1m");
 		else if (STRING_CONTAINS(line, "OFF"))
 			printf("\033[22m");
-		else {
-			printf("?SYNTAX ERROR");
-			if (running) printf(" IN %ld", programCounter);
-			printf("\n");
-		}
+		else show_error("SYNTAX ERROR");
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "CD")) {
@@ -81,31 +75,18 @@ void run(Program program, VarList variables, Line line, bool running) {
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy, variables);
 		temp = atoi(copy);
-		if (temp < 0 || temp > PROGRAM_SIZE) {
-			printf("?SYNTAX ERROR");
-			if (running) printf (" IN %ld", programCounter);
-			printf("\n");
-			keepRunning = false;
-			printf("READY.\n");
-		}
+		if (temp < 0 || temp > PROGRAM_SIZE)
+			show_error("SYNTAX ERROR");
 		else printf("\033[3%ldm", temp);
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "GOSUB")) {
 		temp = atoi(line + 5);
-		if (temp < 0 || temp > PROGRAM_SIZE) {
-			printf("?SYNTAX ERROR");
-			if (running) printf (" IN %ld", programCounter);
-			printf("\n");
-			keepRunning = false;
-			printf("READY.\n");
-		}
+		if (temp < 0 || temp > PROGRAM_SIZE)
+			show_error("SYNTAX ERROR");
 		else if (subCounter + 1 == PROGRAM_SIZE) {
 			/* Should never happen, but if so, handle it gracefully  :D */
-			printf("?TOO MANY SUBS ERROR");
-			if (running) printf (" IN %ld", programCounter);
-			printf("\n");
-			printf("READY.\n");
+			show_error("TOO MANY SUBS ERROR");
 		}
 		else {
 			subs[subCounter] = programCounter;
@@ -118,13 +99,8 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	if (STRING_STARTS_WITH(line, "GOTO")) {
 		temp = atoi(line + 4);
-		if (temp < 0 || temp > PROGRAM_SIZE) {
-			printf("?SYNTAX ERROR");
-			if (running) printf (" IN %ld", programCounter);
-			printf("\n");
-			keepRunning = false;
-			printf("READY.\n");
-		}
+		if (temp < 0 || temp > PROGRAM_SIZE)
+			show_error("SYNTAX ERROR");
 		else {
 			programCounter = temp - 1;
 			if (!running) run_program(program, variables);
@@ -136,12 +112,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			printf("\033[8m");
 		else if (STRING_CONTAINS(line, "OFF"))
 			printf("\033[28m");
-		else {
-			printf("?SYNTAX ERROR");
-			if (running) printf(" IN %ld", programCounter);
-			printf("\n");
-			printf("READY.\n");
-		}
+		else show_error("SYNTAX ERROR");
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "IF")) {
@@ -150,7 +121,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	if (STRING_STARTS_WITH(line, "INPUT")) {
 		if (!running) {
-			printf("?ILLEGAL DIRECT MODE ERROR\n");
+			show_error("ILLEGAL DIRECT MODE ERROR");
 			return;
 		}
 		SetBlocking(true);
@@ -163,12 +134,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			printf("\033[3m");
 		else if (STRING_CONTAINS(line, "OFF"))
 			printf("\033[23m");
-		else {
-			printf("?SYNTAX ERROR");
-			if (running) printf(" IN %ld", programCounter);
-			printf("\n");
-			printf("READY.\n");
-		}
+		else show_error("SYNTAX ERROR");
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "LET")) {
@@ -214,11 +180,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			printf("\033[7m");
 		else if (STRING_CONTAINS(line, "OFF"))
 			printf("\033[27m");
-		else {
-			printf("?SYNTAX ERROR");
-			if (running) printf(" IN %ld", programCounter);
-			printf("\n");
-		}
+		else show_error("SYNTAX ERROR");
 		return;
 	}
 	if (STRING_EQUALS(line, "RUN")) {
@@ -229,12 +191,8 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	if (STRING_STARTS_WITH(line, "RETURN")) {
 		subCounter--;
-		if (subCounter < 0 || subCounter >= PROGRAM_SIZE) {
-			printf("?RETURN WITHOUT GOSUB ERROR");
-			if (running) printf (" IN %ld", programCounter);
-			printf("\n");
-			return;
-		}
+		if (subCounter < 0 || subCounter >= PROGRAM_SIZE)
+			show_error("RETURN WITHOUT GOSUB ERROR");
 		programCounter = subs[subCounter];
 		keepRunning = true;
 		if (!running) run_program(program, variables);
@@ -253,12 +211,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			printf("\033[4m");
 		else if (STRING_CONTAINS(line, "OFF"))
 			printf("\033[24m");
-		else {
-			printf("?SYNTAX ERROR");
-			if (running) printf(" IN %ld", programCounter);
-			printf("\n");
-			printf("READY.\n");
-		}
+		else show_error("SYNTAX ERROR");
 		return;
 	}
 	
@@ -507,10 +460,7 @@ void run_let(char* line, VarList variables) {
 	strip_spaces(line);
 	temp = strchr(line, '=');
 	if (temp == NULL) {
-		printf("?SYNTAX ERROR");
-		if (keepRunning) printf (" IN %ld", programCounter);
-		printf("\n");
-		keepRunning = false;
+		show_error("SYNTAX ERROR");
 		return;
 	}
 	temp++;
@@ -540,7 +490,7 @@ void run_list(Program program, Line line) {
 	
 	/* Validate the numbers */
 	if (from < 0 || from > PROGRAM_SIZE || to < 0 || to > PROGRAM_SIZE) {
-		printf("?SYNTAX ERROR\n");
+		show_error("SYNTAX ERROR");
 		return;
 	}
 	
@@ -564,21 +514,12 @@ void run_move(Line line) {
 	int tempInt = 0, x = -1, y = -1, x2 = -1, y2 = -1;
 	tempInt = sscanf(line, "%d %d", &x, &y);
 	if (tempInt != 2 || x < 0 || y < 0) {
-		printf("?SYNTAX ERROR");
-		if (keepRunning)
-			printf(" IN %ld", programCounter);
-		printf("\n");
-		keepRunning = false;
-		printf("READY.\n");
+		show_error("SYNTAX ERROR");
 		return;
 	}
 	GetScreenSize(&y2, &x2);
 	if (x > x2 || y > y2) {
-		printf("?SYNTAX ERROR");
-		if (keepRunning) printf(" IN %ld", programCounter);
-		printf("\n");
-		keepRunning = false;
-		printf("READY.\n");
+		show_error("SYNTAX ERROR");
 		return;
 	}
 	printf("\033[%d;%dH", y, x);
@@ -640,8 +581,7 @@ void run_program(Program program, VarList variables) {
 			continue;
 		}
 		if (!is_statement(currentLine)) {
-			printf("?SYNTAX ERROR IN %ld\n", programCounter);
-			printf("READY.\n");
+			show_error("SYNTAX ERROR");
 			return;
 		}
 		currentLine = program[programCounter];
@@ -649,9 +589,11 @@ void run_program(Program program, VarList variables) {
 		programCounter++;
 		if (programCounter == PROGRAM_SIZE) {
 			printf("READY.\n");
+			SetBlocking(true);
 			return;
 		}
 	}
+	printf("READY.\n");
 	SetBlocking(true);
 }
 
