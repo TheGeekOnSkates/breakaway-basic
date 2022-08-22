@@ -12,6 +12,7 @@ It gets its name from hockey, of course (look at my nickname if you don't get wh
 
 * Set up the Linux version to use GNU readline, including history
 * Set up the Escape key to stop running the current program
+* Added the `CONT` instruction to continue the program (pick up where it left off)
 * Added the `ROWS()` and `COLUMNS()` functions for getting the terminal size
 * Added the `RC()` function to get the return value of the last `SYS` instruction
 

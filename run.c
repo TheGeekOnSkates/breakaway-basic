@@ -57,6 +57,11 @@ void run(Program program, VarList variables, Line line, bool running) {
 		CLEAR_SCREEN();
 		return;
 	}
+	if (STRING_EQUALS(line, "CONT")) {
+		keepRunning = true;
+		run_program(program, variables);
+		return;
+	}
 	if (STRING_EQUALS(line, "END")) {
 		keepRunning = false;
 		return;
@@ -567,13 +572,12 @@ void run_program(Program program, VarList variables) {
 		if (temp == 27) {
 			printf("BREAK IN %ld\n", programCounter);
 			keepRunning = false;
-			SetBlocking(true);
 		}
-		if (!keepRunning) {
+		if (!keepRunning || programCounter == PROGRAM_SIZE) {
+			SetBlocking(true);
 			printf("READY.\n");
 			return;
 		}
-		if (programCounter == PROGRAM_SIZE) return;
 		currentLine = program[programCounter];
 		if (currentLine[0] == '\0') {
 			programCounter++;

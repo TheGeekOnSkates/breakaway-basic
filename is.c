@@ -311,6 +311,7 @@ bool is_statement(Line line) {
 	/* These don't have anything after them, so they're easy */
 	if (
 		STRING_EQUALS(line, "CLEAR")
+		|| STRING_EQUALS(line, "CONT")
 		|| STRING_EQUALS(line, "END")
 		|| STRING_EQUALS(line, "EXIT")
 		|| STRING_EQUALS(line, "LIST")
