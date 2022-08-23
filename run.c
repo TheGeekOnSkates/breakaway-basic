@@ -230,7 +230,9 @@ void run(Program program, VarList variables, Line line, bool running) {
 	
 	/* If it gets here, treat the instruction as a system command */
 	if (!IsBlocking()) return;
-	rc = system(line);
+	if (STRING_STARTS_WITH(line, "cd"))
+		run_cd(line + 2);	/* So users can just cd ./wherever like in Bash */
+	else rc = system(line);
 }
 
 void run_cd(char* line) {

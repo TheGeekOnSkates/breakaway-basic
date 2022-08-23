@@ -1,4 +1,5 @@
-Started on CHR$; I think what I'll need to do is rework RUN, so it calls eval_expr on a copy for every instruction.  idk tho, it's almost lunchtime and then I have to get back to work :)
+I think I have is_chr working; but now I need to actually replace the character.
+Also, lowercase cd is not working yet (maybe don't call run_cd)
 
 
 # To-do's for version 0.2

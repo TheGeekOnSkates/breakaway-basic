@@ -8,15 +8,19 @@ bool is_bg(Line line) {
 	return is_number(temp, &temp) || is_var(temp, &temp) || is_function(temp, &temp);
 }
 
-bool is_chr(Line line) {
-	char* temp;
-	if (!STRING_STARTS_WITH(line, "CHR$")) return false;
-	temp = line + 4;
+bool is_chr(Line line, char** position) {
+	char* temp = line;
+	while(temp[0] == ' ') temp++;
+	printf("temp[0] = '%c'", temp[0]);
+	if (!STRING_STARTS_WITH(temp, "CHR$(")) return false;
+	printf("It gets here\n"); /* not yet */
+	temp = line + 5;
 	while(temp[0] == ' ') temp++;
 	if (!is_number(temp, &temp) && !is_var(temp, &temp)) return false;
 	while(temp[0] == ' ') temp++;
 	if (temp[0] != ')') return false;
 	temp++;
+	*position = temp;
 	return true;
 }
 
@@ -140,6 +144,8 @@ bool is_function(Line line, char** position) {
 		*position += 6;
 		return true;
 	}
+	if (is_chr(line, position))
+		return true;
 	return false;
 }
 
@@ -346,7 +352,6 @@ bool is_statement(Line line) {
 	return is_bg(line)
 		|| is_blink(line)
 		|| is_cd(line)
-		|| is_chr(line)
 		|| is_cursor(line)
 		|| is_esc(line)
 		|| is_fg(line)
