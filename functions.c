@@ -2,6 +2,28 @@
 
 extern int rc;
 
+void replace_chr(Line line) {
+	/* Declare variables */
+	char* where;
+	int rows, columns;
+	size_t start, end;
+	size_t chr;
+	
+	/* Set rows and columns */
+	GetScreenSize(&rows, &columns);
+
+	/* And replace ROWS() with rows */
+	while(true) {
+		where = strstr(line, "CHR$(");
+		if (where == NULL) break;
+		start = where - line;
+		end = start + 5;
+		chr = atol(where + end);
+		/* LEFT OFF HERE */
+		printf("CHR = '%lc'\n", (wchar_t)chr);
+	}
+}
+
 void replace_columns(Line line) {
 	/* Declare variables */
 	char* where;

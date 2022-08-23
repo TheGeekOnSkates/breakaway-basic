@@ -8,6 +8,18 @@ bool is_bg(Line line) {
 	return is_number(temp, &temp) || is_var(temp, &temp) || is_function(temp, &temp);
 }
 
+bool is_chr(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "CHR$")) return false;
+	temp = line + 4;
+	while(temp[0] == ' ') temp++;
+	if (!is_number(temp, &temp) && !is_var(temp, &temp)) return false;
+	while(temp[0] == ' ') temp++;
+	if (temp[0] != ')') return false;
+	temp++;
+	return true;
+}
+
 bool is_blink(Line line) {
 	char* temp;
 	if (!STRING_STARTS_WITH(line, "BLINK")) return false;
@@ -334,6 +346,7 @@ bool is_statement(Line line) {
 	return is_bg(line)
 		|| is_blink(line)
 		|| is_cd(line)
+		|| is_chr(line)
 		|| is_cursor(line)
 		|| is_esc(line)
 		|| is_fg(line)

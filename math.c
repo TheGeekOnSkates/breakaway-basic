@@ -26,6 +26,7 @@ void eval_expr(Line line, VarList variables) {
 	replace_columns(line);
 	replace_rc(line);
 	replace_rows(line);
+	replace_chr(line);
 	replace_vars_with_values(line, variables);
 	multiply(line, LINE_SIZE);
 	divide(line, LINE_SIZE);

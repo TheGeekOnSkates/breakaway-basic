@@ -293,6 +293,9 @@ void strip_spaces(char* string);
 /**** FUNCTIONS (defined in functions.c)                             ****/
 /************************************************************************/
 
+/** Replaces CHR$(number) with the character represented by that number */
+void replace_chr(Line line);
+
 /** Replaces COLUMNS() with the screen width, in characters */
 void replace_columns(Line line);
 
