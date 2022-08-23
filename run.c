@@ -62,6 +62,14 @@ void run(Program program, VarList variables, Line line, bool running) {
 		run_program(program, variables);
 		return;
 	}
+	if (STRING_STARTS_WITH(line, "CURSOR")) {
+		if (STRING_CONTAINS(line, "ON"))
+			printf("\033[?25h");
+		else if (STRING_CONTAINS(line, "OFF"))
+			printf("\033[?25l");
+		else show_error("SYNTAX ERROR");
+		return;
+	}
 	if (STRING_EQUALS(line, "END")) {
 		keepRunning = false;
 		return;
@@ -159,7 +167,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 	if (STRING_STARTS_WITH(line, "MOVE")) {
 		line += 4;
 		strncpy(copy, line, LINE_SIZE);
-		replace_vars_with_values(copy, variables);
+		eval_expr(copy, variables);
 		run_move(copy);
 		return;
 	}

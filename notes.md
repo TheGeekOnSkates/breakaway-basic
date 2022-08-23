@@ -1,7 +1,6 @@
 # To-do's for version 0.2
 
 * ROW() and COLUMN() to get the current cursor position
-* CURSOR ON/OFF (to show/hide the cursor)
 * ASC(<character>)
 * CHR$(<number>)
 * Add support for parens again (might be necessaryto make ASC and CHR work)

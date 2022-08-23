@@ -5,7 +5,7 @@ bool is_bg(Line line) {
 	if (!STRING_STARTS_WITH(line, "BG")) return false;
 	temp = line + 2;
 	while(temp[0] == ' ') temp++;
-	return is_number(temp, &temp) || is_var(temp, &temp);
+	return is_number(temp, &temp) || is_var(temp, &temp) || is_function(temp, &temp);
 }
 
 bool is_blink(Line line) {
@@ -30,6 +30,14 @@ bool is_cd(Line line) {
 	temp = line + 3;
 	while(temp[0] == ' ') temp++;
 	return is_string(temp, &temp);
+}
+
+bool is_cursor(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "CURSOR")) return false;
+	temp = line + 6;
+	while(temp[0] == ' ') temp++;
+	return STRING_EQUALS(temp, "ON") || STRING_EQUALS(temp, "OFF");
 }
 
 bool is_esc(Line line) {
@@ -104,7 +112,7 @@ bool is_fg(Line line) {
 	if (!STRING_STARTS_WITH(line, "FG")) return false;
 	temp = line + 2;
 	while(temp[0] == ' ') temp++;
-	return is_number(temp, &temp);
+	return is_number(temp, &temp) || is_var(temp, &temp) || is_function(temp, &temp);
 }
 
 bool is_function(Line line, char** position) {
@@ -241,10 +249,10 @@ bool is_move(Line line) {
 	if (!STRING_STARTS_WITH(line, "MOVE")) return false;
 	temp = line + 4;
 	while(temp[0] == ' ') temp++;
-	if (!is_number(temp, &temp) && !is_var(temp, &temp))
+	if (!is_number(temp, &temp) && !is_var(temp, &temp) && !is_function(temp, &temp))
 		return false;
 	while(temp[0] == ' ') temp++;
-	return is_number(temp, &temp) || is_var(temp, &temp);
+	return is_number(temp, &temp) || is_var(temp, &temp) || is_function(temp, &temp);
 }
 
 bool is_number(Line line, char** position) {
@@ -326,6 +334,7 @@ bool is_statement(Line line) {
 	return is_bg(line)
 		|| is_blink(line)
 		|| is_cd(line)
+		|| is_cursor(line)
 		|| is_esc(line)
 		|| is_fg(line)
 		|| is_gosub(line)
