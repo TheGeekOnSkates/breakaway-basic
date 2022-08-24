@@ -230,8 +230,13 @@ void run(Program program, VarList variables, Line line, bool running) {
 	
 	/* If it gets here, treat the instruction as a system command */
 	if (!IsBlocking()) return;
-	if (STRING_STARTS_WITH(line, "cd"))
-		run_cd(line + 2);	/* So users can just cd ./wherever like in Bash */
+	printf("Testing '%s'\n", line);
+	if (STRING_STARTS_WITH(line, "cd")) {
+		line += 2;
+		while(line[0] == ' ') line++;
+		printf("Go to '%s'\n", line);
+		GoToFolder(line);
+	}
 	else rc = system(line);
 }
 
@@ -575,12 +580,15 @@ void run_print(Program program, Line line) {
 
 void run_program(Program program, VarList variables) {
 	char* currentLine, temp;
+	size_t lastLine;
 
 	SetBlocking(false);
 	while(true) {
 		temp = getchar();
 		if (temp == 27) {
-			printf("BREAK IN %ld\n", programCounter);
+			lastLine = programCounter;
+			while(program[lastLine][0] == '\0') lastLine--;
+			printf("\nBREAK IN %ld\n", lastLine);
 			keepRunning = false;
 		}
 		if (!keepRunning || programCounter == PROGRAM_SIZE) {

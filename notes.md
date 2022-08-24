@@ -1,23 +1,25 @@
-I think I have is_chr working; but now I need to actually replace the character.
-Also, lowercase cd is not working yet (maybe don't call run_cd)
-
-
 # To-do's for version 0.2
 
-* ROW() and COLUMN() to get the current cursor position
+* Finish CHR$ - I think I have is_chr working; but now I need to actually replace the character.
+* Fix the buggz :/
+* Update the docs
+
+# Buggz! :D
+
+* Lowercase cd is not working yet (maybe don't call run_cd)
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------
+
+# Goals/plans for version 0.3
+
 * ASC(<character>)
-* CHR$(<number>)
 * Add support for parens again (might be necessaryto make ASC and CHR work)
 * And if I'm going _there_, may as well add in all my other mathing work - meaningless functions like ABS, ATN, COS, TAN, ETC, ETC, ETC, that some people will appreciate.
 * Update the docs
 
-# Known issues
-
-* Fix the bug in "LAUGH" (syntax error in 20??)
-* In the Escape shortcut, fix the "BREAK" line; for example, in the classic
-	10 PRINT "BREAKAWAY!  ";
-	20 GOTO 10
-  When I hit Escape, it says "BREAK IN 11" or "IN 15" or wherever - get it to point to the last actual line that ran.
 
 
 -----------------------------------------------------------------------------------------------------------------------
