@@ -42,6 +42,14 @@ bool is_bold(Line line) {
 
 bool is_cd(Line line) {
 	char* temp;
+
+	/* Most shells use this syntax: cd /path (Unix-y) or cd C:\path (DOS-like).
+	That's not particularly consistent with Breakaway BASIC (or any BASIC),
+	but it's a thing we've gotten so used to that it should "just work". */
+	if (STRING_STARTS_WITH(line, "cd")) return true;
+	
+	/* Otherwise, expect CD "string", which is different from most
+	shells but more consistent with thie BASIC's syntax */
 	if (!STRING_STARTS_WITH(line, "CD")) return false;
 	temp = line + 3;
 	while(temp[0] == ' ') temp++;

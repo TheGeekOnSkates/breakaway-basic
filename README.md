@@ -10,6 +10,7 @@ It gets its name from hockey, of course (look at my nickname if you don't get wh
 
 ### 0.2
 
+* Set up "normal" `CD` (normal meaning like other shells).  So both `CD "wherever"` AND `cd wherever` work.
 * Added the `CURSOR ON/OFF` instruction
 * Set up the Linux version to use GNU readline, including history
 * Set up the Escape key to stop running the current program

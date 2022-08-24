@@ -40,7 +40,7 @@ void SetBlocking(bool setting) {
 inline bool GoToFolder(char* folder) {
 	char* newline = strstr(folder, "\n");
 	if (newline != NULL) newline[0] = '\0';
-	return chdir((const char*)folder) == -1;
+	return chdir((const char*)folder) != -1;
 }
 
 void ReadLine(char* buffer) {

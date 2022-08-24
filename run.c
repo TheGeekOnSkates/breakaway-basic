@@ -227,16 +227,18 @@ void run(Program program, VarList variables, Line line, bool running) {
 		else show_error("SYNTAX ERROR");
 		return;
 	}
-	
-	/* If it gets here, treat the instruction as a system command */
-	if (!IsBlocking()) return;
-	printf("Testing '%s'\n", line);
+
+	/* If the user typed cd /wherver, like in Bash, let it "just work" */
+	/* NOTE: This same functionality is also in parse.c */
 	if (STRING_STARTS_WITH(line, "cd")) {
 		line += 2;
 		while(line[0] == ' ') line++;
-		printf("Go to '%s'\n", line);
-		GoToFolder(line);
+		if (!GoToFolder(line)) show_error("?DIRECTORY NOT FOUND ERROR");
+		return;
 	}
+	
+	/* If it gets here, treat the instruction as a system command */
+	if (!IsBlocking()) return;
 	else rc = system(line);
 }
 
@@ -262,7 +264,7 @@ void run_cd(char* line) {
 	}
 	
 	/* And here we go... */
-	GoToFolder(copy);
+	if (!GoToFolder(copy)) show_error("?DIRECTORY NOT FOUND ERROR");
 }
 
 void run_esc(char* line) {

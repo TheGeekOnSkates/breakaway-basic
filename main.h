@@ -227,6 +227,12 @@ bool is_var_list(Line line, char** position);
 /************************************************************************/
 
 /**
+ * Shows an error message and stops the program
+ * @param[in] The error message
+ */
+void show_error(const char* error);
+
+/**
  * Runs the line the user just typed
  * @param[in] The memory where the user's code is stores
  * @param[in] The memory where variable valeus are stores

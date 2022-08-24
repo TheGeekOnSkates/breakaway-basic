@@ -24,5 +24,11 @@ void parse(Program program, VarList variables, Line line) {
 	/* Otherwise, it's either a statement or a syntax error :) */
 	if (is_statement(line))
 		run(program, variables, line, false);
+	else if (STRING_STARTS_WITH(line, "cd")) {
+		line += 2;
+		while(line[0] == ' ') line++;
+		if (!GoToFolder(line)) show_error("?DIRECTORY NOT FOUND ERROR");
+		return;
+	}
 	else rc = system(line);
 }
