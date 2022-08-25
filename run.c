@@ -227,19 +227,26 @@ void run(Program program, VarList variables, Line line, bool running) {
 		else show_error("SYNTAX ERROR");
 		return;
 	}
+	
+	/* If it gets here, treat the instruction as a system command */
+	if (!IsBlocking()) return;
+	run_system(line);
+}
 
-	/* If the user typed cd /wherver, like in Bash, let it "just work" */
-	/* NOTE: This same functionality is also in parse.c */
+void run_system(char* line) {
+	/* If the user typed cd wherver, like in DOS or Bash,
+		let it "just work".  It looks weird in BASIC, but
+		considering terminals have been doing it this way
+		for decades, it's the right thing to do.  :)  */
 	if (STRING_STARTS_WITH(line, "cd")) {
 		line += 2;
 		while(line[0] == ' ') line++;
 		if (!GoToFolder(line)) show_error("?DIRECTORY NOT FOUND ERROR");
 		return;
 	}
-	
-	/* If it gets here, treat the instruction as a system command */
-	if (!IsBlocking()) return;
-	else rc = system(line);
+
+	/* Otherwise, run it */
+	rc = system(line);
 }
 
 void run_cd(char* line) {
@@ -609,7 +616,13 @@ void run_program(Program program, VarList variables) {
 			continue;
 		}
 		if (!is_statement(currentLine)) {
-			show_error("SYNTAX ERROR");
+			if (STRING_STARTS_WITH(currentLine, "cd")) {
+				currentLine += 2;
+				while(currentLine[0] == ' ') currentLine++;
+				if (!GoToFolder(currentLine)) show_error("?DIRECTORY NOT FOUND ERROR");
+			}
+			else rc = system(currentLine);
+			SetBlocking(true);
 			return;
 		}
 		currentLine = program[programCounter];

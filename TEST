@@ -1,2 +1,4 @@
-10 PRINT "TESTING, ";
-20 PRINT 1,"-",2,"-",3
+10 cd ../
+20 pwd
+30 cd ./breakaway-basic
+40 pwd

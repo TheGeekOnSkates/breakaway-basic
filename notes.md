@@ -8,13 +8,7 @@
 
 * I can't do MOVE COLUMNS() ROWS() - might also be a good idea to try MOVE 3 + 3 4... actually, just saying that, I kinda want to add a comma between X and Y.
 * PRINT "     Leading spaces IN QUOTES get clipped.     ";
-* Need to allow for system commands in program mode, such as:
-
-	10 micro notes.md
-	20 make
-
-  Currently this would throw a syntax error (look at run_program.c).
-
+* When a system command runs in program mode, it seems to stop (see "TEST")
 
 
 -----------------------------------------------------------------------------------------------------------------------

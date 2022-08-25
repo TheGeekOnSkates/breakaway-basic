@@ -249,6 +249,12 @@ void run(Program program, VarList variables, Line line, bool running);
  */
 void run_program(Program program, VarList variables) ;
 
+/**
+ * When the user types something that isn't valid Breakaway BASIC,
+ * it gets treated as a system command.  This runs it.
+ * @param[in] The user's code
+ */
+void run_system(char* line);
 
 /**
  * These all run specific instructions
