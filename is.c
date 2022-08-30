@@ -11,9 +11,7 @@ bool is_bg(Line line) {
 bool is_chr(Line line, char** position) {
 	char* temp = line;
 	while(temp[0] == ' ') temp++;
-	printf("temp[0] = '%c'", temp[0]);
 	if (!STRING_STARTS_WITH(temp, "CHR$(")) return false;
-	printf("It gets here\n"); /* not yet */
 	temp = line + 5;
 	while(temp[0] == ' ') temp++;
 	if (!is_number(temp, &temp) && !is_var(temp, &temp)) return false;
@@ -94,7 +92,7 @@ bool is_expr(Line line, char** position) {
 		/* Here we get into a kinda weird scenario:
 		What if I enter 3 + 4 * (nothing at the end?)
 		We can't have that, so... */
-		if (!is_number(pos, &pos) && !is_var(pos, &pos) && !is_function(line, &pos)) {
+		if (!is_number(pos, &pos) && !is_var(pos, &pos) && !is_function(pos, &pos)) {
 			*position = pos;
 			return false;
 		}

@@ -17,17 +17,6 @@ void replace_with_float(char* line, size_t from, size_t to, float value) {
 		copy[i] = temp[i - from];
 	strncat(copy, line + to, LINE_SIZE - 1);
 	strncpy(line, copy, LINE_SIZE);
-	
-/*
-	char temp[LINE_SIZE * 2];
-	memset(temp, 32, LINE_SIZE * 2);
-	temp[LINE_SIZE * 2 - 1] = '\0';
-	if (from > 0) strncpy(temp, line, from - 1);
-	snprintf(temp + from - 1, LINE_SIZE * 2, "%g", value);
-	printf("\"%s\" (%ld)\n", temp, strlen(temp));
-	strncat(temp, line + to, LINE_SIZE);
-	
-*/
 }
 
 void replace_with_string(char* line, size_t start, size_t end, char* replacement) {

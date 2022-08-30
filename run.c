@@ -401,7 +401,7 @@ void run_sys(char* line) {
 	}
 	
 	/* And here we go... */
-	system(copy);
+	rc = system(copy);
 }
 
 

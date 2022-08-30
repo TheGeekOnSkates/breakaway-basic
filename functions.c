@@ -4,23 +4,23 @@ extern int rc;
 
 void replace_chr(Line line) {
 	/* Declare variables */
-	char* where;
-	int rows, columns;
-	size_t start, end;
-	size_t chr;
-	
-	/* Set rows and columns */
-	GetScreenSize(&rows, &columns);
+	char* where = NULL, buffer[8];
+	size_t start = 0, end = 0;
+	size_t chr = 0;
 
 	/* And replace ROWS() with rows */
 	while(true) {
 		where = strstr(line, "CHR$(");
 		if (where == NULL) break;
 		start = where - line;
-		end = start + 5;
-		chr = atol(where + end);
+		end = start + 4;
+		while(line[end] != ')' && end < LINE_SIZE) end++;
+		if (end + 1 < LINE_SIZE) end++;
+		chr = atol(where + start + 4);
 		/* LEFT OFF HERE */
-		printf("CHR = '%lc'\n", (wchar_t)chr);
+		memset(buffer, 0, 8);
+		snprintf(buffer, 8, "%lc", (wchar_t)chr);
+		replace_with_string(line, start, end, buffer);
 	}
 }
 
