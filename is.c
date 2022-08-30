@@ -14,7 +14,7 @@ bool is_chr(Line line, char** position) {
 	if (!STRING_STARTS_WITH(temp, "CHR$(")) return false;
 	temp = line + 5;
 	while(temp[0] == ' ') temp++;
-	if (!is_number(temp, &temp) && !is_var(temp, &temp)) return false;
+	if (!is_number(temp, &temp) && !is_expr(temp, &temp)) return false;
 	while(temp[0] == ' ') temp++;
 	if (temp[0] != ')') return false;
 	temp++;
@@ -140,6 +140,10 @@ bool is_fg(Line line) {
 bool is_function(Line line, char** position) {
 	if (STRING_STARTS_WITH(line, "COLUMNS()")) {
 		*position += 9;
+		return true;
+	}
+	if (STRING_STARTS_WITH(line, "FRE()")) {
+		*position += 5;
 		return true;
 	}
 	if (STRING_STARTS_WITH(line, "RC()")) {

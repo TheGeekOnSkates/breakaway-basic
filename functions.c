@@ -44,6 +44,27 @@ void replace_columns(Line line) {
 	}
 }
 
+void replace_fre(Line line) {
+	/* Declare variables */
+	char* where, buffer[20];
+	uint64_t bytes;
+	size_t start, end;
+	
+	/* Get the bytes free */
+	bytes = GetBytesFree();
+	memset(buffer, 0, 20);
+	snprintf(buffer, 20, "%ld", bytes);
+	
+	/* And replace ROWS() with rows */
+	while(true) {
+		where = strstr(line, "FRE()");
+		if (where == NULL) break;
+		start = where - line;
+		end = start + 5;
+		replace_with_string(line, start, end, buffer);
+	}
+}
+
 void replace_rc(Line line) {
 	char* where;
 	size_t start, end;

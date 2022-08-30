@@ -308,6 +308,9 @@ void strip_spaces(char* string);
 /** Replaces CHR$(number) with the character represented by that number */
 void replace_chr(Line line);
 
+/** Replaces FRE() with the bytes free */
+void replace_fre(Line line);
+
 /** Replaces COLUMNS() with the screen width, in characters */
 void replace_columns(Line line);
 
