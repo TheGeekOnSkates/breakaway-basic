@@ -559,30 +559,32 @@ void run_print(Program program, Line line) {
 	size_t i, length;
 	char copy[LINE_SIZE], * temp;
 	bool in_quotes = false, newline = true;
-	
-	/* Replaces the commas and quotation marks with spaces */
+
+	/* Replace the commas and quotation marks with spaces */
 	length = strlen(line);
 	strncpy(copy, line, LINE_SIZE);
+	while(copy[0] == ' ') shift_left(copy, 0, length);
 	for (i=0; i<length; i++) {
 		while (copy[i] == '"') {
 			in_quotes = !in_quotes;
 			shift_left(copy, i, length);
 		}
 		if (copy[i] == ',' && !in_quotes ) {
-			copy[i] = ' ';
+			/* This used to replace it with a space, but by doing a shift
+			left, you can do i.e. PRINT CHR$(65),"BC" and get "ABC". */
+			shift_left(copy, i, length);
 			continue;
 		}
 	}
 	
 	/* Figure out if it should print a new line at the end */
 	i = length - 1;
-	while(copy[i] == '\0' || copy[i] == ' ') i--;
+	while(copy[i] == '\0' || (copy[i] == ' ' && !in_quotes)) i--;
 	newline = copy[i] != ';';
 	if (!newline) copy[i] = '\0';
 	
 	/* And print away! */
 	temp = copy;
-	while(temp[0] == ' ') temp++;
 	printf("%s", temp);
 	if (newline) printf("\n");
 }

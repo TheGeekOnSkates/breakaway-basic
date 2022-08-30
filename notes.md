@@ -5,9 +5,6 @@
 
 # Buggz! :D
 
-* I can't do MOVE COLUMNS() ROWS() - might also be a good idea to try MOVE 3 + 3 4... actually, just saying that, I kinda want to add a comma between X and Y.
-	**EDIT:** I'm not going there.  Look at my CHR_TEST script; between that and ESC (and the fact that not all terminals work the same way) I've decided this one is just not worth it.
-* PRINT "     Leading spaces IN QUOTES get clipped.     ";
 * When a system command runs in program mode, it seems to stop (see "TEST"); not to mention, look at run.c - there's a run_system, but also a run_sys - not sure if it should be that way
 * I noticed too that lowercase cd doesn't seem to be working consistently - could be related to the previous issue.
 
