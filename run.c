@@ -229,7 +229,6 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	
 	/* If it gets here, treat the instruction as a system command */
-	if (!IsBlocking()) return;
 	run_system(line);
 }
 
