@@ -305,6 +305,9 @@ void strip_spaces(char* string);
 /**** FUNCTIONS (defined in functions.c)                             ****/
 /************************************************************************/
 
+/** Replaces ASC("Some character") with the ASCII (or Unicode) value */
+void replace_asc(Line line);
+
 /** Replaces CHR$(number) with the character represented by that number */
 void replace_chr(Line line);
 

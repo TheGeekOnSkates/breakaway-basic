@@ -2,6 +2,28 @@
 
 extern int rc;
 
+void replace_asc(Line line) {
+	/* Declare variables */
+	char* where = NULL, buffer[8];
+	size_t start = 0, end = 0;
+
+	/* And replace ROWS() with rows */
+	while(true) {
+		where = strstr(line, "ASC(");
+		if (where == NULL) break;
+		start = where - line;
+		end = start + 4;
+		while(line[end] != ')' && line[end] != '\0' && end < LINE_SIZE) end++;
+		if (end + 1 < LINE_SIZE) end++;
+		where += 5;
+
+		/* And do the replacing */
+		memset(buffer, 0, 8);
+		snprintf(buffer, 8, "%d", where[0]);
+		replace_with_string(line, start, end, buffer);
+	}
+}
+
 void replace_chr(Line line) {
 	/* Declare variables */
 	char* where = NULL, buffer[8];

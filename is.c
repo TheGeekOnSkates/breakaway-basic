@@ -1,5 +1,20 @@
 #include "main.h"
 
+bool is_asc(Line line, char** position) {
+	char* temp = line;
+	while(temp[0] == ' ') temp++;
+	if (!STRING_STARTS_WITH(temp, "ASC(\"")) return false;
+	temp = line + 5;
+	if (temp[0] == '\0') return false;
+	temp++;	/* The character we want the ASCII value for */
+	if (temp[0] != '"') return false;
+	temp++;
+	if (temp[0] != ')') return false;
+	temp++;
+	*position = temp;
+	return true;
+}
+
 bool is_bg(Line line) {
 	char* temp;
 	if (!STRING_STARTS_WITH(line, "BG")) return false;
@@ -138,6 +153,10 @@ bool is_fg(Line line) {
 }
 
 bool is_function(Line line, char** position) {
+	if (is_asc(line, position)) {
+		*position += 4;
+		return true;
+	}
 	if (STRING_STARTS_WITH(line, "COLUMNS()")) {
 		*position += 9;
 		return true;
