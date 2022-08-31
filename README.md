@@ -21,7 +21,7 @@ Alternatively, you can remove this dependency by going to os/Linux.c and getting
 
 ### 0.3
 
-* 
+* Made the `LET` keyword optional (you can just do i.e. `X = 42` now).
 
 ### 0.2
 
@@ -254,7 +254,11 @@ Turns italics on or off on terminals that support it.  For example:
 Sets a variable.  Variables (as of version 0.1) can only be capital letters, just one character (longer names are not yet supported).  For example:
 
 ```
+10 LET X = 42
+20 PRINT X
 ```
+
+It will print 42.  Note that the `LET` keyword is optional (you can just do i.e. `10 X = 42`).
 
 ### LIST [{number}[ - {number}]]
 
