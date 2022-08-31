@@ -23,7 +23,24 @@ size_t count_math_symbols(Line line, char symbol) {
 }
 
 void eval_expr(Line line, VarList variables) {
+	/* Unfortunately, all this needs to be handled first (see below) */
+	replace_asc(line);
+	replace_columns(line);
+	replace_chr(line);
+	replace_fre(line);
+	replace_rc(line);
+	replace_rows(line);
+	
+	/* Bug I'll need to address in 0.3:
+	If I call this first (which is what I'd like),
+	all the one-letter variables get replaced with zeroes.
+	This makes sense (cuz the only variables 0.2 supports
+	are capital letters A-Z, which default to zero), but
+	I think is_var will have to check that the variable is
+	doesn't contain a keyword before replacing */
 	replace_vars_with_values(line, variables);
+
+	/* Then we can crunch numbers (which again, I would like to do first)*/
 	multiply(line, LINE_SIZE);
 	divide(line, LINE_SIZE);
 	add(line, LINE_SIZE);

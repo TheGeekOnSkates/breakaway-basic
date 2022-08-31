@@ -13,7 +13,7 @@ void set_line(Program program, Line line) {
 	/* Get the line number */
 	lineNumber = atoi(line);
 	if (lineNumber < 0 || lineNumber >= PROGRAM_SIZE) {
-		printf("?SYNTAX ERROR\n");
+		show_error("SYNTAX ERROR");
 		return;
 	}
 	

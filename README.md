@@ -8,6 +8,18 @@ It gets its name from hockey, of course (look at my nickname if you don't get wh
 
 ## Change log
 
+### 0.2
+
+* Tried to set up "normal" `CD` (normal meaning like other shells).  So both `CD "wherever"` AND `cd wherever` work.
+* Added the `CURSOR ON/OFF` instruction
+* Set up the Linux version to use GNU readline, including history
+* Set up the Escape key to stop running the current program
+* Added the `ASC("{character}")` instruction to get the ASCII character codes (like in Commodore BASICs); note that for now it's just ASCII; Unicode characters like "▄" are not supported yet.
+* Added the `CONT` instruction to continue the program (pick up where it left off)
+* Added the `ROWS()` and `COLUMNS()` functions for getting the terminal size
+* Added the `RC()` function to get the return value of the last `SYS` instruction
+* Added the `FRE()` function (like Commodore BASICs) - not important at all, but it's fun. :)
+
 ### 0.1
 
 The first release was just a superset of "Tiny BASIC", the main additions being things like ASCII art functions and LOAD/SAVE.
@@ -16,6 +28,12 @@ The first release was just a superset of "Tiny BASIC", the main additions being 
 ==============================================================================
 
 ## Language reference
+
+### ASC({character})
+
+Gets the ASCII character code that corresponds to the character you typed.  For example, running `PRINT ASC("A")` would print 65 (the ASCII character code for the letter "A").
+
+**NOTE:** For now, it's just ASCII (no Unicode).  However, this is something I plan to fix in a future update.  And that's where things really get interesting (and helpful).  Try printing `CHR$(9604)` and seeing what happens. :)
 
 ### BG {expression}
 
@@ -65,9 +83,48 @@ Changes the folder you're working in (most systems call this the "working direct
 
 `CD "wherever"`
 
+**NOTE:** You might also be able to use CD like in other shells (i.e. `cd ./wherever` with no quotes), but this feature is still in development and has been known to not always behave correctly.
+
 ### CLEAR
 
 Clears the screen.  This is used by a bunch of other examples (for instance, `BG`) so there's no need to repeat it here.
+
+### CONT
+
+Continues the program from where it left off.  So for example, if you have the program:
+
+```
+10 PRINT "BREAKAWAY ";
+20 PRINT "BASIC ";
+30 PRINT "IS ";
+40 PRINT "AWESOME!"
+```
+
+And you hit Escape while it was on line 10, it would print "BASIC IS AWESOME!" (since it already ran line 10)
+
+### COLUMNS()
+
+Gets the number of columns of characters in your terminal, for terminals that support that feature.  For example:
+
+```
+PRINT COLUMNS(), "COLUMNS BY", ROWS(), "ROWS"
+```
+
+Should give you the dimensions of your terminal in characters.
+
+### CURSOR ON/OFF
+
+Shows or hides the blinking cursor on terminals that support it.  For example, this little program hides both the cursor and the text you type, kind of like when you're entering a password:
+
+```
+10 CURSOR OFF
+20 PRINT "ENTER YOUR 4-DIGIT PIN:"
+30 HIDDEN ON
+40 INPUT X
+50 HIDDEN OFF
+60 CURSOR ON
+70 PRINT "YOU TYPED: ",X
+```
 
 ### END
 
@@ -107,6 +164,10 @@ Sets the foreground color (text color).  See the `BG` instruction for more info 
 60 RESET
 ```
 
+### FRE()
+
+Prints the number of bytes free; not particularly useful or important on a modern system, but Commodore BASIC does it so I figured it would be a fun feature to have just cuz. :)
+
 ### GOSUB {expression}
 
 Jumps to a line number, and doesn't go back from there until it finds a `RETURN` instruction.  For example:
@@ -129,7 +190,7 @@ Jumps to a line number.  One classic example (and if you ever played with any BA
 20 GOTO 10
 ```
 
-Note that for version 0.1, the only way to stop this infinite loop is to exit Breakaway BASIC.  This change will (Lord willing) be fixed in version 0.2. :)
+To exit this loop, press the Escape key.
 
 ### HIDDEN ON/OFF
 
@@ -213,6 +274,18 @@ Prints (displays) data on the screen.  I've used it all through this reference, 
 60 PRINT N,"SQUARED = ", N * N
 ```
 
+### RC()
+
+Gets the return code of the last `SYS` call or system call in program mode.  This is usually zero, so checking if it's not may be useful for troubleshooting. For example:
+
+```
+10 SYS "ls"
+20 IF RC() <> 0 THEN GOTO 50
+30 PRINT "IT WORKED"
+40 END
+50 PRINT "COMMAND FAILED."
+```
+
 ### REM {comment}
 
 A comment is like a note to yourself, so you know what your code is doing if you come back to it after a long time away.  For example:
@@ -242,9 +315,19 @@ Turns reverse text on/off (so for example, on most terminals it will cause text 
 40 PRINT "THIS WON'T."
 ```
 
+### ROWS()
+
+Gets the number of rows of characters in your terminal, for terminals that support that feature.  For example:
+
+```
+PRINT COLUMNS(), "COLUMNS BY", ROWS(), "ROWS"
+```
+
+Should give you the dimensions of your terminal in characters.
+
 ### RUN
 
-Runs your program.
+Runs your program.  To stop running, press the Escape key.
 
 ### SAVE {string}
 
@@ -259,6 +342,8 @@ Runs a system command.  For example:
 20 CLEAR
 30 SYS "ls -la"
 ```
+
+The return value of the system call will be saved for later use by the `RC()` function.
 
 ### UNDERLINE ON/OFF
 

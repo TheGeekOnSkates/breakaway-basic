@@ -1,5 +1,13 @@
 #include "../main.h"
 
+#ifdef Linux
+
+bool is_blocking = false;
+
+bool IsBlocking() {
+	return is_blocking;
+}
+
 void GetScreenSize(int* rows, int* columns) {
 	static struct winsize w;
 	ioctl(0, TIOCGWINSZ, &w);
@@ -13,6 +21,7 @@ uint64_t GetBytesFree() {
 
 /* See https://gist.github.com/dagon666/8194870 */
 void SetBlocking(bool setting) {
+	is_blocking = setting;
 	struct termios t;
 	tcgetattr(STDIN_FILENO, &t);
 	if (setting) {
@@ -31,5 +40,18 @@ void SetBlocking(bool setting) {
 inline bool GoToFolder(char* folder) {
 	char* newline = strstr(folder, "\n");
 	if (newline != NULL) newline[0] = '\0';
-	return chdir((const char*)folder) == -1;
+	return chdir((const char*)folder) != -1;
 }
+
+void ReadLine(char* buffer) {
+	char* temp = readline("");
+	if (temp == NULL) {
+		printf("?MEMORY ERROR\n");
+		return;
+	}
+	strncpy(buffer, temp, LINE_SIZE);
+	add_history(buffer);
+	free(temp);
+}
+
+#endif

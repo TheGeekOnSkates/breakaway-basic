@@ -59,6 +59,12 @@
  */
 #define STRING_CONTAINS(a, b) (strstr(a, b) != NULL)
 
+/**
+ * Checks if blocking mode is on
+ * @returns True if it is, false if it isn't
+ */
+bool IsBlocking(void);
+
 
 
 /************************************************************************/
@@ -117,6 +123,12 @@ uint64_t GetBytesFree(void);
  * in GET (once I've done that)
  */
 void SetBlocking(bool setting);
+
+/**
+ * Gets input from the user
+ * @param[out] The user's input will be stored here
+ */
+void ReadLine(char* buffer);
 
 
 
@@ -199,12 +211,13 @@ static inline bool is_math_action(char ch) {
  * And these all check for types of tokens
  * @param[in] The line to be tested
  * @param[in, out] Same as line, except it gets moved
-  * to the first character _after_ the string/expr_list/etc.
+ * to the first character _after_ the string/expr_list/etc.
  * @returns True if it is, false if it isn't
  */
 bool is_string(Line line, char** position);
 bool is_relop(Line line, char** position);
 bool is_expr_list(Line line, char** position);
+bool is_function(Line line, char** position);
 bool is_var_list(Line line, char** position);
 
 
@@ -212,6 +225,12 @@ bool is_var_list(Line line, char** position);
 /************************************************************************/
 /**** FUNCTIONS THAT RUN CODE (defined in run.c)                     ****/
 /************************************************************************/
+
+/**
+ * Shows an error message and stops the program
+ * @param[in] The error message
+ */
+void show_error(const char* error);
 
 /**
  * Runs the line the user just typed
@@ -230,6 +249,12 @@ void run(Program program, VarList variables, Line line, bool running);
  */
 void run_program(Program program, VarList variables) ;
 
+/**
+ * When the user types something that isn't valid Breakaway BASIC,
+ * it gets treated as a system command.  This runs it.
+ * @param[in] The user's code
+ */
+void run_system(char* line);
 
 /**
  * These all run specific instructions
@@ -273,6 +298,30 @@ void shift_left(char* string, size_t start, size_t length);
 void replace_with_float(char* line, size_t from, size_t to, float value);
 void replace_with_string(char* line, size_t start, size_t end, char* replacement);
 void strip_spaces(char* string);
+
+
+
+/************************************************************************/
+/**** FUNCTIONS (defined in functions.c)                             ****/
+/************************************************************************/
+
+/** Replaces ASC("Some character") with the ASCII (or Unicode) value */
+void replace_asc(Line line);
+
+/** Replaces CHR$(number) with the character represented by that number */
+void replace_chr(Line line);
+
+/** Replaces FRE() with the bytes free */
+void replace_fre(Line line);
+
+/** Replaces COLUMNS() with the screen width, in characters */
+void replace_columns(Line line);
+
+/** Replaces RC() with the return code of the last SYS call */
+void replace_rc(Line line);
+
+/** Replaces ROWS() with the screen height, in characters */
+void replace_rows(Line line);
 
 
 

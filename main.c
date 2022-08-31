@@ -13,7 +13,7 @@ int main() {
 	
 	/* Title */
 	CLEAR_SCREEN();
-	print_centered("**** BREAKAWAY BASIC  0.1 ****\n");
+	print_centered("**** BREAKAWAY BASIC  0.2 ****\n");
 	sprintf(title, "%lu BYTES FREE\n", GetBytesFree());
 	print_centered(title);
 	printf("READY.\n");
@@ -21,7 +21,7 @@ int main() {
 	/* Main event loop */
 	while(true) {
 		memset(buffer, 0, LINE_SIZE);
-		fgets(buffer, LINE_SIZE, stdin);
+		ReadLine(buffer);
 		parse(code, variables, buffer);
 	}
 	return 0;

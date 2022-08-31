@@ -5,6 +5,15 @@ bool keepRunning = true;
 size_t subs[PROGRAM_SIZE];
 size_t subCounter = 0;
 bool thereWasAnError;
+int rc = 0;
+
+void show_error(const char* error) {
+	printf("?%s", error);
+	if (keepRunning) printf (" IN %ld", programCounter);
+	printf("\n");
+	keepRunning = false;
+	SetBlocking(true);
+}
 
 void run(Program program, VarList variables, Line line, bool running) {
 	/* Declare vars */
@@ -19,13 +28,8 @@ void run(Program program, VarList variables, Line line, bool running) {
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy, variables);
 		temp = atoi(copy);
-		if (temp < 0 || temp > PROGRAM_SIZE) {
-			printf("?SYNTAX ERROR");
-			if (running) printf (" IN %ld", programCounter);
-			printf("\n");
-			keepRunning = false;
-			printf("READY.\n");
-		}
+		if (temp < 0 || temp > PROGRAM_SIZE)
+			show_error("SYNTAX ERROR");
 		else printf("\033[4%ldm", temp);
 		return;
 	}
@@ -34,12 +38,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			printf("\033[5m");
 		else if (STRING_CONTAINS(line, "OFF"))
 			printf("\033[25m");
-		else {
-			printf("?SYNTAX ERROR");
-			if (running) printf(" IN %ld", programCounter);
-			printf("\n");
-			printf("READY.\n");
-		}
+		else show_error("SYNTAX ERROR");
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "BOLD")) {
@@ -47,11 +46,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			printf("\033[1m");
 		else if (STRING_CONTAINS(line, "OFF"))
 			printf("\033[22m");
-		else {
-			printf("?SYNTAX ERROR");
-			if (running) printf(" IN %ld", programCounter);
-			printf("\n");
-		}
+		else show_error("SYNTAX ERROR");
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "CD")) {
@@ -60,6 +55,19 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	if (STRING_EQUALS(line, "CLEAR")) {
 		CLEAR_SCREEN();
+		return;
+	}
+	if (STRING_EQUALS(line, "CONT")) {
+		keepRunning = true;
+		run_program(program, variables);
+		return;
+	}
+	if (STRING_STARTS_WITH(line, "CURSOR")) {
+		if (STRING_CONTAINS(line, "ON"))
+			printf("\033[?25h");
+		else if (STRING_CONTAINS(line, "OFF"))
+			printf("\033[?25l");
+		else show_error("SYNTAX ERROR");
 		return;
 	}
 	if (STRING_EQUALS(line, "END")) {
@@ -80,31 +88,18 @@ void run(Program program, VarList variables, Line line, bool running) {
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy, variables);
 		temp = atoi(copy);
-		if (temp < 0 || temp > PROGRAM_SIZE) {
-			printf("?SYNTAX ERROR");
-			if (running) printf (" IN %ld", programCounter);
-			printf("\n");
-			keepRunning = false;
-			printf("READY.\n");
-		}
+		if (temp < 0 || temp > PROGRAM_SIZE)
+			show_error("SYNTAX ERROR");
 		else printf("\033[3%ldm", temp);
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "GOSUB")) {
 		temp = atoi(line + 5);
-		if (temp < 0 || temp > PROGRAM_SIZE) {
-			printf("?SYNTAX ERROR");
-			if (running) printf (" IN %ld", programCounter);
-			printf("\n");
-			keepRunning = false;
-			printf("READY.\n");
-		}
+		if (temp < 0 || temp > PROGRAM_SIZE)
+			show_error("SYNTAX ERROR");
 		else if (subCounter + 1 == PROGRAM_SIZE) {
 			/* Should never happen, but if so, handle it gracefully  :D */
-			printf("?TOO MANY SUBS ERROR");
-			if (running) printf (" IN %ld", programCounter);
-			printf("\n");
-			printf("READY.\n");
+			show_error("TOO MANY SUBS ERROR");
 		}
 		else {
 			subs[subCounter] = programCounter;
@@ -117,13 +112,8 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	if (STRING_STARTS_WITH(line, "GOTO")) {
 		temp = atoi(line + 4);
-		if (temp < 0 || temp > PROGRAM_SIZE) {
-			printf("?SYNTAX ERROR");
-			if (running) printf (" IN %ld", programCounter);
-			printf("\n");
-			keepRunning = false;
-			printf("READY.\n");
-		}
+		if (temp < 0 || temp > PROGRAM_SIZE)
+			show_error("SYNTAX ERROR");
 		else {
 			programCounter = temp - 1;
 			if (!running) run_program(program, variables);
@@ -135,12 +125,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			printf("\033[8m");
 		else if (STRING_CONTAINS(line, "OFF"))
 			printf("\033[28m");
-		else {
-			printf("?SYNTAX ERROR");
-			if (running) printf(" IN %ld", programCounter);
-			printf("\n");
-			printf("READY.\n");
-		}
+		else show_error("SYNTAX ERROR");
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "IF")) {
@@ -148,7 +133,13 @@ void run(Program program, VarList variables, Line line, bool running) {
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "INPUT")) {
+		if (!running) {
+			show_error("ILLEGAL DIRECT MODE ERROR");
+			return;
+		}
+		SetBlocking(true);
 		run_input(line + 5, variables);
+		SetBlocking(false);
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "ITALIC")) {
@@ -156,12 +147,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			printf("\033[3m");
 		else if (STRING_CONTAINS(line, "OFF"))
 			printf("\033[23m");
-		else {
-			printf("?SYNTAX ERROR");
-			if (running) printf(" IN %ld", programCounter);
-			printf("\n");
-			printf("READY.\n");
-		}
+		else show_error("SYNTAX ERROR");
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "LET")) {
@@ -181,7 +167,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 	if (STRING_STARTS_WITH(line, "MOVE")) {
 		line += 4;
 		strncpy(copy, line, LINE_SIZE);
-		replace_vars_with_values(copy, variables);
+		eval_expr(copy, variables);
 		run_move(copy);
 		return;
 	}
@@ -207,11 +193,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			printf("\033[7m");
 		else if (STRING_CONTAINS(line, "OFF"))
 			printf("\033[27m");
-		else {
-			printf("?SYNTAX ERROR");
-			if (running) printf(" IN %ld", programCounter);
-			printf("\n");
-		}
+		else show_error("SYNTAX ERROR");
 		return;
 	}
 	if (STRING_EQUALS(line, "RUN")) {
@@ -222,12 +204,8 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	if (STRING_STARTS_WITH(line, "RETURN")) {
 		subCounter--;
-		if (subCounter < 0 || subCounter >= PROGRAM_SIZE) {
-			printf("?RETURN WITHOUT GOSUB ERROR");
-			if (running) printf (" IN %ld", programCounter);
-			printf("\n");
-			return;
-		}
+		if (subCounter < 0 || subCounter >= PROGRAM_SIZE)
+			show_error("RETURN WITHOUT GOSUB ERROR");
 		programCounter = subs[subCounter];
 		keepRunning = true;
 		if (!running) run_program(program, variables);
@@ -246,17 +224,28 @@ void run(Program program, VarList variables, Line line, bool running) {
 			printf("\033[4m");
 		else if (STRING_CONTAINS(line, "OFF"))
 			printf("\033[24m");
-		else {
-			printf("?SYNTAX ERROR");
-			if (running) printf(" IN %ld", programCounter);
-			printf("\n");
-			printf("READY.\n");
-		}
+		else show_error("SYNTAX ERROR");
 		return;
 	}
 	
 	/* If it gets here, treat the instruction as a system command */
-	system(line);
+	run_system(line);
+}
+
+void run_system(char* line) {
+	/* If the user typed cd wherver, like in DOS or Bash,
+		let it "just work".  It looks weird in BASIC, but
+		considering terminals have been doing it this way
+		for decades, it's the right thing to do.  :)  */
+	if (STRING_STARTS_WITH(line, "cd")) {
+		line += 2;
+		while(line[0] == ' ') line++;
+		if (!GoToFolder(line)) show_error("?DIRECTORY NOT FOUND ERROR");
+		return;
+	}
+
+	/* Otherwise, run it */
+	rc = system(line);
 }
 
 void run_cd(char* line) {
@@ -281,7 +270,7 @@ void run_cd(char* line) {
 	}
 	
 	/* And here we go... */
-	GoToFolder(copy);
+	if (!GoToFolder(copy)) show_error("?DIRECTORY NOT FOUND ERROR");
 }
 
 void run_esc(char* line) {
@@ -411,7 +400,7 @@ void run_sys(char* line) {
 	}
 	
 	/* And here we go... */
-	system(copy);
+	rc = system(copy);
 }
 
 
@@ -424,7 +413,7 @@ void run_input(char* line, VarList variables) {
 	super easy cuz only expressions are allowed */
 	memset(buffer, 0, LINE_SIZE);
 	printf("? ");
-	fgets(buffer, LINE_SIZE, stdin);
+	ReadLine(buffer);
 	temp = buffer;
 	if (!is_expr(temp, &temp)) {
 		printf("?INVALID INPUT ERROR\n");
@@ -499,10 +488,7 @@ void run_let(char* line, VarList variables) {
 	strip_spaces(line);
 	temp = strchr(line, '=');
 	if (temp == NULL) {
-		printf("?SYNTAX ERROR");
-		if (keepRunning) printf (" IN %ld", programCounter);
-		printf("\n");
-		keepRunning = false;
+		show_error("SYNTAX ERROR");
 		return;
 	}
 	temp++;
@@ -532,7 +518,7 @@ void run_list(Program program, Line line) {
 	
 	/* Validate the numbers */
 	if (from < 0 || from > PROGRAM_SIZE || to < 0 || to > PROGRAM_SIZE) {
-		printf("?SYNTAX ERROR\n");
+		show_error("SYNTAX ERROR");
 		return;
 	}
 	
@@ -556,21 +542,12 @@ void run_move(Line line) {
 	int tempInt = 0, x = -1, y = -1, x2 = -1, y2 = -1;
 	tempInt = sscanf(line, "%d %d", &x, &y);
 	if (tempInt != 2 || x < 0 || y < 0) {
-		printf("?SYNTAX ERROR");
-		if (keepRunning)
-			printf(" IN %ld", programCounter);
-		printf("\n");
-		keepRunning = false;
-		printf("READY.\n");
+		show_error("SYNTAX ERROR");
 		return;
 	}
 	GetScreenSize(&y2, &x2);
 	if (x > x2 || y > y2) {
-		printf("?SYNTAX ERROR");
-		if (keepRunning) printf(" IN %ld", programCounter);
-		printf("\n");
-		keepRunning = false;
-		printf("READY.\n");
+		show_error("SYNTAX ERROR");
 		return;
 	}
 	printf("\033[%d;%dH", y, x);
@@ -581,52 +558,72 @@ void run_print(Program program, Line line) {
 	size_t i, length;
 	char copy[LINE_SIZE], * temp;
 	bool in_quotes = false, newline = true;
-	
-	/* Replaces the commas and quotation marks with spaces */
+
+	/* Replace the commas and quotation marks with spaces */
 	length = strlen(line);
 	strncpy(copy, line, LINE_SIZE);
+	while(copy[0] == ' ') shift_left(copy, 0, length);
 	for (i=0; i<length; i++) {
 		while (copy[i] == '"') {
 			in_quotes = !in_quotes;
 			shift_left(copy, i, length);
 		}
 		if (copy[i] == ',' && !in_quotes ) {
-			copy[i] = ' ';
+			/* This used to replace it with a space, but by doing a shift
+			left, you can do i.e. PRINT CHR$(65),"BC" and get "ABC". */
+			shift_left(copy, i, length);
 			continue;
 		}
 	}
 	
 	/* Figure out if it should print a new line at the end */
 	i = length - 1;
-	while(copy[i] == '\0' || copy[i] == ' ') i--;
+	while(copy[i] == '\0' || (copy[i] == ' ' && !in_quotes)) i--;
 	newline = copy[i] != ';';
 	if (!newline) copy[i] = '\0';
 	
 	/* And print away! */
 	temp = copy;
-	while(temp[0] == ' ') temp++;
 	printf("%s", temp);
 	if (newline) printf("\n");
 }
 
 void run_program(Program program, VarList variables) {
-	char* currentLine;
-	
+	char* currentLine, temp;
+	size_t lastLine;
+
+	SetBlocking(false);
 	while(true) {
-		if (!keepRunning) {
+		temp = getchar();
+		if (temp == 27) {
+			lastLine = programCounter;
+			while(program[lastLine][0] == '\0') lastLine--;
+			printf("\nBREAK IN %ld\n", lastLine);
+			keepRunning = false;
+		}
+		if (!keepRunning || programCounter == PROGRAM_SIZE) {
+			SetBlocking(true);
 			printf("READY.\n");
 			return;
 		}
-		if (programCounter == PROGRAM_SIZE) return;
 		currentLine = program[programCounter];
 		if (currentLine[0] == '\0') {
 			programCounter++;
-			if (programCounter == PROGRAM_SIZE) return;
+			if (programCounter == PROGRAM_SIZE) {
+				SetBlocking(true);
+				printf("READY.\n");
+				return;
+			}
 			continue;
 		}
 		if (!is_statement(currentLine)) {
-			printf("?SYNTAX ERROR IN %ld\n", programCounter);
-			printf("READY.\n");
+			if (STRING_STARTS_WITH(currentLine, "cd")) {
+				currentLine += 2;
+				while(currentLine[0] == ' ') currentLine++;
+				if (!GoToFolder(currentLine)) show_error("?DIRECTORY NOT FOUND ERROR");
+			}
+			else rc = system(currentLine);
+			SetBlocking(true);
 			return;
 		}
 		currentLine = program[programCounter];
@@ -634,9 +631,12 @@ void run_program(Program program, VarList variables) {
 		programCounter++;
 		if (programCounter == PROGRAM_SIZE) {
 			printf("READY.\n");
+			SetBlocking(true);
 			return;
 		}
 	}
+	printf("READY.\n");
+	SetBlocking(true);
 }
 
 // End of code-running functions

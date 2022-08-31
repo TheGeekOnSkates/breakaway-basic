@@ -1,11 +1,40 @@
 #include "main.h"
 
+bool is_asc(Line line, char** position) {
+	char* temp = line;
+	while(temp[0] == ' ') temp++;
+	if (!STRING_STARTS_WITH(temp, "ASC(\"")) return false;
+	temp = line + 5;
+	if (temp[0] == '\0') return false;
+	temp++;	/* The character we want the ASCII value for */
+	if (temp[0] != '"') return false;
+	temp++;
+	if (temp[0] != ')') return false;
+	temp++;
+	*position = temp;
+	return true;
+}
+
 bool is_bg(Line line) {
 	char* temp;
 	if (!STRING_STARTS_WITH(line, "BG")) return false;
 	temp = line + 2;
 	while(temp[0] == ' ') temp++;
-	return is_number(temp, &temp) || is_var(temp, &temp);
+	return is_number(temp, &temp) || is_var(temp, &temp) || is_function(temp, &temp);
+}
+
+bool is_chr(Line line, char** position) {
+	char* temp = line;
+	while(temp[0] == ' ') temp++;
+	if (!STRING_STARTS_WITH(temp, "CHR$(")) return false;
+	temp = line + 5;
+	while(temp[0] == ' ') temp++;
+	if (!is_number(temp, &temp) && !is_expr(temp, &temp)) return false;
+	while(temp[0] == ' ') temp++;
+	if (temp[0] != ')') return false;
+	temp++;
+	*position = temp;
+	return true;
 }
 
 bool is_blink(Line line) {
@@ -26,10 +55,26 @@ bool is_bold(Line line) {
 
 bool is_cd(Line line) {
 	char* temp;
+
+	/* Most shells use this syntax: cd /path (Unix-y) or cd C:\path (DOS-like).
+	That's not particularly consistent with Breakaway BASIC (or any BASIC),
+	but it's a thing we've gotten so used to that it should "just work". */
+	if (STRING_STARTS_WITH(line, "cd")) return true;
+	
+	/* Otherwise, expect CD "string", which is different from most
+	shells but more consistent with thie BASIC's syntax */
 	if (!STRING_STARTS_WITH(line, "CD")) return false;
 	temp = line + 3;
 	while(temp[0] == ' ') temp++;
 	return is_string(temp, &temp);
+}
+
+bool is_cursor(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "CURSOR")) return false;
+	temp = line + 6;
+	while(temp[0] == ' ') temp++;
+	return STRING_EQUALS(temp, "ON") || STRING_EQUALS(temp, "OFF");
 }
 
 bool is_esc(Line line) {
@@ -43,7 +88,7 @@ bool is_esc(Line line) {
 bool is_expr(Line line, char** position) {
 	/* Variables */
 	char* pos;
-	bool result = is_number(line, position) || is_var(line, position);
+	bool result = is_number(line, position) || is_var(line, position) || is_function(line, position);
 	
 	/* Skip spaces again */
 	pos = *position;
@@ -62,7 +107,7 @@ bool is_expr(Line line, char** position) {
 		/* Here we get into a kinda weird scenario:
 		What if I enter 3 + 4 * (nothing at the end?)
 		We can't have that, so... */
-		if (!is_number(pos, &pos) && ! is_var(pos, &pos)) {
+		if (!is_number(pos, &pos) && !is_var(pos, &pos) && !is_function(pos, &pos)) {
 			*position = pos;
 			return false;
 		}
@@ -104,7 +149,33 @@ bool is_fg(Line line) {
 	if (!STRING_STARTS_WITH(line, "FG")) return false;
 	temp = line + 2;
 	while(temp[0] == ' ') temp++;
-	return is_number(temp, &temp);
+	return is_number(temp, &temp) || is_var(temp, &temp) || is_function(temp, &temp);
+}
+
+bool is_function(Line line, char** position) {
+	if (is_asc(line, position)) {
+		*position += 4;
+		return true;
+	}
+	if (STRING_STARTS_WITH(line, "COLUMNS()")) {
+		*position += 9;
+		return true;
+	}
+	if (STRING_STARTS_WITH(line, "FRE()")) {
+		*position += 5;
+		return true;
+	}
+	if (STRING_STARTS_WITH(line, "RC()")) {
+		*position += 4;
+		return true;
+	}
+	if (STRING_STARTS_WITH(line, "ROWS()")) {
+		*position += 6;
+		return true;
+	}
+	if (is_chr(line, position))
+		return true;
+	return false;
 }
 
 bool is_gosub(Line line) {
@@ -225,10 +296,10 @@ bool is_move(Line line) {
 	if (!STRING_STARTS_WITH(line, "MOVE")) return false;
 	temp = line + 4;
 	while(temp[0] == ' ') temp++;
-	if (!is_number(temp, &temp) && !is_var(temp, &temp))
+	if (!is_number(temp, &temp) && !is_var(temp, &temp) && !is_function(temp, &temp))
 		return false;
 	while(temp[0] == ' ') temp++;
-	return is_number(temp, &temp) || is_var(temp, &temp);
+	return is_number(temp, &temp) || is_var(temp, &temp) || is_function(temp, &temp);
 }
 
 bool is_number(Line line, char** position) {
@@ -295,6 +366,7 @@ bool is_statement(Line line) {
 	/* These don't have anything after them, so they're easy */
 	if (
 		STRING_EQUALS(line, "CLEAR")
+		|| STRING_EQUALS(line, "CONT")
 		|| STRING_EQUALS(line, "END")
 		|| STRING_EQUALS(line, "EXIT")
 		|| STRING_EQUALS(line, "LIST")
@@ -309,6 +381,7 @@ bool is_statement(Line line) {
 	return is_bg(line)
 		|| is_blink(line)
 		|| is_cd(line)
+		|| is_cursor(line)
 		|| is_esc(line)
 		|| is_fg(line)
 		|| is_gosub(line)
