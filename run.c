@@ -227,6 +227,13 @@ void run(Program program, VarList variables, Line line, bool running) {
 		else show_error("SYNTAX ERROR");
 		return;
 	}
+
+	/* Check if it's LET without the keyword LET */
+	if (is_let(line)) {
+		strncpy(copy, line, LINE_SIZE);
+		run_let(copy, variables);
+		return;
+	}
 	
 	/* If it gets here, treat the instruction as a system command */
 	run_system(line);

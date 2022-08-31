@@ -248,13 +248,13 @@ bool is_italic(Line line) {
 }
 
 bool is_let(Line line) {
-	char* temp;
+	char* temp = line;
 	
 	/* If it doesn't start with LET, then no. */
-	if (!STRING_STARTS_WITH(line, "LET")) return false;
+	// if (!STRING_STARTS_WITH(line, "LET")) return false;
+	if (STRING_STARTS_WITH(line, "LET")) temp += 3;
 	
 	/* Skip spaces */
-	temp = line + 3;
 	while (temp[0] == ' ') temp++;
 	
 	/* If what follows is not a variable, then no. */
