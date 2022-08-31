@@ -1,8 +1,16 @@
 # To-do's for version 0.2
 
+* MOVE UP/DOWN/LEFT/RIGHT, or CURSOR UP/DOWN/LEFT/RIGHT (I'm thinking MOVE)
+* Support for special characters like "▄" in ASC
+* Set up LET so I can just do i.e. X = 7 (make sure to call is_variable and all that first, to prevent the issue I described before [equals signs in commands])
+* Support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
+* POKE X Y character (right now it takes 4 lines to do this - put CHARACTER at position X, Y)
+* PEEK(X, Y) - get character at that position.  On the other hand, what if I made the memory stack bigger?  Then we could do not only screen "RAM" but also color "RAM" and use the rest for storing data.  Might be nice to have an extra 64K (or 128K or whatever) just for extra data.
+* Aliases
+* Auto-run files
 * Keep swatting at the buggz.  Eventually I'll catch one. :D
-* May as well keep adding fun features :)
-
+* Update the docs
+* Random thought: Do I really need is.c?  Looking at how `run()` works, I kind of think that's a whole lot of extra code I don't really need.  Validation is usually a good thing IMO, but...?
 
 # Buggz! :D
 
@@ -36,17 +44,6 @@ The bigger issue seems to be with pwd though; it's like it hangs in program mode
 -----------------------------------------------------------------------------------------------------------------------
 
 # Road map to version 1.0
-
-## Stuff I'd like version 0.3 to add
-
-* MOVE UP/DOWN/LEFT/RIGHT, or CURSOR UP/DOWN/LEFT/RIGHT (I'm thinking MOVE)
-* Support for special characters like "▄" in ASC
-* Set up LET so I can just do i.e. X = 7 (make sure to call is_variable and all that first, to prevent the issue I described before [equals signs in commands])
-* Support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
-* POKE X Y character (right now it takes 4 lines to do this - put CHARACTER at position X, Y)
-* PEEK(X, Y) - get character at that position.  On the other hand, what if I made the memory stack bigger?  Then we could do not only screen "RAM" but also color "RAM" and use the rest for storing data.  Might be nice to have an extra 64K (or 128K or whatever) just for extra data.
-* Aliases
-* Auto-run files
 
 ## Stuff I'll probably procrastinate longer - 0.4 (maybe), lol
 

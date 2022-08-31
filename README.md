@@ -6,7 +6,22 @@ Breakaway BASIC is a shell for Linux (and maybe someday, DOS and other systems) 
 
 It gets its name from hockey, of course (look at my nickname if you don't get why that's so obvious, lol).  A "breakaway" is one of the most exciting things you could see at a hockey game.  It's when a player manages to get past all the opposing team's defenders, so it's just him/her vs. the goalie.  Breakaways are rare, but they're always described as fast, cool, and sometimes game-changing - all things I would like this BASIC to be. :)
 
+## Building
+
+For now, the only supported build target is Linux, and the only library I use is GNU readline.  To install it on Debian-based systems, run:
+
+```
+sudo apt-get install libreadline-dev
+```
+
+Alternatively, you can remove this dependency by going to os/Linux.c and getting rid of the readline stuff.  Delete the #includes and replace readline and add_history with fgets or something like that.
+
+
 ## Change log
+
+### 0.3
+
+* 
 
 ### 0.2
 
