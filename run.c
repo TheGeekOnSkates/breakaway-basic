@@ -238,11 +238,6 @@ void run(Program program, VarList variables, Line line, bool running) {
 		return;
 	}
 	
-	/* If it gets here, treat the instruction as a system command */
-	run_system(line);
-}
-
-void run_system(char* line) {
 	/* If the user typed cd wherver, like in DOS or Bash,
 		let it "just work".  It looks weird in BASIC, but
 		considering terminals have been doing it this way
@@ -254,6 +249,14 @@ void run_system(char* line) {
 		return;
 	}
 
+	/* If the "command" name is a Breakaway BASIC keyword,
+	it's most likely a syntax error; on the off-chance it's not,
+	users could just run i.e. SYS "PRINT whatever" */
+	if (is_keyword(line)) {
+		show_error("SYNTAX ERROR");
+		return;
+	}
+	
 	/* Otherwise, run it */
 	rc = system(line);
 }
@@ -625,16 +628,6 @@ void run_program(Program program, VarList variables) {
 				return;
 			}
 			continue;
-		}
-		if (!is_statement(currentLine)) {
-			if (STRING_STARTS_WITH(currentLine, "cd")) {
-				currentLine += 2;
-				while(currentLine[0] == ' ') currentLine++;
-				if (!GoToFolder(currentLine)) show_error("?DIRECTORY NOT FOUND ERROR");
-			}
-			else rc = system(currentLine);
-			SetBlocking(true);
-			return;
 		}
 		currentLine = program[programCounter];
 		run(program, variables, currentLine, true);

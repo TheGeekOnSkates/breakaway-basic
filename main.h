@@ -170,6 +170,7 @@ bool is_hidden(Line line);
 bool is_if(Line line);
 bool is_input(Line line);
 bool is_italic(Line line);
+bool is_keyword(Line line);
 bool is_let(Line line);
 bool is_list(Line line);
 bool is_load(Line line);
@@ -250,13 +251,6 @@ void run(Program program, VarList variables, Line line, bool running);
  * @param[in] true if in program mode, false if in direct mode
  */
 void run_program(Program program, VarList variables) ;
-
-/**
- * When the user types something that isn't valid Breakaway BASIC,
- * it gets treated as a system command.  This runs it.
- * @param[in] The user's code
- */
-void run_system(char* line);
 
 /**
  * These all run specific instructions

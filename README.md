@@ -22,6 +22,7 @@ Alternatively, you can remove this dependency by going to os/Linux.c and getting
 ### 0.3
 
 * Made the `LET` keyword optional (you can just do i.e. `X = 42` now).
+* Bugfixes in `LIST` and `GOTO`
 
 ### 0.2
 

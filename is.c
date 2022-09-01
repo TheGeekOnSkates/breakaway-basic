@@ -247,6 +247,50 @@ bool is_italic(Line line) {
 	return STRING_EQUALS(temp, "ON") || STRING_EQUALS(temp, "OFF");
 }
 
+bool is_keyword(Line line) {
+	if (line[0] == 'A') return STRING_STARTS_WITH(line, "ASC");
+	if (line[0] == 'B') return STRING_STARTS_WITH(line, "BG")
+		|| STRING_STARTS_WITH(line, "BLINK")
+		|| STRING_STARTS_WITH(line, "BOLD");
+	if (line[0] == 'C') return STRING_STARTS_WITH(line, "CD")
+		|| STRING_STARTS_WITH(line, "CLEAR")
+		|| STRING_STARTS_WITH(line, "COLUMNS")
+		|| STRING_STARTS_WITH(line, "CONT")
+		|| STRING_STARTS_WITH(line, "CURSOR");
+	if (line[0] == 'E') return STRING_STARTS_WITH(line, "END")
+		|| STRING_STARTS_WITH(line, "ESC")
+		|| STRING_STARTS_WITH(line, "EXIT");
+	if (line[0] == 'F') return STRING_STARTS_WITH(line, "FG")
+		|| STRING_STARTS_WITH(line, "FOR")
+		|| STRING_STARTS_WITH(line, "FRE");
+	if (line[0] == 'G') return STRING_STARTS_WITH(line, "GOSUB")
+		|| STRING_STARTS_WITH(line, "GOTO");
+	if (line[0] == 'H') return STRING_STARTS_WITH(line, "HIDDEN");
+	if (line[0] == 'I') return STRING_STARTS_WITH(line, "IF")
+		|| STRING_STARTS_WITH(line, "INPUT")
+		|| STRING_STARTS_WITH(line, "ITALIC");
+	if (line[0] == 'L') return STRING_STARTS_WITH(line, "LET")
+		|| STRING_STARTS_WITH(line, "LIST")
+		|| STRING_STARTS_WITH(line, "LOAD");
+	if (line[0] == 'M') return STRING_STARTS_WITH(line, "MOVE");
+	if (line[0] == 'N') return STRING_STARTS_WITH(line, "NEW");
+	if (line[0] == 'O') return STRING_STARTS_WITH(line, "ON")
+		|| STRING_STARTS_WITH(line, "OFF");
+	if (line[0] == 'P') return STRING_STARTS_WITH(line, "PI")
+		|| STRING_STARTS_WITH(line, "PRINT");
+	if (line[0] == 'R') return STRING_STARTS_WITH(line, "REM")
+		|| STRING_STARTS_WITH(line, "REVERSE")
+		|| STRING_STARTS_WITH(line, "RUN")
+		|| STRING_STARTS_WITH(line, "RETURN");
+	if (line[0] == 'S') return STRING_STARTS_WITH(line, "SAVE")
+		|| STRING_STARTS_WITH(line, "SYS");
+	if (line[0] == 'T') return STRING_STARTS_WITH(line, "TAB")
+		|| STRING_STARTS_WITH(line, "TAN")
+		|| STRING_STARTS_WITH(line, "TO");
+	if (line[0] == 'U') return STRING_STARTS_WITH(line, "UNDERLINE");
+	return false;
+}
+
 bool is_let(Line line) {
 	char* temp = line;
 	
