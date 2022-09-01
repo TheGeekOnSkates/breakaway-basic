@@ -2,9 +2,44 @@
 
 ## Overview
 
-Breakaway BASIC is a shell for Linux (and maybe someday, DOS and other systems) inspired by the 8-bit BASICs of the 1970s and 80s.  Its design was meant to be simpler than other shells (yes, I'm cmparing it to Bash again, lol), fully functional for scripting but also just fun to play with.  It could be used to create games, or it could be used to write scripts that actually do useful stuff.
+Breakaway BASIC is a shell for Linux (and maybe someday, DOS and other systems) inspired by the 8-bit BASICs of the 1970s and 80s.  Its design was meant to be easier than other shells for practical automation, but also just fun to play with.  It could be used to create games, or it could be used to write scripts that actually do useful stuff.
 
 It gets its name from hockey, of course (look at my nickname if you don't get why that's so obvious, lol).  A "breakaway" is one of the most exciting things you could see at a hockey game.  It's when a player manages to get past all the opposing team's defenders, so it's just him/her vs. the goalie.  Breakaways are rare, but they're always described as fast, cool, and sometimes game-changing - all things I would like this BASIC to be. :)
+
+## Quick Start
+
+If you're on an x86-based Linux distro, you don't need to build Breakaway BASIC (if you are on something else, please see "building" below).  There's an executable file already compiled; you might need to give it permission to run though:
+
+`sudo chmod +x ./breakaway-basic`
+
+When you run it, you'll see a title screen and a ridiculous number of "bytes free" (this is more a joke, a nod to Commodore BASIC, which has a tremendous influence on this BASIC).  From here you can type any of the commands below.  For example, one thing that was common in the 80s was to write something like this:
+
+```
+10 PRINT "BREAKAWAY! ";
+20 GOTO 10
+RUN
+```
+
+Before we go any further, it's worth mentioning that this BASIC, like the ones that inspired it, have two "modes":
+1. "Program mode": If a line of code starts with a line number, that line is saved to your program.
+2. "Direct mode": If you don't start with a line number, the code runs immediately.
+
+If you type (or paste) this code into Breakaway BASIC, the word "BREAKAWAY!" will fill the screen, in a crazy wavy pattern, non-stop, until you press the Escape key.  This is the kind of goofy trick that makes BASIC fun.
+
+Now for what makes this BASIC practical: system commands.  So first off, there is an SYS command.  For example, to bring up a list of files (assuming you're on Linux), you can do:
+
+`SYS "ls -la"`
+
+But the SYS command isn't the only way.  Anything that is not recognized as a Breakaway BASIC instruction is interpreted as a system command.  For example, you can do:
+
+```
+10 REM This demonstrates automating a journal writing process
+20 cd /path/to/my/journal
+30 date > journal.md
+40 nano journal.md
+```
+
+You can save this code to a file, and then load it later.  If you use the extension ".bas" (which this BASIC doesn't require) you might also get some nice syntax highlighting in text editors, if you prefer to write your programs in that instead of entering the code into Breakaway BASIC directly.
 
 ## Building
 

@@ -1,6 +1,6 @@
 # To-do's for version 0.2
 
-* Aliases
+* Finish aliases
 * MOVE UP/DOWN/LEFT/RIGHT/HOME/END
 * I kinda like the idea of ROW() and COLUMN() to get cursor position
 * Support for special characters like "▄" in ASC
@@ -11,15 +11,6 @@
 * Now that I'm using is_keyword in is_var, address that bug in math.c
 * Keep swatting at the buggz.  Eventually I'll catch one. :D
 * Update the docs
-* Add a "quick start" tutorial - @ArchieT over at Lunduke.locals tried this:
-
-	new
-	?SYNTAX ERROR
-	NEW
-	10 BG 4
-	SAVE BG.BAS
-	sh: SAVE: not found
-
 * Random thought: Do I really need parse()?  Its code could be added to run(), cuz it's not really a separate step anymore.
 	**EDIT:** YES!  I do need it.  LOAD uses it.  Or do like I almost did and get rid of it in both main() and run_load() - might be a thing to do on a night when I'm not as tired lol
 
