@@ -23,7 +23,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 	Line copy;
 	
 	/* And figure out what to do from there */
-	if (STRING_STARTS_WITH(line, "BG")) {
+	if (is_bg(line)) {
 		line += 2;
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy, variables);
@@ -33,7 +33,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		else printf("\033[4%ldm", temp);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "BLINK")) {
+	if (is_blink(line)) {
 		if (STRING_CONTAINS(line, "ON"))
 			printf("\033[5m");
 		else if (STRING_CONTAINS(line, "OFF"))
@@ -41,7 +41,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		else show_error("SYNTAX ERROR");
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "BOLD")) {
+	if (is_bold(line)) {
 		if (STRING_CONTAINS(line, "ON"))
 			printf("\033[1m");
 		else if (STRING_CONTAINS(line, "OFF"))
@@ -49,7 +49,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		else show_error("SYNTAX ERROR");
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "CD")) {
+	if (is_cd(line)) {
 		run_cd(line + 2);
 		return;
 	}
@@ -62,7 +62,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		run_program(program, variables);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "CURSOR")) {
+	if (is_cursor(line)) {
 		if (STRING_CONTAINS(line, "ON"))
 			printf("\033[?25h");
 		else if (STRING_CONTAINS(line, "OFF"))
@@ -74,7 +74,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		keepRunning = false;
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "ESC")) {
+	if (is_esc(line)) {
 		run_esc(line + 3);
 		return;
 	}
@@ -83,7 +83,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		CLEAR_SCREEN();
 		exit(0);
 	}
-	if (STRING_STARTS_WITH(line, "FG")) {
+	if (is_fg(line)) {
 		line += 2;
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy, variables);
@@ -93,7 +93,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		else printf("\033[3%ldm", temp);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "GOSUB")) {
+	if (is_gosub(line)) {
 		temp = atoi(line + 5);
 		if (temp < 0 || temp > PROGRAM_SIZE)
 			show_error("SYNTAX ERROR");
@@ -110,17 +110,20 @@ void run(Program program, VarList variables, Line line, bool running) {
 		}
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "GOTO")) {
+	if (is_goto(line)) {
 		temp = atoi(line + 4);
 		if (temp < 0 || temp > PROGRAM_SIZE)
 			show_error("SYNTAX ERROR");
 		else {
 			programCounter = temp - 1;
-			if (!running) run_program(program, variables);
+			if (!running) {
+				keepRunning = true;
+				run_program(program, variables);
+			}
 		}
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "HIDDEN")) {
+	if (is_hidden(line)) {
 		if (STRING_CONTAINS(line, "ON"))
 			printf("\033[8m");
 		else if (STRING_CONTAINS(line, "OFF"))
@@ -128,11 +131,11 @@ void run(Program program, VarList variables, Line line, bool running) {
 		else show_error("SYNTAX ERROR");
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "IF")) {
+	if (is_if(line)) {
 		run_if(program, line, variables, running);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "INPUT")) {
+	if (is_input(line)) {
 		if (!running) {
 			show_error("ILLEGAL DIRECT MODE ERROR");
 			return;
@@ -142,7 +145,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		SetBlocking(false);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "ITALIC")) {
+	if (is_italic(line)) {
 		if (STRING_CONTAINS(line, "ON"))
 			printf("\033[3m");
 		else if (STRING_CONTAINS(line, "OFF"))
@@ -156,15 +159,15 @@ void run(Program program, VarList variables, Line line, bool running) {
 		run_let(copy, variables);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "LIST")) {
+	if (is_list(line)) {
 		run_list(program, line + 4);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "LOAD")) {
+	if (is_load(line)) {
 		run_load(program, variables, line + 4);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "MOVE")) {
+	if (is_move(line)) {
 		line += 4;
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy, variables);
@@ -176,7 +179,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		memset(variables, 0, 26);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "PRINT")) {
+	if (is_print(line)) {
 		line += 5;
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy, variables);
@@ -188,7 +191,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		RESET();
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "REVERSE")) {
+	if (is_reverse(line)) {
 		if (STRING_CONTAINS(line, "ON"))
 			printf("\033[7m");
 		else if (STRING_CONTAINS(line, "OFF"))
@@ -202,7 +205,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		run_program(program, variables);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "RETURN")) {
+	if (STRING_EQUALS(line, "RETURN")) {
 		subCounter--;
 		if (subCounter < 0 || subCounter >= PROGRAM_SIZE)
 			show_error("RETURN WITHOUT GOSUB ERROR");
@@ -211,15 +214,15 @@ void run(Program program, VarList variables, Line line, bool running) {
 		if (!running) run_program(program, variables);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "SAVE")) {
+	if (is_save(line)) {
 		run_save(program, line + 4);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "SYS")) {
+	if (is_sys(line)) {
 		run_sys(line + 3);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "UNDERLINE")) {
+	if (is_underline(line)) {
 		if (STRING_CONTAINS(line, "ON"))
 			printf("\033[4m");
 		else if (STRING_CONTAINS(line, "OFF"))

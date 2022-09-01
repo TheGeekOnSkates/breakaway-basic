@@ -1,6 +1,10 @@
 # To-do's for version 0.2
 
-* MOVE UP/DOWN/LEFT/RIGHT, or CURSOR UP/DOWN/LEFT/RIGHT (I'm thinking MOVE)
+* Add an is_keyword function
+* Use that to make the syntax-checker a bit smarter - if I type `MOVE X` that's a syntax error, not a system command.
+* Use is_keyword in is_var if possible
+* MOVE UP/DOWN/LEFT/RIGHT
+* I kinda like the idea of ROW() and COLUMN() to get cursor position - there's gotta be a way to do it in the "termios" API (or the "ioctl" API... lol where do the kernel folks come up with this cryptic shorthand?) :D
 * Support for special characters like "▄" in ASC
 * Support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
 * POKE X Y character (right now it takes 4 lines to do this - put CHARACTER at position X, Y)

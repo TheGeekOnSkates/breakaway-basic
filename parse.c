@@ -21,8 +21,7 @@ void parse(Program program, VarList variables, Line line) {
 		return;
 	}
 	
-	/* Otherwise, it's either a statement or a system command */
-	if (is_statement(line))
-		run(program, variables, line, false);
-	else run_system(line);
+	/* Otherwise, it's either a statement or a system command,
+	and in either case the run() function will take it from here. */
+	run(program, variables, line, false);
 }
