@@ -1,9 +1,8 @@
 # To-do's for version 0.2
 
-* Use is_keyword to make the syntax-checker a bit smarter - if I type `MOVE X` that's a syntax error, not a system command.
 * Use is_keyword in is_var if possible
-* MOVE UP/DOWN/LEFT/RIGHT
-* I kinda like the idea of ROW() and COLUMN() to get cursor position - there's gotta be a way to do it in the "termios" API (or the "ioctl" API... lol where do the kernel folks come up with this cryptic shorthand?) :D
+* MOVE UP/DOWN/LEFT/RIGHT/HOME/END
+* I kinda like the idea of ROW() and COLUMN() to get cursor position
 * Support for special characters like "▄" in ASC
 * Support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
 * POKE X Y character (right now it takes 4 lines to do this - put CHARACTER at position X, Y)
@@ -12,6 +11,15 @@
 * Auto-run files
 * Keep swatting at the buggz.  Eventually I'll catch one. :D
 * Update the docs
+* Add a "quick start" tutorial - @ArchieT over at Lunduke.locals tried this:
+
+	new
+	?SYNTAX ERROR
+	NEW
+	10 BG 4
+	SAVE BG.BAS
+	sh: SAVE: not found
+
 * Random thought: Do I really need parse()?  Its code could be added to run(), cuz it's not really a separate step anymore.
 
 

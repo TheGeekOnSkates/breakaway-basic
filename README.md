@@ -21,8 +21,10 @@ Alternatively, you can remove this dependency by going to os/Linux.c and getting
 
 ### 0.3
 
+* 
 * Made the `LET` keyword optional (you can just do i.e. `X = 42` now).
-* Bugfixes in `LIST` and `GOTO`
+* Bugfixes in `LIST`, `GOTO`, and lowercase `CD`
+* Code changes "under the hood" that are different enough from 0.2 to mention.
 
 ### 0.2
 
@@ -99,7 +101,7 @@ Changes the folder you're working in (most systems call this the "working direct
 
 `CD "wherever"`
 
-**NOTE:** You might also be able to use CD like in other shells (i.e. `cd ./wherever` with no quotes), but this feature is still in development and has been known to not always behave correctly.
+**NOTE:** You can also use lowercase cd, like you would in other shells (DOS, Bash etc).  For example, you can do `cd /path/to/wherever` or `cd ./wherever` like you're probably used to.
 
 ### CLEAR
 
