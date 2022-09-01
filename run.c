@@ -23,6 +23,10 @@ void run(Program program, VarList variables, Line line, bool running) {
 	Line copy;
 	
 	/* And figure out what to do from there */
+	if (is_alias(line)) {
+		printf("LEFT OFF HERE\n");
+		return;
+	}
 	if (is_bg(line)) {
 		line += 2;
 		strncpy(copy, line, LINE_SIZE);
@@ -235,6 +239,13 @@ void run(Program program, VarList variables, Line line, bool running) {
 	if (is_let(line)) {
 		strncpy(copy, line, LINE_SIZE);
 		run_let(copy, variables);
+		return;
+	}
+
+	/* Another scenario that can happen is if the user tries to
+	create an alias that is a Breakaway BASIC keyword.  So... */
+	if (STRING_STARTS_WITH(line, "ALIAS")) {
+		show_error("THAT'S A KEYWORD");
 		return;
 	}
 	

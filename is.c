@@ -1,5 +1,46 @@
 #include "main.h"
 
+bool is_alias(Line line) {
+	/* Declare vars */
+	char* temp = line, name[LINE_SIZE];
+	size_t i;
+
+	/* Skip spaces */
+	while(temp[0] == ' ') temp++;
+
+	/* If it doesn't start with ALIAS, then no */
+	if (!STRING_STARTS_WITH(temp, "ALIAS")) return false;
+	temp += 5;
+
+	/* Skip spaces again */
+	while(temp[0] == ' ') temp++;
+	
+	/* If the name of the alias is a keyword, then no */
+	memset(name, 0, LINE_SIZE);
+	if (temp[0] != '"') return false;
+	for (i=0; i<LINE_SIZE-1; i++) {
+		if (temp[i+1] == '"' || temp[i+1] == '\0') break;
+		name[i] = temp[i+1];
+	}
+	if (is_keyword(name)) return false;
+
+	/* Temp is still at the quote, so if it's not a string, then no */
+	if (!is_string(temp, &temp)) return false;
+	temp++;
+
+	/* Skip spaces again */
+	while(temp[0] == ' ') temp++;
+
+	/* If it's not an equals sign, then no */
+	if (temp[0] != '=') return false;
+	
+	/* Skip spaces for the last time :)  */
+	temp++;
+	while(temp[0] == ' ') temp++;
+		
+	return is_string(temp, &temp);
+}
+
 bool is_asc(Line line, char** position) {
 	char* temp = line;
 	while(temp[0] == ' ') temp++;

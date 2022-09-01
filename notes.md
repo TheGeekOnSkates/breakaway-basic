@@ -1,14 +1,14 @@
 # To-do's for version 0.2
 
-* Use is_keyword in is_var if possible
+* Aliases
 * MOVE UP/DOWN/LEFT/RIGHT/HOME/END
 * I kinda like the idea of ROW() and COLUMN() to get cursor position
 * Support for special characters like "▄" in ASC
 * Support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
 * POKE X Y character (right now it takes 4 lines to do this - put CHARACTER at position X, Y)
 * PEEK(X, Y) - get character at that position.  On the other hand, what if I made the memory stack bigger?  Then we could do not only screen "RAM" but also color "RAM" and use the rest for storing data.  Might be nice to have an extra 64K (or 128K or whatever) just for extra data.
-* Aliases
 * Auto-run files
+* Now that I'm using is_keyword in is_var, address that bug in math.c
 * Keep swatting at the buggz.  Eventually I'll catch one. :D
 * Update the docs
 * Add a "quick start" tutorial - @ArchieT over at Lunduke.locals tried this:
@@ -21,7 +21,7 @@
 	sh: SAVE: not found
 
 * Random thought: Do I really need parse()?  Its code could be added to run(), cuz it's not really a separate step anymore.
-
+	**EDIT:** YES!  I do need it.  LOAD uses it.  Or do like I almost did and get rid of it in both main() and run_load() - might be a thing to do on a night when I'm not as tired lol
 
 # Buggz! :D
 
@@ -36,6 +36,14 @@
 
 # Road map to version 1.0
 
+## Fun stuff I'll add when I get in the mood, just cuz it's awesome
+
+* I was researching the whole "get cursor position with termios" thing when I found this:
+	http://dtelnet.sourceforge.net/shkeys.c
+  Apparently, you can get (and even SET) *mouse support!*  If I can find out how that works; I could add instructions like MOUSE ON/OFF, MOUSEX() and MOUSEY() to get the position, CLICKX() and CLICKY() to get the last clicked position, ON CLICK GOTO... no, that's too far. :D
+* If I go there... and I might cuz it's awesome... why not use the Linux *joystick* library?!  There's a joystick.h I used years ago that would totally work for that.
+
+
 ## Stuff I'll probably procrastinate longer - 0.4 (maybe), lol
 
 * GET (may need to add BLOCK ON/OFF to make that work tho)
@@ -46,13 +54,14 @@
 * Something like my old CLEAR HISTORY
 * also, a way to not add repeats to history
 
+
 ## Giant leaps forward that will probably end up in me calling it a 1.0
 
 * FOR <expr> TO <expr> STEP <expression>
 * NEXT (can't have FOR without it) :)
 * Arrays
 * _maybe_ WHILE / LOOP (not WEND or END WHILE like other BASICs)
-
+* Files
 
 
 ------------------------------------------------------------------------------------------------------------
