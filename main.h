@@ -238,29 +238,32 @@ void show_error(const char* error);
 
 /**
  * Runs the line the user just typed
- * @param[in] The memory where the user's code is stores
- * @param[in] The memory where variable valeus are stores
+ * @param[in] The memory where the user's code is stored
+ * @param[in] The memory where aliases are stored
+ * @param[in] The memory where variable valeus are stored
  * @param[in] The line the user just typed
  * @param[in] true if in program mode, false if in direct mode
  */
-void run(Program program, VarList variables, Line line, bool running);
+void run(Program program, Program aliases, VarList variables, Line line, bool running);
 
 /**
  * Runs the user's program
  * @param[in] The memory where the user's code is stores
+ * @param[in] The memory where aliases are stores
  * @param[in] The memory where variable valeus are stores
  * @param[in] true if in program mode, false if in direct mode
  */
-void run_program(Program program, VarList variables) ;
+void run_program(Program program, Program aliases, VarList variables);
 
 /**
  * These all run specific instructions
  * @param[in] The memory where the user's code is stored
+ * @param[in] The memory where the aliases are stored
  * @param[in] The memory where variable valeus are stored 
  * (for the ones with VarList parameters)
  * @param[in, out] The line the user just typed (this pointer moves)
  */
-void run_load(Program program, VarList variables, char* line);
+void run_load(Program program, Program aliases, VarList variables, char* line);
 void run_save(Program program, char* line);
 void run_list(Program program, Line line);
 void run_print(Program program, Line line);
@@ -268,7 +271,7 @@ void run_cd(char* line);
 void run_esc(char* line);
 void run_let(char* line, VarList variables);
 void run_move(Line line);
-void run_if(Program program, char* line, VarList variables, bool running);
+void run_if(Program program, Program aliases, char* line, VarList variables, bool running);
 void run_input(char* line, VarList variables);
 void run_sys(char* line);
 
@@ -325,14 +328,6 @@ void replace_rows(Line line);
 /************************************************************************/
 /**** TO BE SORTED                                                   ****/
 /************************************************************************/
-
-/**
- * Parses a line of BASIC code
- * @param[in] The memory where the user's code is stores
- * @param[in] The memory where variables' values are stored
- * @param[in] The line the user just typed
- */
-void parse(Program program, VarList variables, Line line);
 
 /**
  * Adds a line of code to the program

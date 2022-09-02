@@ -15,7 +15,7 @@ void show_error(const char* error) {
 	SetBlocking(true);
 }
 
-void run(Program program, VarList variables, Line line, bool running) {
+void run(Program program, Program aliases, VarList variables, Line line, bool running) {
 	/* Declare vars */
 	thereWasAnError = false;
 	size_t temp;
@@ -63,7 +63,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	if (STRING_EQUALS(line, "CONT")) {
 		keepRunning = true;
-		run_program(program, variables);
+		run_program(program, aliases, variables);
 		return;
 	}
 	if (is_cursor(line)) {
@@ -110,7 +110,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			subCounter++;
 			programCounter = temp - 1;
 			keepRunning = true;
-			if (!running) run_program(program, variables);
+			if (!running) run_program(program, aliases, variables);
 		}
 		return;
 	}
@@ -122,7 +122,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			programCounter = temp - 1;
 			if (!running) {
 				keepRunning = true;
-				run_program(program, variables);
+				run_program(program, aliases, variables);
 			}
 		}
 		return;
@@ -136,7 +136,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		return;
 	}
 	if (is_if(line)) {
-		run_if(program, line, variables, running);
+		run_if(program, aliases, line, variables, running);
 		return;
 	}
 	if (is_input(line)) {
@@ -168,7 +168,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		return;
 	}
 	if (is_load(line)) {
-		run_load(program, variables, line + 4);
+		run_load(program, aliases, variables, line + 4);
 		return;
 	}
 	if (is_move(line)) {
@@ -206,7 +206,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 	if (STRING_EQUALS(line, "RUN")) {
 		programCounter = 0;
 		keepRunning = true;
-		run_program(program, variables);
+		run_program(program, aliases, variables);
 		return;
 	}
 	if (STRING_EQUALS(line, "RETURN")) {
@@ -215,7 +215,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 			show_error("RETURN WITHOUT GOSUB ERROR");
 		programCounter = subs[subCounter];
 		keepRunning = true;
-		if (!running) run_program(program, variables);
+		if (!running) run_program(program, aliases, variables);
 		return;
 	}
 	if (is_save(line)) {
@@ -322,7 +322,7 @@ void run_esc(char* line) {
 	printf("\033%s", copy);
 }
 
-void run_load(Program program, VarList variables, char* line) {
+void run_load(Program program, Program aliases, VarList variables, char* line) {
 	/* Declare vars */
 	Line copy, code;
 	char* temp;
@@ -360,7 +360,7 @@ void run_load(Program program, VarList variables, char* line) {
 			fclose(file);
 			return;
 		}
-		parse(program, variables, code);
+		run(program, aliases, variables, code, false);
 	}
 	fclose(file);
 }
@@ -450,7 +450,7 @@ void run_input(char* line, VarList variables) {
 	run_let(buffer2, variables);
 }
 
-void run_if(Program program, char* line, VarList variables, bool running) {
+void run_if(Program program, Program aliases, char* line, VarList variables, bool running) {
 	/* Declare vars */
 	size_t i, counter;
 	bool past_relop;
@@ -503,7 +503,7 @@ void run_if(Program program, char* line, VarList variables, bool running) {
 	while(then[0] == ' ') then++;
 	if (is_digit(then[0]))
 		programCounter = atol(then) - 1;
-	else run(program, variables, then, running);
+	else run(program, aliases, variables, then, running);
 }
 
 void run_let(char* line, VarList variables) {
@@ -612,7 +612,7 @@ void run_print(Program program, Line line) {
 	if (newline) printf("\n");
 }
 
-void run_program(Program program, VarList variables) {
+void run_program(Program program, Program aliases, VarList variables) {
 	char* currentLine, temp;
 	size_t lastLine;
 
@@ -641,7 +641,7 @@ void run_program(Program program, VarList variables) {
 			continue;
 		}
 		currentLine = program[programCounter];
-		run(program, variables, currentLine, true);
+		run(program, aliases, variables, currentLine, true);
 		programCounter++;
 		if (programCounter == PROGRAM_SIZE) {
 			printf("READY.\n");

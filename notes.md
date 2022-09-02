@@ -11,8 +11,6 @@
 * Now that I'm using is_keyword in is_var, address that bug in math.c
 * Keep swatting at the buggz.  Eventually I'll catch one. :D
 * Update the docs
-* Random thought: Do I really need parse()?  Its code could be added to run(), cuz it's not really a separate step anymore.
-	**EDIT:** YES!  I do need it.  LOAD uses it.  Or do like I almost did and get rid of it in both main() and run_load() - might be a thing to do on a night when I'm not as tired lol
 
 # Buggz! :D
 
