@@ -1,12 +1,13 @@
-# To-do's for version 0.2
+# To-do's for version 0.3
 
-* MOVE UP/DOWN/LEFT/RIGHT/HOME/END
+* Add the option to put the auto-run file in the user's home folder (cince /etc requires sudo)
+* Add the CENTER command (wrapping the print_centered function in C), so my title screen looks right again. :)
+* MOVE UP/DOWN/LEFT/RIGHT/HOME/END - or maybe just MOVE X Y TRUE
 * I kinda like the idea of ROW() and COLUMN() to get cursor position
 * Support for special characters like "▄" in ASC
 * Support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
 * POKE X Y character (right now it takes 4 lines to do this - put CHARACTER at position X, Y)
 * PEEK(X, Y) - get character at that position.  On the other hand, what if I made the memory stack bigger?  Then we could do not only screen "RAM" but also color "RAM" and use the rest for storing data.  Might be nice to have an extra 64K (or 128K or whatever) just for extra data.
-* Auto-run files
 * Now that I'm using is_keyword in is_var, address that bug in math.c
 * Keep swatting at the buggz.  Eventually I'll catch one. :D
 * Update the docs

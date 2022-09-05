@@ -130,6 +130,9 @@ void SetBlocking(bool setting);
  */
 void ReadLine(char* buffer);
 
+/** @returns Path where the auto-run file will be, if there is one */
+const char* get_autorun_file(void);
+
 
 
 /************************************************************************/

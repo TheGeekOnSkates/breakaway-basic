@@ -54,4 +54,8 @@ void ReadLine(char* buffer) {
 	free(temp);
 }
 
+const char* get_autorun_file() {
+	return "/etc/breakaway.bas";
+}
+
 #endif

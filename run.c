@@ -21,6 +21,25 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 	size_t temp;
 	keepRunning = running;
 	Line copy;
+	char* tempChar;
+
+	/* If it's an empty string, ignore it */
+	if (STRING_EQUALS(line, "")) return;
+	
+	/* Delete the trailing new-line character, if there is one */
+	tempChar = strchr((const char*)line, '\n');
+	if (tempChar != NULL) tempChar[0] = '\0';
+	tempChar = NULL;
+
+	/* Move past any leading spaces */
+	tempChar = line;
+	while(tempChar[0] == ' ') temp++;
+	
+	/* If it's a line number, store it in memory */
+	if (tempChar[0] >= '0' && tempChar[0] <= '9') {
+		set_line(program, line);
+		return;
+	}
 	
 	/* If it's an ALIAS statement, set the alias */
 	if (is_alias(line)) {
