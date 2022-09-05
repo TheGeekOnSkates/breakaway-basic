@@ -1,6 +1,5 @@
 # To-do's for version 0.3
 
-* Add the option to put the auto-run file in the user's home folder (cince /etc requires sudo)
 * Add the CENTER command (wrapping the print_centered function in C), so my title screen looks right again. :)
 * MOVE UP/DOWN/LEFT/RIGHT/HOME/END - or maybe just MOVE X Y TRUE
 * I kinda like the idea of ROW() and COLUMN() to get cursor position

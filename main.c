@@ -3,11 +3,10 @@
 int main() {
 	/* Declare variables */
 	/* char title[480], * temp; */
-	char code[LINE_SIZE];
+	char code[LINE_SIZE], configPath[512];
 	Program program, aliases;
 	VarList variables;
 	Line line;
-	const char* configPath = get_autorun_file();
 	FILE* file = NULL;
 	
 	/* Clear all memory (no "garbage characters") */
@@ -17,6 +16,7 @@ int main() {
 	
 	/* Run the auto-run file is there is one */
 	/* If there is a config file, LOAD and RUN it */
+	get_autorun_file(configPath);
 	file = fopen(configPath, "r");
 	if (file != NULL) {
 		while(true) {

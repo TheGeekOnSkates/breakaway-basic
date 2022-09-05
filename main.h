@@ -130,8 +130,11 @@ void SetBlocking(bool setting);
  */
 void ReadLine(char* buffer);
 
-/** @returns Path where the auto-run file will be, if there is one */
-const char* get_autorun_file(void);
+/**
+ * Gets the path where the program should look for an auto-run file
+ * @pparam[in, out] Path where the auto-run file will be, if there is one 
+ */
+void get_autorun_file(char* path);
 
 
 

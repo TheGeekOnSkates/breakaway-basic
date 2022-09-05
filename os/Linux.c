@@ -54,8 +54,19 @@ void ReadLine(char* buffer) {
 	free(temp);
 }
 
-const char* get_autorun_file() {
-	return "/etc/breakaway.bas";
+void get_autorun_file(char* path) {
+	char home[512], username[80];
+	memset(home, 0, 512);
+	if (getlogin_r(username, 80) == 0) {
+		strncpy(home, "/home/", 512);
+		strncat(home, username, 512 - strlen(home));
+		strncat(home, "/breakaway.bas", 512 - strlen(home));
+		if (access(home, F_OK) == 0) {
+			strncpy(path, home, 512);
+			return;
+		}
+	}
+	strncpy(path, "/etc/breakaway.bas", 512);
 }
 
 #endif

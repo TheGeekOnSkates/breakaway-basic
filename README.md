@@ -56,7 +56,7 @@ Alternatively, you can remove this dependency by going to os/Linux.c and getting
 
 ### 0.3
 
-* 
+* Added an optional auto-run file, to run a set of instructions on startup
 * Added the `ALIAS` instruction
 * Made the `LET` keyword optional (you can just do i.e. `X = 42` now).
 * Bugfixes in `LIST`, `GOTO`, and lowercase `CD`
