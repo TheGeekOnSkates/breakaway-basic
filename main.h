@@ -267,6 +267,8 @@ void run_load(Program program, Program aliases, VarList variables, char* line);
 void run_save(Program program, char* line);
 void run_list(Program program, Line line);
 void run_print(Program program, Line line);
+void set_alias(Line line, Program aliases);
+void run_alias(Line line, Program aliases);
 void run_cd(char* line);
 void run_esc(char* line);
 void run_let(char* line, VarList variables);

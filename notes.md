@@ -1,6 +1,5 @@
 # To-do's for version 0.2
 
-* Finish aliases
 * MOVE UP/DOWN/LEFT/RIGHT/HOME/END
 * I kinda like the idea of ROW() and COLUMN() to get cursor position
 * Support for special characters like "▄" in ASC

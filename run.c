@@ -22,11 +22,16 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 	keepRunning = running;
 	Line copy;
 	
-	/* And figure out what to do from there */
+	/* If it's an ALIAS statement, set the alias */
 	if (is_alias(line)) {
-		printf("LEFT OFF HERE\n");
+		set_alias(line, aliases);
 		return;
 	}
+
+	/* Otherwise, check for aliases */
+	run_alias(line, aliases);
+
+	/* And figure out what to do from there */
 	if (is_bg(line)) {
 		line += 2;
 		strncpy(copy, line, LINE_SIZE);
@@ -270,6 +275,65 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 	
 	/* Otherwise, run it */
 	rc = system(line);
+}
+
+void set_alias(Line line, Program aliases) {
+	size_t i = 0;
+	for (; i<PROGRAM_SIZE; i++) {
+		if (aliases[i][0] != '\0') continue;
+		strncpy(aliases[i], line, LINE_SIZE);
+		return;
+	}
+}
+
+void run_alias(Line line, Program aliases) {
+	Line left, right;
+	char* temp = line;
+	size_t i = 0, j = 0;
+
+	/* Loop through the list of aliases looking for one that matches
+	the instruction the user typed to do a find-&-replace */
+	for (i=0; i<PROGRAM_SIZE; i++) {
+
+		/* If we've reached an alias that isn't set yet,
+		at the end of the list, then exit the loop */
+		temp = aliases[i];
+		if (temp[0] == '\0') return;
+
+		/* Get the text between the first quotes (the name/key) */
+		memset(left, 0, LINE_SIZE);
+		while(temp[0] != '\0' && temp[0] != '"') temp++;
+		if (temp[0] != '"') return;
+		temp++;
+		j = 0;
+		while(temp[0] != '\0' && temp[0] != '"') {
+			left[j] = temp[0];
+			j++;
+			temp++;
+		}
+		if (temp[0] != '"') return;
+		temp++;	/* The closing quote on the name */
+
+		/* Move past the equals sign and get the right-hand string */
+		while(temp[0] != '\0' && temp[0] != '"') temp++;
+		if (temp[0] != '"') return;
+		temp++;
+		j = 0;
+		memset(right, 0, LINE_SIZE);
+		while(temp[0] != '\0' && temp[0] != '"') {
+			right[j] = temp[0];
+			j++;
+			temp++;
+		}
+
+		/* Now that we have our left and our right, do this:
+		IF instruction = an alias, THEN replace the alias with its value
+		and exit the loop */
+		if (STRING_STARTS_WITH(line, left)) {
+			replace_with_string(line, 0, strlen(left), right);
+			return;
+		}
+	}
 }
 
 void run_cd(char* line) {

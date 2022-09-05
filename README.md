@@ -57,6 +57,7 @@ Alternatively, you can remove this dependency by going to os/Linux.c and getting
 ### 0.3
 
 * 
+* Added the `ALIAS` instruction
 * Made the `LET` keyword optional (you can just do i.e. `X = 42` now).
 * Bugfixes in `LIST`, `GOTO`, and lowercase `CD`
 * Code changes "under the hood" that are different enough from 0.2 to mention.
@@ -87,6 +88,35 @@ The first release was just a superset of "Tiny BASIC", the main additions being 
 Gets the ASCII character code that corresponds to the character you typed.  For example, running `PRINT ASC("A")` would print 65 (the ASCII character code for the letter "A").
 
 **NOTE:** For now, it's just ASCII (no Unicode).  However, this is something I plan to fix in a future update.  And that's where things really get interesting (and helpful).  Try printing `CHR$(9604)` and seeing what happens. :)
+
+### ALIAS {string} = {string}
+
+Aliases are kind of like a "create-your-own instruction".  To keep Breakaway BASIC as portable as possible, there are somet hings it just shouldn't have to do.  For example, in my work on this project, I would find it very easy to do something like this:
+
+```
+ALIAS "FILES" = "ls -la"
+ALIAS "EDIT" = "nano"
+ALIAS "DELETE" = "rm"
+```
+
+But let's say we port Breakaway BASIC to Windows someday; rather than compiling a bunch of extra (not to mention OS-dependent) code, I can just do:
+
+```
+ALIAS "FILES" = "dir"
+ALIAS "EDIT" = "notepad"
+ALIAS "DELETE" = "del"
+```
+
+And now with a lot less work, you can do this:
+
+```
+10 EDIT TEMP.TXT
+20 FILES
+30 DEL TEMP.TXT
+40 FILES
+```
+
+When you `RUN` it, you will get more or less the same behavior (line 10 opens your text editor of choice, line 20 brings up a file listing, line 30 deletes the file you just wrote, and line 40 shows the updated file listing).
 
 ### BG {expression}
 
