@@ -6,6 +6,7 @@ size_t subs[PROGRAM_SIZE];
 size_t subCounter = 0;
 bool thereWasAnError;
 int rc = 0;
+Line prompt;
 
 void show_error(const char* error) {
 	printf("?%s", error);
@@ -219,6 +220,21 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy, variables);
 		if (!thereWasAnError) run_print(program, copy, false);
+		return;
+	}
+	if (is_prompt(line)) {
+		line += 6;
+		while(line[0] != '"') line++;
+		line++;
+		tempChar = strchr(line, '"');
+		if (tempChar != NULL) tempChar[0] = '\0';
+		strncpy(prompt, line, LINE_SIZE - 6);
+		/*
+		TO-DO: Replace \\n with \n, \\r with \r etc.
+		Then again... I kind of like the CHR$ idea better.
+		PROMPT "READY." + CHR$(34) makes more sense, cuz
+		\n and all that are not available to i.e. PRINT or SYS
+		*/
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "REM")) return;
@@ -721,7 +737,7 @@ void run_program(Program program, Program aliases, VarList variables) {
 		}
 		if (!keepRunning || programCounter == PROGRAM_SIZE) {
 			SetBlocking(true);
-			printf("READY.\n");
+			printf("%s", prompt);
 			return;
 		}
 		currentLine = program[programCounter];
@@ -729,7 +745,7 @@ void run_program(Program program, Program aliases, VarList variables) {
 			programCounter++;
 			if (programCounter == PROGRAM_SIZE) {
 				SetBlocking(true);
-				printf("READY.\n");
+				printf("%s", prompt);
 				return;
 			}
 			continue;
@@ -738,12 +754,12 @@ void run_program(Program program, Program aliases, VarList variables) {
 		run(program, aliases, variables, currentLine, true);
 		programCounter++;
 		if (programCounter == PROGRAM_SIZE) {
-			printf("READY.\n");
+			printf("%s", prompt);
 			SetBlocking(true);
 			return;
 		}
 	}
-	printf("READY.\n");
+	printf("%s", prompt);
 	SetBlocking(true);
 }
 

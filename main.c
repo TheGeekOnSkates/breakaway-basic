@@ -1,5 +1,7 @@
 #include "main.h"
 
+extern Line prompt;
+
 int main() {
 	/* Declare variables */
 	/* char title[480], * temp; */
@@ -13,6 +15,9 @@ int main() {
 	memset(program, 0, PROGRAM_SIZE * LINE_SIZE);
 	memset(aliases, 0, PROGRAM_SIZE * LINE_SIZE);
 	memset(variables, 0, VARIABLE_SIZE * sizeof(Variable));
+
+	/* Set the default prompt */
+	strncpy(prompt, "READY.\n", LINE_SIZE);
 	
 	/* Run the auto-run file is there is one */
 	/* If there is a config file, LOAD and RUN it */
@@ -44,7 +49,7 @@ int main() {
 		memset(variables, 0, 26 * sizeof(Variable));
 		fclose(file);
 	}
-	else printf("READY.\n");
+	else printf("%s", prompt);
 	
 	/* Main event loop - prompt the user for input, then run it */
 	while(true) {

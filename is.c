@@ -488,6 +488,7 @@ bool is_statement(Line line) {
 		|| is_load(line)
 		|| is_move(line)
 		|| is_print(line)
+		|| is_prompt(line)
 		|| is_reverse(line)
 		|| is_save(line)
 		|| is_sys(line)
@@ -587,6 +588,14 @@ bool is_underline(Line line) {
 	temp = line + 9;
 	while(temp[0] == ' ') temp++;
 	return STRING_EQUALS(temp, "ON") || STRING_EQUALS(temp, "OFF");
+}
+
+bool is_prompt(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "PROMPT")) return false;
+	temp = line + 6;
+	while(temp[0] == ' ') temp++;
+	return is_string(temp, &temp);
 }
 
 // End of validation functions

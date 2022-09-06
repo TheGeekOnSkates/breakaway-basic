@@ -381,6 +381,15 @@ Prints (displays) data on the screen.  I've used it all through this reference, 
 60 PRINT N,"SQUARED = ", N * N
 ```
 
+### PROMPT {string}
+
+I'm a Commodore nut.  So when I built my own BASIC, I wanted that "READY." like Commodore machines had.  You might want something else, and this command allows you to change it.
+
+```
+10 REM THIS CHANGES THE PROMPT TO LOOK LIKE AN APPLE ][
+20 PROMPT "]"
+```
+
 ### RC()
 
 Gets the return code of the last `SYS` call or system call in program mode.  This is usually zero, so checking if it's not may be useful for troubleshooting. For example:

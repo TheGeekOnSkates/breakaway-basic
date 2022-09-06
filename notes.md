@@ -1,21 +1,19 @@
 # To-do's for version 0.3
 
-* Also, now that our title screen is totally customizable, add a PROMPT command; this way instead of "READY." with a newline a la Commodore, you can have "]" like an Apple ][, or "Ok" like a TRS-80 Model 100 etc. :)
-* MOVE UP/DOWN/LEFT/RIGHT/HOME/END - or maybe just MOVE X Y TRUE
-* I kinda like the idea of ROW() and COLUMN() to get cursor position
-* Support for special characters like "▄" in ASC
-* Support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
+* Add support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
+	- I'm thinking add an is_string_expr function
+	- Once that's done, get it to work in PRINT
+	- Then, get it to work in PROMPT
+	- Then, same deal for SYS
 * When that's done, add support for case-insensitive commands (see issue #1 on GitHub)
-* POKE X Y character (right now it takes 4 lines to do this - put CHARACTER at position X, Y)
-* PEEK(X, Y) - get character at that position.  On the other hand, what if I made the memory stack bigger?  Then we could do not only screen "RAM" but also color "RAM" and use the rest for storing data.  Might be nice to have an extra 64K (or 128K or whatever) just for extra data.
-* Now that I'm using is_keyword in is_var, address that bug in math.c
+* Once that's done, I'd say update the docs and call 0.3 done - it's already *way* better than 0.2!
 * Keep swatting at the buggz.  Eventually I'll catch one. :D
 * Keep updating the docs as I go
 
 # Buggz! :D
 
 * See math.c on why I currently have to replace functions _after_ replacing variables.  Unlike the next one, this bug makes perfect sense (all variables are letters A-Z, all BASIC functions are made up of those letters, so ROWS() becomes 0000() if I call replace_vars first.)
-
+* Looking at other BASICs, I notice mine doesn't show the prompt nearly often enough; like if I do "10 PRINT whatever" I get no prompt, but anything else in direct mode gives me a prompt.  Maybe give that a closer look (take the prompts out of run_program and put them back in main or something)
 
 
 
@@ -33,13 +31,20 @@
 * If I go there... and I might cuz it's awesome... why not use the Linux *joystick* library?!  There's a joystick.h I used years ago that would totally work for that.
 
 
-## Stuff I'll probably procrastinate longer - 0.4 (maybe), lol
+## On the to-do list for 0.4
 
-* GET (may need to add BLOCK ON/OFF to make that work tho)
-* Add support for parens again
-* And if I'm going _there_, may as well add in all my other mathing work - meaningless functions like ABS, ATN, COS, TAN, ETC, ETC, ETC, that some people will appreciate.
 * Variables with names longer than 1 character
 * Variables ending in $ being strings
+* MOVE UP/DOWN/LEFT/RIGHT/HOME/END - or maybe just MOVE X Y TRUE
+* I kinda like the idea of ROW() and COLUMN() to get cursor position
+* Support for special characters like "▄" in ASC
+* POKE X Y character (right now it takes 4 lines to do this - put CHARACTER at position X, Y)
+* PEEK(X, Y) - get character at that position.  On the other hand, what if I made the memory stack bigger?  Then we could do not only screen "RAM" but also color "RAM" and use the rest for storing data.  Might be nice to have an extra 64K (or 128K or whatever) just for extra data.
+	**EDIT:** The more I think about this, the more I'm thinking it should be more like other BASICs, POKE {address} {value} and PEEK({address}) - that way addresses > the total character cells can be used to set *colors* on specific cells rather than *characters* :)
+* Now that I'm using is_keyword in is_var, address that bug in math.c
+* GET (may need to add BLOCK ON/OFF to make that work tho)
+* Add support for parens again
+* And when I going *there*, may as well add in all my other mathing work - meaningless functions like ABS, ATN, COS, TAN, ETC, ETC, ETC, that some people will appreciate.
 * Something like my old CLEAR HISTORY
 * also, a way to not add repeats to history
 
@@ -50,7 +55,7 @@
 * NEXT (can't have FOR without it) :)
 * Arrays
 * _maybe_ WHILE / LOOP (not WEND or END WHILE like other BASICs)
-* Files
+* Advanced file I/O (OPEN, CLOSE, PRINT#, INPUT# etc.)
 
 
 ------------------------------------------------------------------------------------------------------------

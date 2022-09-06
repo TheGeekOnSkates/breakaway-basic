@@ -184,6 +184,7 @@ bool is_list(Line line);
 bool is_load(Line line);
 bool is_move(Line line);
 bool is_print(Line line);
+bool is_prompt(Line line);
 bool is_reverse(Line line);
 bool is_save(Line line);
 bool is_sys(Line line);
