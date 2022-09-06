@@ -81,6 +81,13 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 		run_cd(line + 2);
 		return;
 	}
+	if (is_center(line)) {
+		line += 6;
+		strncpy(copy, line, LINE_SIZE);
+		eval_expr(copy, variables);
+		if (!thereWasAnError) run_print(program, copy, true);
+		return;
+	}
 	if (STRING_EQUALS(line, "CLEAR")) {
 		CLEAR_SCREEN();
 		return;
@@ -211,7 +218,7 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 		line += 5;
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy, variables);
-		if (!thereWasAnError) run_print(program, copy);
+		if (!thereWasAnError) run_print(program, copy, false);
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "REM")) return;
@@ -660,7 +667,7 @@ void run_move(Line line) {
 	printf("\033[%d;%dH", y, x);
 }
 
-void run_print(Program program, Line line) {
+void run_print(Program program, Line line, bool centered) {
 	/* Declare vars */
 	size_t i, length;
 	char copy[LINE_SIZE], * temp;
@@ -691,8 +698,12 @@ void run_print(Program program, Line line) {
 	
 	/* And print away! */
 	temp = copy;
-	printf("%s", temp);
-	if (newline) printf("\n");
+	if (centered)
+		print_centered(temp);
+	else {
+		printf("%s", temp);
+		if (newline) printf("\n");
+	}
 }
 
 void run_program(Program program, Program aliases, VarList variables) {

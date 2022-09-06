@@ -41,6 +41,12 @@ But the SYS command isn't the only way.  Anything that is not recognized as a Br
 
 You can save this code to a file, and then load it later.  If you use the extension ".bas" (which this BASIC doesn't require) you might also get some nice syntax highlighting in text editors, if you prefer to write your programs in that instead of entering the code into Breakaway BASIC directly.
 
+
+## The auto-run file
+
+If you want Breakaway BASIC to run certain instructions when it first starts, you can create a file in either your home folder or /etc called "breakaway.bas".  This file should use line numbers, like any other Breakaway BASIC file (no direct mode).  There is a sample breakaway.bas file included in this folder; it sets the background to blue and turns bold mode on (on my terminal), and then prints the title screen that used to be (before version 0.3) hard-coded into Breakaway BASIC itself.
+
+
 ## Building
 
 For now, the only supported build target is Linux, and the only library I use is GNU readline.  To install it on Debian-based systems, run:
@@ -56,6 +62,7 @@ Alternatively, you can remove this dependency by going to os/Linux.c and getting
 
 ### 0.3
 
+* Added the `CENTER` instruction
 * Added an optional auto-run file, to run a set of instructions on startup
 * Added the `ALIAS` instruction
 * Made the `LET` keyword optional (you can just do i.e. `X = 42` now).
@@ -167,6 +174,19 @@ Changes the folder you're working in (most systems call this the "working direct
 `CD "wherever"`
 
 **NOTE:** You can also use lowercase cd, like you would in other shells (DOS, Bash etc).  For example, you can do `cd /path/to/wherever` or `cd ./wherever` like you're probably used to.
+
+### CENTER
+
+Works like `PRINT` except that it prints text center-aligned.  For example, a nice way to add a "title" to a screen is to run something like this:
+
+```
+10 CLEAR
+20 REVERSE ON
+30 CENTER "YOUR TITLE HERE"
+40 REVERSE OFF
+```
+
+In fact, the example auto-run file in this folder ("breakaway.bas") uses a similar approach.
 
 ### CLEAR
 

@@ -110,6 +110,13 @@ bool is_cd(Line line) {
 	return is_string(temp, &temp);
 }
 
+bool is_center(Line line) {
+	if (!STRING_STARTS_WITH(line, "CENTER")) return false;
+	line += 6;
+	while(line[0] == ' ') line++;
+	return is_expr_list(line, &line);
+}
+
 bool is_cursor(Line line) {
 	char* temp;
 	if (!STRING_STARTS_WITH(line, "CURSOR")) return false;
@@ -466,6 +473,7 @@ bool is_statement(Line line) {
 	return is_bg(line)
 		|| is_blink(line)
 		|| is_cd(line)
+		|| is_center(line)
 		|| is_cursor(line)
 		|| is_esc(line)
 		|| is_fg(line)

@@ -1,15 +1,16 @@
 # To-do's for version 0.3
 
-* Add the CENTER command (wrapping the print_centered function in C), so my title screen looks right again. :)
+* Also, now that our title screen is totally customizable, add a PROMPT command; this way instead of "READY." with a newline a la Commodore, you can have "]" like an Apple ][, or "Ok" like a TRS-80 Model 100 etc. :)
 * MOVE UP/DOWN/LEFT/RIGHT/HOME/END - or maybe just MOVE X Y TRUE
 * I kinda like the idea of ROW() and COLUMN() to get cursor position
 * Support for special characters like "▄" in ASC
 * Support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
+* When that's done, add support for case-insensitive commands (see issue #1 on GitHub)
 * POKE X Y character (right now it takes 4 lines to do this - put CHARACTER at position X, Y)
 * PEEK(X, Y) - get character at that position.  On the other hand, what if I made the memory stack bigger?  Then we could do not only screen "RAM" but also color "RAM" and use the rest for storing data.  Might be nice to have an extra 64K (or 128K or whatever) just for extra data.
 * Now that I'm using is_keyword in is_var, address that bug in math.c
 * Keep swatting at the buggz.  Eventually I'll catch one. :D
-* Update the docs
+* Keep updating the docs as I go
 
 # Buggz! :D
 

@@ -57,6 +57,8 @@ void print_centered(const char* string) {
 	length = (columns / 2) - strlen(string) / 2;
 	for (i=0; i<length; i++) printf(" ");
 	printf("%s", string);
+	if (length + strlen(string) + length > columns) length--;
+	for (i=0; i<length; i++) printf(" ");
 }
 
 // End of string functions

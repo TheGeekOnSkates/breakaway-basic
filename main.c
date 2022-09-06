@@ -40,8 +40,8 @@ int main() {
 		}
 		strncpy(code, "RUN", LINE_SIZE);
 		run(program, aliases, variables, code, false);
-		//memset(program, 0, PROGRAM_SIZE * LINE_SIZE);
-		//memset(variables, 0, 26 * sizeof(Variable));
+		memset(program, 0, PROGRAM_SIZE * LINE_SIZE);
+		memset(variables, 0, 26 * sizeof(Variable));
 		fclose(file);
 	}
 	else printf("READY.\n");
