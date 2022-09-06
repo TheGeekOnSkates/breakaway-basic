@@ -30,6 +30,7 @@ void eval_expr(Line line, VarList variables) {
 	replace_fre(line);
 	replace_rc(line);
 	replace_rows(line);
+	replace_tab(line);
 	
 	/* Bug I'll need to address in 0.3:
 	If I call this first (which is what I'd like),

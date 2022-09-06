@@ -221,6 +221,10 @@ bool is_function(Line line, char** position) {
 		*position += 6;
 		return true;
 	}
+	if (STRING_STARTS_WITH(line, "TAB()")) {
+		*position += 5;
+		return true;
+	}
 	if (is_chr(line, position))
 		return true;
 	return false;
@@ -558,6 +562,14 @@ bool is_load(Line line) {
 	return is_string(temp, &temp);
 }
 
+bool is_prompt(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "PROMPT")) return false;
+	temp = line + 6;
+	while(temp[0] == ' ') temp++;
+	return is_string(temp, &temp);
+}
+
 bool is_reverse(Line line) {
 	char* temp;
 	if (!STRING_STARTS_WITH(line, "REVERSE")) return false;
@@ -588,14 +600,6 @@ bool is_underline(Line line) {
 	temp = line + 9;
 	while(temp[0] == ' ') temp++;
 	return STRING_EQUALS(temp, "ON") || STRING_EQUALS(temp, "OFF");
-}
-
-bool is_prompt(Line line) {
-	char* temp;
-	if (!STRING_STARTS_WITH(line, "PROMPT")) return false;
-	temp = line + 6;
-	while(temp[0] == ' ') temp++;
-	return is_string(temp, &temp);
 }
 
 // End of validation functions

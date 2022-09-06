@@ -2,6 +2,7 @@
 
 * Add support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
 	- I'm thinking add an is_string_expr function
+	- Also bring back my old combine_strings function
 	- Once that's done, get it to work in PRINT
 	- Then, get it to work in PROMPT
 	- Then, same deal for SYS
@@ -25,6 +26,7 @@
 
 ## Fun stuff I'll add when I get in the mood, just cuz it's awesome
 
+* SPC({number}) like the C64 has
 * I was researching the whole "get cursor position with termios" thing when I found this:
 	http://dtelnet.sourceforge.net/shkeys.c
   Apparently, you can get (and even SET) *mouse support!*  If I can find out how that works; I could add instructions like MOUSE ON/OFF, MOUSEX() and MOUSEY() to get the position, CLICKX() and CLICKY() to get the last clicked position, ON CLICK GOTO... no, that's too far. :D

@@ -62,6 +62,7 @@ Alternatively, you can remove this dependency by going to os/Linux.c and getting
 
 ### 0.3
 
+* Added the `TAB()` function
 * Added the `CENTER` instruction
 * Added an optional auto-run file, to run a set of instructions on startup
 * Added the `ALIAS` instruction
@@ -460,6 +461,17 @@ Runs a system command.  For example:
 ```
 
 The return value of the system call will be saved for later use by the `RC()` function.
+
+### TAB()
+
+Prints a Tab character (8 spaces in most terminals).  Note that unlike Commodore BASIC, this function doesn't take any parameters; this is because Tab characters behave differently on a modern terminal than they might on a C64.  I had thought of making the number inside be the number of Tab characters, but that would just be confusing to my fellow Commodore-lovers.  So mine is different enough to be not-confusing at least (lol).  This function is mainly useful for making text look like a table.  For example:
+
+```
+10 PRINT "COL 1",TAB(),"COL 2",TAB(),"COL 3"
+20 PRINT "A",TAB(),"B",TAB(),"C"
+30 PRINT "D",TAB(),"E",TAB(),"F"
+40 PRINT "etc.",TAB(),"etc.",TAB(),"etc."
+```
 
 ### UNDERLINE ON/OFF
 

@@ -333,6 +333,9 @@ void replace_rc(Line line);
 /** Replaces ROWS() with the screen height, in characters */
 void replace_rows(Line line);
 
+/** Replaces TAB() with the Tab character */
+void replace_tab(Line line);
+
 
 
 /************************************************************************/

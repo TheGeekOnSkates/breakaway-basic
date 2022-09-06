@@ -39,7 +39,6 @@ void replace_chr(Line line) {
 		while(line[end] != ')' && end < LINE_SIZE) end++;
 		if (end + 1 < LINE_SIZE) end++;
 		chr = atol(where + start + 4);
-		/* LEFT OFF HERE */
 		memset(buffer, 0, 8);
 		snprintf(buffer, 8, "%lc", (wchar_t)chr);
 		replace_with_string(line, start, end, buffer);
@@ -118,3 +117,25 @@ void replace_rows(Line line) {
 		replace_with_float(line, start, end, (float)rows);
 	}
 }
+
+void replace_tab(Line line) {
+	/* Declare variables */
+	char* where = NULL, buffer[2];
+	size_t start = 0, end = 0;
+
+	/* Set up the "buffer" */
+	buffer[0] = '\t';
+	buffer[1] = '\0';
+
+	/* And replace ROWS() with rows */
+	while(true) {
+		where = strstr(line, "TAB()");
+		if (where == NULL) break;
+		start = where - line;
+		end = start + 5;
+		if (end + 1 < LINE_SIZE) end++;
+		replace_with_string(line, start, end, buffer);
+	}
+}
+
+// End of "function-replacing functions" (lol)
