@@ -1,18 +1,17 @@
 # To-do's for version 0.3
 
-* Add support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
-	- I'm thinking add an is_string_expr function
-	- Also bring back my old combine_strings function
-	- Once that's done, get it to work in PRINT
-	- Then, get it to work in PROMPT
+* Finish support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
+	- Add an is_string_function function (lol) - returns true for things like CHR$, TAB, etc. which return strings
+	- In is_print, replace is_function with is_string_function
+	- Fix the bug at the top of the "buggz" list
+	- Once combine_strings works for PRINT, get it to work in PROMPT
 	- Then, same deal for SYS
-* When that's done, add support for case-insensitive commands (see issue #1 on GitHub)
+* Add support for case-insensitive commands (see issue #1 on GitHub)
 * Once that's done, I'd say update the docs and call 0.3 done - it's already *way* better than 0.2!
-* Keep swatting at the buggz.  Eventually I'll catch one. :D
-* Keep updating the docs as I go
 
 # Buggz! :D
 
+* If I do PRINT CHR$({number}) + "STRING", it works; if I print "STRING" + CHR$(number), the CHR$ part gets clipped off.  Note this is true whether we're talking special characters or ASCII
 * See math.c on why I currently have to replace functions _after_ replacing variables.  Unlike the next one, this bug makes perfect sense (all variables are letters A-Z, all BASIC functions are made up of those letters, so ROWS() becomes 0000() if I call replace_vars first.)
 * Looking at other BASICs, I notice mine doesn't show the prompt nearly often enough; like if I do "10 PRINT whatever" I get no prompt, but anything else in direct mode gives me a prompt.  Maybe give that a closer look (take the prompts out of run_program and put them back in main or something)
 

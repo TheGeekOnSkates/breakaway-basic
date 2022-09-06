@@ -48,6 +48,26 @@ void strip_spaces(char* string) {
 	}
 }
 
+void combine_strings(char* line) {
+	size_t start, end, i, j, length;
+	length = strlen(line);
+	for (i = 0; i<length; i++) {
+		if (line[i] != '"') continue;
+		start = i;
+		i++;
+		while(line[i] == ' ') i++;
+		if (line[i] != '+') continue;
+		i++;
+		while(line[i] == ' ') i++;
+		if (line[i] != '"') continue;
+		i++;
+		end = i - start;
+		for (j = 0; j < end; j++)
+			shift_left(line, start, LINE_SIZE);
+		length = strlen(line);
+		i = -1;
+	}
+}
 
 void print_centered(const char* string) {
 	int rows = 48, columns = 25;

@@ -23,14 +23,17 @@ size_t count_math_symbols(Line line, char symbol) {
 }
 
 void eval_expr(Line line, VarList variables) {
+	/* Handle string functions first */
+	replace_chr(line);
+	replace_tab(line);
+	combine_strings(line);
+	
 	/* Unfortunately, all this needs to be handled first (see below) */
 	replace_asc(line);
 	replace_columns(line);
-	replace_chr(line);
 	replace_fre(line);
 	replace_rc(line);
 	replace_rows(line);
-	replace_tab(line);
 	
 	/* Bug I'll need to address in 0.3:
 	If I call this first (which is what I'd like),

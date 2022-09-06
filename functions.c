@@ -40,7 +40,7 @@ void replace_chr(Line line) {
 		if (end + 1 < LINE_SIZE) end++;
 		chr = atol(where + start + 4);
 		memset(buffer, 0, 8);
-		snprintf(buffer, 8, "%lc", (wchar_t)chr);
+		snprintf(buffer, 8, "\"%lc\"", (wchar_t)chr);
 		replace_with_string(line, start, end, buffer);
 	}
 }
@@ -120,12 +120,14 @@ void replace_rows(Line line) {
 
 void replace_tab(Line line) {
 	/* Declare variables */
-	char* where = NULL, buffer[2];
+	char* where = NULL, buffer[4];
 	size_t start = 0, end = 0;
 
 	/* Set up the "buffer" */
-	buffer[0] = '\t';
-	buffer[1] = '\0';
+	buffer[0] = '"';
+	buffer[1] = '\t';
+	buffer[2] = '"';
+	buffer[3] = '\0';
 
 	/* And replace ROWS() with rows */
 	while(true) {
