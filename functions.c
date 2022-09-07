@@ -42,7 +42,9 @@ void replace_chr(Line line) {
 		memset(buffer, 0, 8);
 		snprintf(buffer, 8, "\"%lc\"", (wchar_t)chr);
 		replace_with_string(line, start, end, buffer);
+		printf("in replace_chr: %s\n", line);
 	}
+	printf("after replace_chr: %s\n", line);
 }
 
 void replace_columns(Line line) {

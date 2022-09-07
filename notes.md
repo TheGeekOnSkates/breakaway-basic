@@ -12,6 +12,7 @@
 # Buggz! :D
 
 * If I do PRINT CHR$({number}) + "STRING", it works; if I print "STRING" + CHR$(number), the CHR$ part gets clipped off.  Note this is true whether we're talking special characters or ASCII
+	**EDIT:** Just reworked replace_with_string, thinking that was the problem; I'm keeping my changes because the code is a bit cleaner, but the problem definitely seems to be in replace_chr (cuz I'm still getting the same bug).  I wonder if other things might be getting "clipped" like this... I haven't seen it, and it's still beyond my puny little human perspective, but my God knows what the answer is.  Somewhere, somehow, if you have a CHR$ function at the end, something somewhere decides "nope, I'm cuttin' you off." :D
 * See math.c on why I currently have to replace functions _after_ replacing variables.  Unlike the next one, this bug makes perfect sense (all variables are letters A-Z, all BASIC functions are made up of those letters, so ROWS() becomes 0000() if I call replace_vars first.)
 * Looking at other BASICs, I notice mine doesn't show the prompt nearly often enough; like if I do "10 PRINT whatever" I get no prompt, but anything else in direct mode gives me a prompt.  Maybe give that a closer look (take the prompts out of run_program and put them back in main or something)
 

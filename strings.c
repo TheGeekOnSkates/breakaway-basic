@@ -20,12 +20,23 @@ void replace_with_float(char* line, size_t from, size_t to, float value) {
 }
 
 void replace_with_string(char* line, size_t start, size_t end, char* replacement) {
-	char temp[LINE_SIZE];
-	size_t i;
-	
-	for (i=0; i<start; i++) temp[i] = line[i];
-	snprintf(temp + start, LINE_SIZE - start, "%s%s", replacement, line + end);
-	strncpy(line, temp, LINE_SIZE);
+	Line copy;
+	size_t i, length;
+
+	/* We start with a blank line.  Into this copy,
+	add the text to the left of the replacement */
+	memset(copy, 0, LINE_SIZE);
+	for (i=0; i<start; i++)
+		copy[i] = line[i];	
+
+	/* Copy the replacement into the string */
+	strncat(copy, replacement, LINE_SIZE - 1);
+
+	/* Copy the text after the replacement */
+	strncat(copy, line + end, LINE_SIZE - 1);
+
+	/* And update the "line" with the new string */
+	strncpy(line, copy, LINE_SIZE);
 }
 
 void shift_left(char* string, size_t start, size_t length) {
@@ -62,8 +73,9 @@ void combine_strings(char* line) {
 		if (line[i] != '"') continue;
 		i++;
 		end = i - start;
-		for (j = 0; j < end; j++)
+		for (j = 0; j < end; j++) {
 			shift_left(line, start, LINE_SIZE);
+		}
 		length = strlen(line);
 		i = -1;
 	}
