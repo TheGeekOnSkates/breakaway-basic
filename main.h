@@ -44,12 +44,14 @@
 #define STRING_EQUALS(a, b) (strcmp(a, b) == 0)
 
 /**
- * Checks if the first string starts with the second string
+ * Checks if the first string starts with the second string,
+ * including case-insensitive comparison
  * @param[in] The first string
  * @param[in] The second string
  * @returns True if it does, false if it doesn't
+ * @todo Make the function name lowercase; it's not a macro anymore.
  */
-#define STRING_STARTS_WITH(a, b) (strstr(a, b) == a)
+bool STRING_STARTS_WITH(char* a, const char* b);
 
 /**
  * Checks if the first string contains the second string

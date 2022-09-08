@@ -1,5 +1,22 @@
 #include "main.h"
 
+bool STRING_STARTS_WITH(char* a, const char* b) {
+	bool result = false;
+	size_t i = 0, length = strlen(a);
+	char* c = NULL;
+
+	c = calloc(length + 1, sizeof(char));
+	if (c == NULL) {
+		show_error("MEMORY ERROR");
+		return result;
+	}
+	for (; i<length; i++)
+		c[i] = toupper(a[i]);
+	result = strstr(c, b) == c;
+	free(c);
+	return result;
+}
+
 void replace_with_float(char* line, size_t from, size_t to, float value) {
 	char temp[15];
 	Line copy;

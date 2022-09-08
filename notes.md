@@ -1,11 +1,9 @@
 # To-do's for version 0.3
 
-* Completely finish string-adding (actual "string expressions" will have to come much, much later - we're talking IF "some string" <> "some other string" THEN fooey :D)
-	- In is_print, replace is_function with is_string_function
-		**EDIT:** This isn't called in is_print, but in is_expr_list.
-		But expression lists don't have to just be string things.
-		So this comment will be deleted next commit.
-* Add support for case-insensitive commands (see issue #1 on GitHub)
+* Finish support for case-insensitive commands (see issue #1 on GitHub)
+	- Update STRING_EQUALS like I did STRING_STARTS_WITH
+	- Get it working in replace_asc, replace_chr, etc.
+* Keep swatting at the buggz. :)
 * Once that's done, I'd say update the docs and call 0.3 done - it's already *way* better than 0.2!
 
 # Buggz! :D
