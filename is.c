@@ -200,6 +200,16 @@ bool is_fg(Line line) {
 	return is_number(temp, &temp) || is_var(temp, &temp) || is_function(temp, &temp);
 }
 
+bool is_string_function(Line line, char** position) {
+	if (STRING_STARTS_WITH(line, "TAB()")) {
+		*position += 5;
+		return true;
+	}
+	if (is_chr(line, position))
+		return true;
+	return false;
+}
+
 bool is_function(Line line, char** position) {
 	if (is_asc(line, position)) {
 		*position += 4;
@@ -221,13 +231,7 @@ bool is_function(Line line, char** position) {
 		*position += 6;
 		return true;
 	}
-	if (STRING_STARTS_WITH(line, "TAB()")) {
-		*position += 5;
-		return true;
-	}
-	if (is_chr(line, position))
-		return true;
-	return false;
+	return is_string_function(line, position);
 }
 
 bool is_gosub(Line line) {

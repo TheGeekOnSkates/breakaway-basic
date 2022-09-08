@@ -231,6 +231,7 @@ static inline bool is_math_action(char ch) {
 bool is_string(Line line, char** position);
 bool is_relop(Line line, char** position);
 bool is_expr_list(Line line, char** position);
+bool is_string_function(Line line, char** position);
 bool is_function(Line line, char** position);
 bool is_var_list(Line line, char** position);
 
