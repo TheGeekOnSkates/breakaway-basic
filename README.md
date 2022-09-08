@@ -20,6 +20,8 @@ When you run it, you'll see a title screen and a ridiculous number of "bytes fre
 RUN
 ```
 
+One important point worth noting: I use uppercase for instructions, but you don't have to.  Starting in version 0.3, `PRINT` and `print` and `Print` and `PrInT` are all the same thing.  But because 8-bit BASICs were mostly uppercase, and just to be extra-clear in this manual.
+
 Before we go any further, it's worth mentioning that this BASIC, like the ones that inspired it, have two "modes":
 1. "Program mode": If a line of code starts with a line number, that line is saved to your program.
 2. "Direct mode": If you don't start with a line number, the code runs immediately.
@@ -62,10 +64,10 @@ Alternatively, you can remove this dependency by going to os/Linux.c and getting
 
 ### 0.3
 
-* Added the `TAB()` function
-* Added the `CENTER` instruction
+* Made instructions case-insensitive, resolving issue #1 in GitHub
+* Added the `CHR$()` and `TAB()` function
+* Added the `ALIAS`, `CENTER` and `PROMPT` instructions
 * Added an optional auto-run file, to run a set of instructions on startup
-* Added the `ALIAS` instruction
 * Made the `LET` keyword optional (you can just do i.e. `X = 42` now).
 * Bugfixes in `LIST`, `GOTO`, and lowercase `CD`
 * Code changes "under the hood" that are different enough from 0.2 to mention.

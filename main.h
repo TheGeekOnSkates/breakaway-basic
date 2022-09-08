@@ -54,6 +54,9 @@ bool STRING_EQUALS(char* a, const char* b);
  */
 bool STRING_STARTS_WITH(char* a, const char* b);
 
+/** Basically case-insensitive strstr */
+char* substring(char* a, const char* b);
+
 /**
  * Checks if the first string contains the second string
  * @param[in] The first string

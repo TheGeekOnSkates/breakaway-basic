@@ -9,7 +9,7 @@ void replace_asc(Line line) {
 
 	/* And replace ASC() with the ASCII (or Unicode) character */
 	while(true) {
-		where = strstr(line, "ASC(");
+		where = substring(line, "ASC(");
 		if (where == NULL) break;
 		start = where - line;
 		end = start + 4;
@@ -32,7 +32,7 @@ void replace_chr(Line line) {
 	/* And replace ROWS() with rows */
 	while(true) {
 		/* Find the next one, or exit if not found */
-		where = strstr(line, "CHR$(");
+		where = substring(line, "CHR$(");
 		if (where == NULL) break;
 
 		/* Copy the character into a buffer */
@@ -61,7 +61,7 @@ void replace_columns(Line line) {
 
 	/* And replace COLUMNS() with columns */
 	while(true) {
-		where = strstr(line, "COLUMNS()");
+		where = substring(line, "COLUMNS()");
 		if (where == NULL) break;
 		start = where - line;
 		end = start + 9;
@@ -83,7 +83,7 @@ void replace_fre(Line line) {
 	
 	/* And replace ROWS() with rows */
 	while(true) {
-		where = strstr(line, "FRE()");
+		where = substring(line, "FRE()");
 		if (where == NULL) break;
 		start = where - line;
 		end = start + 5;
@@ -95,7 +95,7 @@ void replace_rc(Line line) {
 	char* where;
 	size_t start, end;
 	while(true) {
-		where = strstr(line, "RC()");
+		where = substring(line, "RC()");
 		if (where == NULL) break;
 		start = where - line;
 		end = start + 4;
@@ -114,7 +114,7 @@ void replace_rows(Line line) {
 
 	/* And replace ROWS() with rows */
 	while(true) {
-		where = strstr(line, "ROWS()");
+		where = substring(line, "ROWS()");
 		if (where == NULL) break;
 		start = where - line;
 		end = start + 6;
@@ -136,7 +136,7 @@ void replace_tab(Line line) {
 
 	/* And replace ROWS() with rows */
 	while(true) {
-		where = strstr(line, "TAB()");
+		where = substring(line, "TAB()");
 		if (where == NULL) break;
 		start = where - line;
 		end = start + 5;

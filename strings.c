@@ -1,5 +1,32 @@
 #include "main.h"
 
+char* substring(char* a, const char* b) {
+	/* Declare variables */
+	size_t i = 0, length = strlen(a);
+	char* c = NULL, * result = NULL;
+
+	/* Create a temporary string where we will backup "a" */
+	c = calloc(length + 1, sizeof(char));
+	if (c == NULL) {
+		show_error("MEMORY ERROR");
+		return result;
+	}
+
+	/* Copy a into c, and make a all-caps */
+	for (; i<length; i++) {
+		c[i] = a[i];
+		a[i] = toupper(a[i]);
+	}
+
+	/* Figure out where the result pointer should be */
+	result = strstr(a, b);
+
+	/* copy c back into a, free c and we're done */
+	strncpy(a, c, length);
+	free(c);
+	return result;
+}
+
 bool STRING_EQUALS(char* a, const char* b) {
 	bool result = false;
 	size_t i = 0, length = strlen(a);
