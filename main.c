@@ -17,7 +17,7 @@ int main() {
 	memset(variables, 0, VARIABLE_SIZE * sizeof(Variable));
 
 	/* Set the default prompt */
-	strncpy(prompt, "READY.\n", LINE_SIZE);
+	strncpy(prompt, "", LINE_SIZE);
 	
 	/* Run the auto-run file is there is one */
 	/* If there is a config file, LOAD and RUN it */
