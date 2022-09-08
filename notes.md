@@ -1,8 +1,8 @@
 # To-do's for version 0.3
 
 * Finish support for case-insensitive commands (see issue #1 on GitHub)
-	- Update STRING_EQUALS like I did STRING_STARTS_WITH
 	- Get it working in replace_asc, replace_chr, etc.
+	- Anywhere else?
 * Keep swatting at the buggz. :)
 * Once that's done, I'd say update the docs and call 0.3 done - it's already *way* better than 0.2!
 

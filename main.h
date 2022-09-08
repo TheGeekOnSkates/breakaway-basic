@@ -40,8 +40,9 @@
  * @param[in] The first string
  * @param[in] The second string
  * @returns True if they do, false if they don't
+ * @todo Make the function name lowercase; it's not a macro anymore.
  */
-#define STRING_EQUALS(a, b) (strcmp(a, b) == 0)
+bool STRING_EQUALS(char* a, const char* b);
 
 /**
  * Checks if the first string starts with the second string,
