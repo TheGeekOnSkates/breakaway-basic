@@ -22,7 +22,7 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 	size_t temp;
 	keepRunning = running;
 	Line copy;
-	char* tempChar;
+	char* tempChar, *tempChar2;
 
 	/* If it's an empty string, ignore it */
 	if (STRING_EQUALS(line, "")) return;
@@ -224,17 +224,14 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 	}
 	if (is_prompt(line)) {
 		line += 6;
-		while(line[0] != '"') line++;
-		line++;
-		tempChar = strchr(line, '"');
-		if (tempChar != NULL) tempChar[0] = '\0';
-		strncpy(prompt, line, LINE_SIZE - 6);
-		/*
-		TO-DO: Replace \\n with \n, \\r with \r etc.
-		Then again... I kind of like the CHR$ idea better.
-		PROMPT "READY." + CHR$(34) makes more sense, cuz
-		\n and all that are not available to i.e. PRINT or SYS
-		*/
+		while(line[0] == ' ') line++;
+		strncpy(copy, line, LINE_SIZE);
+		replace_chr(copy);
+		combine_strings(copy);	/* We don't want to replace variables with values etc. */
+		tempChar = strchr(copy, '"');
+		tempChar2 = strchr(copy + 1, '"');
+		if (tempChar2 != NULL) tempChar2[0] = '\0';
+		strncpy(prompt, tempChar + 1, LINE_SIZE - 6);
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "REM")) return;
@@ -270,7 +267,7 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 		return;
 	}
 	if (is_sys(line)) {
-		run_sys(line + 3);
+		run_sys(line + 3, variables);
 		return;
 	}
 	if (is_underline(line)) {
@@ -508,7 +505,7 @@ void run_save(Program program, char* line) {
 	fclose(file);
 }
 
-void run_sys(char* line) {
+void run_sys(char* line, VarList variables) {
 	/* Declare vars */
 	Line copy;
 	char* temp;
@@ -528,6 +525,9 @@ void run_sys(char* line) {
 		temp++;
 		i++;
 	}
+
+	/* Do any string-joining that may be necessary */
+	eval_expr(copy, variables);
 	
 	/* And here we go... */
 	rc = system(copy);

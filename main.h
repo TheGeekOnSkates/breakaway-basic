@@ -285,7 +285,7 @@ void run_let(char* line, VarList variables);
 void run_move(Line line);
 void run_if(Program program, Program aliases, char* line, VarList variables, bool running);
 void run_input(char* line, VarList variables);
-void run_sys(char* line);
+void run_sys(char* line, VarList variables);
 
 
 

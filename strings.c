@@ -21,7 +21,7 @@ void replace_with_float(char* line, size_t from, size_t to, float value) {
 
 void replace_with_string(char* line, size_t start, size_t end, char* replacement) {
 	Line copy;
-	size_t i, length;
+	size_t i;
 
 	/* We start with a blank line.  Into this copy,
 	add the text to the left of the replacement */

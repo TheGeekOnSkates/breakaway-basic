@@ -7,7 +7,7 @@ void replace_asc(Line line) {
 	char* where = NULL, buffer[8];
 	size_t start = 0, end = 0;
 
-	/* And replace ROWS() with rows */
+	/* And replace ASC() with the ASCII (or Unicode) character */
 	while(true) {
 		where = strstr(line, "ASC(");
 		if (where == NULL) break;
@@ -27,24 +27,27 @@ void replace_asc(Line line) {
 void replace_chr(Line line) {
 	/* Declare variables */
 	char* where = NULL, buffer[8];
-	size_t start = 0, end = 0;
-	size_t chr = 0;
+	size_t end = 0, chr = 0;
 
 	/* And replace ROWS() with rows */
 	while(true) {
+		/* Find the next one, or exit if not found */
 		where = strstr(line, "CHR$(");
 		if (where == NULL) break;
-		start = where - line;
-		end = start + 4;
-		while(line[end] != ')' && end < LINE_SIZE) end++;
-		if (end + 1 < LINE_SIZE) end++;
-		chr = atol(where + start + 4);
+
+		/* Copy the character into a buffer */
+		chr = atol(where + 5);
 		memset(buffer, 0, 8);
 		snprintf(buffer, 8, "\"%lc\"", (wchar_t)chr);
-		replace_with_string(line, start, end, buffer);
-		printf("in replace_chr: %s\n", line);
+
+		/* Figure out the end point (to include the closing ")") */
+		end = 0;
+		while(where[end] != ')') end++;
+		if (end < LINE_SIZE) end++;
+
+		/* And replace the string */
+		replace_with_string(line, where - line, where - line + end, buffer);
 	}
-	printf("after replace_chr: %s\n", line);
 }
 
 void replace_columns(Line line) {
