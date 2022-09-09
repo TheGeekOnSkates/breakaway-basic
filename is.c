@@ -120,26 +120,32 @@ bool is_esc(Line line) {
 bool is_expr(Line line, char** position) {
 	/* Variables */
 	char* pos;
-	bool result = is_number(line, position) || is_var(line, position) || is_function(line, position);
-	
-	/* Skip spaces again */
-	pos = *position;
-	while(pos[0] == ' ') pos++;
+	bool result = is_number(line, position) || is_var(line, position) || is_function(line, position) || is_pi(line, position);
 	
 	/* From here, we already know if it starts with an expression or not.
 	But let's move the pointer to the end of the expression, because some
 	functions (IF, PRINT etc.) involve more than one on the same line */
+	pos = *position;
 	while(true) {
-		/* Skip spaces again */
+		/* Skip spaces */
 		while(pos[0] == ' ') pos++;
-		
+
+		/* No math symbol?  We've reached the end */
 		if (!is_math_action(pos[0])) break;
 		pos++;
+
+		/* Skip spaces again */
+		while(pos[0] == ' ') pos++;
 		
 		/* Here we get into a kinda weird scenario:
 		What if I enter 3 + 4 * (nothing at the end?)
 		We can't have that, so... */
-		if (!is_number(pos, &pos) && !is_var(pos, &pos) && !is_function(pos, &pos)) {
+		if (
+			!is_number(pos, &pos)
+			&& !is_var(pos, &pos)
+			&& !is_function(pos, &pos)
+			&& !is_pi(pos, &pos)
+		) {
 			*position = pos;
 			return false;
 		}
@@ -484,6 +490,16 @@ bool is_statement(Line line) {
 		|| is_save(line)
 		|| is_sys(line)
 		|| is_underline(line);
+}
+
+bool is_pi(Line line, char** position) {
+	char* pos;
+	if (STRING_STARTS_WITH(line, "PI")) {
+		pos = line + 2;
+		*position = pos;
+		return true;
+	}
+	return false;
 }
 
 bool is_string(Line line, char** position) {

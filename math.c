@@ -32,6 +32,7 @@ void eval_expr(Line line, VarList variables) {
 	replace_asc(line);
 	replace_columns(line);
 	replace_fre(line);
+	replace_pi(line);
 	replace_rc(line);
 	replace_rows(line);
 	
@@ -258,6 +259,16 @@ void divide(char* line, size_t length) {
 		/* And continue the loop */
 		count--;
 		if (count == 0) break;
+	}
+}
+
+void replace_pi(char* line) {
+	size_t start;
+	while(true) {
+		char* pi = substring(line, "PI");
+		if (pi == NULL) return;
+		start = pi - line;
+		replace_with_float(line, start, start + 2, M_PI);
 	}
 }
 

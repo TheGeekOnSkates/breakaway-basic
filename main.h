@@ -10,6 +10,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 
 
@@ -237,6 +238,7 @@ static inline bool is_math_action(char ch) {
 bool is_string(Line line, char** position);
 bool is_relop(Line line, char** position);
 bool is_expr_list(Line line, char** position);
+bool is_pi(Line line, char** position);
 bool is_string_function(Line line, char** position);
 bool is_function(Line line, char** position);
 bool is_var_list(Line line, char** position);
@@ -304,6 +306,7 @@ void multiply(char* line, size_t length);
 void divide(char* line, size_t length);
 void add(char* line, size_t length);
 void subtract(char* line, size_t length);
+void replace_pi(char* line);
 
 
 
