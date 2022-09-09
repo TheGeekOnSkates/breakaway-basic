@@ -157,7 +157,7 @@ bool is_expr(Line line, char** position) {
 bool is_expr_list(Line line, char** position) {
 	/* Variables */
 	char* pos;
-	bool result = is_string(line, position) || is_expr(line, position) || is_function(line, position);
+	bool result = is_expr(line, position) || is_string(line, position);
 	
 	/* From here, we can have a comma, followed by another expression
 	(but trailing commas are not allowed).  Kind of like is_expr :) */
@@ -171,7 +171,7 @@ bool is_expr_list(Line line, char** position) {
 		pos++;
 		
 		/* No expression after the comma?  Syntax error. */
-		if (!is_string(pos, &pos) && !is_expr(pos, &pos) && !is_function(pos, &pos)) {
+		if (!is_expr(pos, &pos) && !is_string(pos, &pos)) {
 			*position = pos;
 			return false;
 		}
@@ -304,6 +304,7 @@ bool is_keyword(Line line) {
 			|| STRING_STARTS_WITH(line, "BOLD");
 	if (line[0] == 'C' || line[0] == 'c')
 		return STRING_STARTS_WITH(line, "CD")
+			|| STRING_STARTS_WITH(line, "CENTER")
 			|| STRING_STARTS_WITH(line, "CLEAR")
 			|| STRING_STARTS_WITH(line, "COLUMNS")
 			|| STRING_STARTS_WITH(line, "CONT")
