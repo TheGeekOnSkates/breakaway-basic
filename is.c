@@ -94,22 +94,6 @@ bool is_bold(Line line) {
 	return STRING_EQUALS(temp, "ON") || STRING_EQUALS(temp, "OFF");
 }
 
-bool is_cd(Line line) {
-	char* temp;
-
-	/* Most shells use this syntax: cd /path (Unix-y) or cd C:\path (DOS-like).
-	That's not particularly consistent with Breakaway BASIC (or any BASIC),
-	but it's a thing we've gotten so used to that it should "just work". */
-	if (STRING_STARTS_WITH(line, "cd")) return true;
-	
-	/* Otherwise, expect CD "string", which is different from most
-	shells but more consistent with thie BASIC's syntax */
-	if (!STRING_STARTS_WITH(line, "CD")) return false;
-	temp = line + 3;
-	while(temp[0] == ' ') temp++;
-	return is_string(temp, &temp);
-}
-
 bool is_center(Line line) {
 	if (!STRING_STARTS_WITH(line, "CENTER")) return false;
 	line += 6;
@@ -480,7 +464,6 @@ bool is_statement(Line line) {
 	/* The others have specific requirements, so check for each of those */
 	return is_bg(line)
 		|| is_blink(line)
-		|| is_cd(line)
 		|| is_center(line)
 		|| is_cursor(line)
 		|| is_esc(line)

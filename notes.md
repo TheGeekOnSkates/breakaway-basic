@@ -6,10 +6,8 @@
 # Buggz! :D
 
 * Looking at other BASICs, I notice mine doesn't show the prompt nearly often enough; like if I do "10 PRINT whatever" I get no prompt, but anything else in direct mode gives me a prompt.  Maybe give that a closer look (take the prompts out of run_program and put them back in main or something)
-* Also, I noticed that my auto-run file doesn't run from cool-retro-term; I kind of think this is because of the function I'm using to get my home folder; look at the alternatives (there were 3/4 different ways to get the username part)
 * Not a bug per se, but still a thing I'd like to change: CHR$ (and probably ASC) don't suport expressions, variables etc. - just numbers or strings.
 * See math.c on why I currently have to replace functions _after_ replacing variables.  Unlike the next one, this bug makes perfect sense (all variables are letters A-Z, all BASIC functions are made up of those letters, so ROWS() becomes 0000() if I call replace_vars first.)
-
 
 
 

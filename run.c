@@ -78,10 +78,6 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 		else show_error("SYNTAX ERROR");
 		return;
 	}
-	if (is_cd(line)) {
-		run_cd(line + 2);
-		return;
-	}
 	if (is_center(line)) {
 		line += 6;
 		strncpy(copy, line, LINE_SIZE);
@@ -297,7 +293,7 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 		let it "just work".  It looks weird in BASIC, but
 		considering terminals have been doing it this way
 		for decades, it's the right thing to do.  :)  */
-	if (STRING_STARTS_WITH(line, "cd")) {
+	if (STRING_STARTS_WITH(line, "CD")) {
 		line += 2;
 		while(line[0] == ' ') line++;
 		if (!GoToFolder(line)) show_error("?DIRECTORY NOT FOUND ERROR");
@@ -373,31 +369,6 @@ void run_alias(Line line, Program aliases) {
 			return;
 		}
 	}
-}
-
-void run_cd(char* line) {
-	/* Declare vars */
-	Line copy;
-	char* temp;
-	size_t i;
-	
-	/* Set default values */
-	memset(copy, 0, LINE_SIZE);
-	temp = line;
-	i = 0;
-	
-	/* Move past spaces and the first quote */
-	while (temp[0] == ' ' || temp[0] == '"') temp++;
-	
-	/* Copy up to the closing quote */
-	while(temp[0] != '"' && temp[0] != '\0') {
-		copy[i] = temp[0];
-		temp++;
-		i++;
-	}
-	
-	/* And here we go... */
-	if (!GoToFolder(copy)) show_error("?DIRECTORY NOT FOUND ERROR");
 }
 
 void run_esc(char* line) {
@@ -733,6 +704,7 @@ void run_program(Program program, Program aliases, VarList variables) {
 			lastLine = programCounter;
 			while(program[lastLine][0] == '\0') lastLine--;
 			printf("\nBREAK IN %ld\n", lastLine);
+			printf("%s", prompt);
 			keepRunning = false;
 		}
 		if (!keepRunning || programCounter == PROGRAM_SIZE) {

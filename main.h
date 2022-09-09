@@ -96,6 +96,7 @@ typedef Variable VarList[26];	/* Again, that limit might not last long lol */
 	#include <termios.h>
 	#include <sys/resource.h>
 	#include <sys/ioctl.h>
+	#include <pwd.h>
 	#include <readline/readline.h>
 	#include <readline/history.h>
 #endif
@@ -175,7 +176,6 @@ bool is_alias(Line line);
 bool is_bg(Line line);
 bool is_blink(Line line);
 bool is_bold(Line line);
-bool is_cd(Line line);
 bool is_center(Line line);
 bool is_cursor(Line line);
 bool is_esc(Line line);
@@ -286,7 +286,6 @@ void run_list(Program program, Line line);
 void run_print(Program program, Line line, bool centered);
 void set_alias(Line line, Program aliases);
 void run_alias(Line line, Program aliases);
-void run_cd(char* line);
 void run_esc(char* line);
 void run_let(char* line, VarList variables);
 void run_move(Line line);

@@ -170,13 +170,23 @@ Turns bold text on or off.  For example:
 40 PRINT "THIS TEXT WILL NOT."
 ```
 
-### CD {string}
+### CD
 
-Changes the folder you're working in (most systems call this the "working directory").  Note that this is the _only_ way to change directory in Breakaway BASIC.  Here's how it works:
+Changes the folder you're working in (most systems call this the "working directory").  And it works exactly like the cd command in other systems.  Here are a few examples:
 
-`CD "wherever"`
+```
+CD /home/geek
+cd ./code/active
+CD breakaway-basic
+Cd ../
+cD folder name with spaces
+```
 
-**NOTE:** You can also use lowercase cd, like you would in other shells (DOS, Bash etc).  For example, you can do `cd /path/to/wherever` or `cd ./wherever` like you're probably used to.
+There are, however, a few differences:
+
+* As of version 0.3, there is no "~" environment variable; that's a Bash thing.  If you really need/want a "home" variable like that, you can set it in your auto-run file.  If there's a massive demand for it at some point, it's not too hard to add.
+* Notice that unlike other shells, the "cd" part is case-insinsitive (`CD` and `cd` and `Cd` and `cD` all work).
+* Notice also that unlike other shells Breakaway Basic does **NOT** expect quotes to be on file paths, ever.  This behavior started in version 0.3.
 
 ### CENTER
 
