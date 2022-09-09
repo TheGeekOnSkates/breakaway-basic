@@ -1,6 +1,10 @@
 # To-do's for version 0.4
 
-* Finish replace_pi and is_pi and functions that use them - I can `print PI + 1` but not `print 1 + PI`.  Weird.
+* Fixed the PI bug, but created another.  Fix that next. :D
+	Some functions were moving the output pointer even if they return false.
+	I changed that in is_number and is_var (and there might be others).
+	But now the line `PRINT FRE(), "BYTES FREE"` gets run as a system
+	command for sme reason (and obviously, fails)
 * Add a get_text_between_parens function
 * Use that to update CHR$ and ASC, so I can do things like CHR$(9600 + X)
 * Add more math functions from my old calculator program - ATN, COS, FOO, BAR, BAZ, ETC. :D

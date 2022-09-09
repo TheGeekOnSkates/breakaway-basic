@@ -294,46 +294,67 @@ bool is_italic(Line line) {
 }
 
 bool is_keyword(Line line) {
-	if (line[0] == 'A') return STRING_STARTS_WITH(line, "ASC");
-	if (line[0] == 'B') return STRING_STARTS_WITH(line, "BG")
-		|| STRING_STARTS_WITH(line, "BLINK")
-		|| STRING_STARTS_WITH(line, "BOLD");
-	if (line[0] == 'C') return STRING_STARTS_WITH(line, "CD")
-		|| STRING_STARTS_WITH(line, "CLEAR")
-		|| STRING_STARTS_WITH(line, "COLUMNS")
-		|| STRING_STARTS_WITH(line, "CONT")
-		|| STRING_STARTS_WITH(line, "CURSOR");
-	if (line[0] == 'E') return STRING_STARTS_WITH(line, "END")
-		|| STRING_STARTS_WITH(line, "ESC")
-		|| STRING_STARTS_WITH(line, "EXIT");
-	if (line[0] == 'F') return STRING_STARTS_WITH(line, "FG")
-		|| STRING_STARTS_WITH(line, "FOR")
-		|| STRING_STARTS_WITH(line, "FRE");
-	if (line[0] == 'G') return STRING_STARTS_WITH(line, "GOSUB")
-		|| STRING_STARTS_WITH(line, "GOTO");
-	if (line[0] == 'H') return STRING_STARTS_WITH(line, "HIDDEN");
-	if (line[0] == 'I') return STRING_STARTS_WITH(line, "IF")
-		|| STRING_STARTS_WITH(line, "INPUT")
-		|| STRING_STARTS_WITH(line, "ITALIC");
-	if (line[0] == 'L') return STRING_STARTS_WITH(line, "LET")
-		|| STRING_STARTS_WITH(line, "LIST")
-		|| STRING_STARTS_WITH(line, "LOAD");
-	if (line[0] == 'M') return STRING_STARTS_WITH(line, "MOVE");
-	if (line[0] == 'N') return STRING_STARTS_WITH(line, "NEW");
-	if (line[0] == 'O') return STRING_STARTS_WITH(line, "ON")
-		|| STRING_STARTS_WITH(line, "OFF");
-	if (line[0] == 'P') return STRING_STARTS_WITH(line, "PI")
-		|| STRING_STARTS_WITH(line, "PRINT");
-	if (line[0] == 'R') return STRING_STARTS_WITH(line, "REM")
-		|| STRING_STARTS_WITH(line, "REVERSE")
-		|| STRING_STARTS_WITH(line, "RUN")
-		|| STRING_STARTS_WITH(line, "RETURN");
-	if (line[0] == 'S') return STRING_STARTS_WITH(line, "SAVE")
-		|| STRING_STARTS_WITH(line, "SYS");
-	if (line[0] == 'T') return STRING_STARTS_WITH(line, "TAB")
-		|| STRING_STARTS_WITH(line, "TAN")
-		|| STRING_STARTS_WITH(line, "TO");
-	if (line[0] == 'U') return STRING_STARTS_WITH(line, "UNDERLINE");
+	if (line[0] == 'A' || line[0] == 'a')
+		return STRING_STARTS_WITH(line, "ASC")
+			|| STRING_STARTS_WITH(line, "ATN");
+	if (line[0] == 'B' || line[0] == 'b')
+		return STRING_STARTS_WITH(line, "BG")
+			|| STRING_STARTS_WITH(line, "BLINK")
+			|| STRING_STARTS_WITH(line, "BLOCK")
+			|| STRING_STARTS_WITH(line, "BOLD");
+	if (line[0] == 'C' || line[0] == 'c')
+		return STRING_STARTS_WITH(line, "CD")
+			|| STRING_STARTS_WITH(line, "CLEAR")
+			|| STRING_STARTS_WITH(line, "COLUMNS")
+			|| STRING_STARTS_WITH(line, "CONT")
+			|| STRING_STARTS_WITH(line, "CURSOR");
+	if (line[0] == 'E' || line[0] == 'e')
+		return STRING_STARTS_WITH(line, "END")
+			|| STRING_STARTS_WITH(line, "ESC")
+			|| STRING_STARTS_WITH(line, "EXIT");
+	if (line[0] == 'F' || line[0] == 'f')
+		return STRING_STARTS_WITH(line, "FG")
+			|| STRING_STARTS_WITH(line, "FOR")
+			|| STRING_STARTS_WITH(line, "FRE");
+	if (line[0] == 'G' || line[0] == 'g')
+		return STRING_STARTS_WITH(line, "GET")
+			|| STRING_STARTS_WITH(line, "GOSUB")
+			|| STRING_STARTS_WITH(line, "GOTO");
+	if (line[0] == 'H' || line[0] == 'h')
+		return STRING_STARTS_WITH(line, "HIDDEN");
+	if (line[0] == 'I' || line[0] == 'i')
+		return STRING_STARTS_WITH(line, "IF")
+			|| STRING_STARTS_WITH(line, "INPUT")
+			|| STRING_STARTS_WITH(line, "ITALIC");
+	if (line[0] == 'L' || line[0] == 'l')
+		return STRING_STARTS_WITH(line, "LET")
+			|| STRING_STARTS_WITH(line, "LIST")
+			|| STRING_STARTS_WITH(line, "LOAD")
+			|| STRING_STARTS_WITH(line, "LOG");
+	if (line[0] == 'M' || line[0] == 'm')
+		return STRING_STARTS_WITH(line, "MOVE");
+	if (line[0] == 'N' || line[0] == 'n')
+		return STRING_STARTS_WITH(line, "NEW");
+	if (line[0] == 'O' || line[0] == 'o')
+		return STRING_STARTS_WITH(line, "ON")
+			|| STRING_STARTS_WITH(line, "OFF");
+	if (line[0] == 'P' || line[0] == 'p')
+		return STRING_STARTS_WITH(line, "PI")
+			|| STRING_STARTS_WITH(line, "PRINT");
+	if (line[0] == 'R' || line[0] == 'r')
+		return STRING_STARTS_WITH(line, "REM")
+			|| STRING_STARTS_WITH(line, "REVERSE")
+			|| STRING_STARTS_WITH(line, "RUN")
+			|| STRING_STARTS_WITH(line, "RETURN");
+	if (line[0] == 'S' || line[0] == 's')
+		return STRING_STARTS_WITH(line, "SAVE")
+			|| STRING_STARTS_WITH(line, "SYS");
+	if (line[0] == 'T' || line[0] == 't')
+		return STRING_STARTS_WITH(line, "TAB")
+			|| STRING_STARTS_WITH(line, "TAN")
+			|| STRING_STARTS_WITH(line, "TO");
+	if (line[0] == 'U' || line[0] == 'u')
+		return STRING_STARTS_WITH(line, "UNDERLINE");
 	return false;
 }
 
@@ -413,7 +434,7 @@ bool is_number(Line line, char** position) {
 	while (is_digit(pos[0])) pos++;
 	
 	/* And we're done */
-	*position = pos;
+	if (result) *position = pos;
 	return result;
 }
 
@@ -522,7 +543,7 @@ bool is_var(Line line, char** position) {
 	bool result = line[0] >= 'A' && line[0] <= 'Z';
 	bool twoLetters = line[1] >= 'A' && line[1] <= 'Z';
 	pos++;
-	*position = pos;
+	if (!twoLetters) *position = pos;
 	return twoLetters ? false : result;
 }
 
