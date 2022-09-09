@@ -36,8 +36,8 @@ int main() {
 			else if (code[0] >= '0' && code[0] <= '9')
 				run(program, aliases, variables, code, false);
 			else {
-				show_error("ILLEGAL DIRECT MODE ERROR");
-				fclose(file);
+				show_error("ILLEGAL DIRECT MODE OR LINE TOO LONG");
+				printf("\"%c\"\n", code[0]);
 				memset(program, 0, PROGRAM_SIZE * LINE_SIZE);
 				memset(variables, 0, 26 * sizeof(Variable));
 				break;

@@ -554,7 +554,7 @@ bool is_prompt(Line line) {
 	if (!STRING_STARTS_WITH(line, "PROMPT")) return false;
 	temp = line + 6;
 	while(temp[0] == ' ') temp++;
-	return is_string(temp, &temp);
+	return is_string(temp, &temp) || is_string_function(temp, &temp);
 }
 
 bool is_reverse(Line line) {
