@@ -6,6 +6,7 @@ size_t subs[PROGRAM_SIZE];
 size_t subCounter = 0;
 bool thereWasAnError;
 int rc = 0;
+Line prompt;
 
 void show_error(const char* error) {
 	printf("?%s", error);
@@ -15,15 +16,43 @@ void show_error(const char* error) {
 	SetBlocking(true);
 }
 
-void run(Program program, VarList variables, Line line, bool running) {
+void run(Program program, Program aliases, VarList variables, Line line, bool running) {
 	/* Declare vars */
 	thereWasAnError = false;
 	size_t temp;
 	keepRunning = running;
 	Line copy;
+	char* tempChar, *tempChar2;
+
+	/* If it's an empty string, ignore it */
+	if (STRING_EQUALS(line, "")) return;
 	
+	/* Delete the trailing new-line character, if there is one */
+	tempChar = strchr((const char*)line, '\n');
+	if (tempChar != NULL) tempChar[0] = '\0';
+	tempChar = NULL;
+
+	/* Move past any leading spaces */
+	tempChar = line;
+	while(tempChar[0] == ' ') temp++;
+	
+	/* If it's a line number, store it in memory */
+	if (tempChar[0] >= '0' && tempChar[0] <= '9') {
+		set_line(program, line);
+		return;
+	}
+	
+	/* If it's an ALIAS statement, set the alias */
+	if (is_alias(line)) {
+		set_alias(line, aliases);
+		return;
+	}
+
+	/* Otherwise, check for aliases */
+	run_alias(line, aliases);
+
 	/* And figure out what to do from there */
-	if (STRING_STARTS_WITH(line, "BG")) {
+	if (is_bg(line)) {
 		line += 2;
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy, variables);
@@ -33,7 +62,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		else printf("\033[4%ldm", temp);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "BLINK")) {
+	if (is_blink(line)) {
 		if (STRING_CONTAINS(line, "ON"))
 			printf("\033[5m");
 		else if (STRING_CONTAINS(line, "OFF"))
@@ -41,7 +70,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		else show_error("SYNTAX ERROR");
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "BOLD")) {
+	if (is_bold(line)) {
 		if (STRING_CONTAINS(line, "ON"))
 			printf("\033[1m");
 		else if (STRING_CONTAINS(line, "OFF"))
@@ -49,8 +78,11 @@ void run(Program program, VarList variables, Line line, bool running) {
 		else show_error("SYNTAX ERROR");
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "CD")) {
-		run_cd(line + 2);
+	if (is_center(line)) {
+		line += 6;
+		strncpy(copy, line, LINE_SIZE);
+		eval_expr(copy, variables);
+		if (!thereWasAnError) run_print(program, copy, true);
 		return;
 	}
 	if (STRING_EQUALS(line, "CLEAR")) {
@@ -59,10 +91,10 @@ void run(Program program, VarList variables, Line line, bool running) {
 	}
 	if (STRING_EQUALS(line, "CONT")) {
 		keepRunning = true;
-		run_program(program, variables);
+		run_program(program, aliases, variables);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "CURSOR")) {
+	if (is_cursor(line)) {
 		if (STRING_CONTAINS(line, "ON"))
 			printf("\033[?25h");
 		else if (STRING_CONTAINS(line, "OFF"))
@@ -74,7 +106,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		keepRunning = false;
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "ESC")) {
+	if (is_esc(line)) {
 		run_esc(line + 3);
 		return;
 	}
@@ -83,7 +115,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		CLEAR_SCREEN();
 		exit(0);
 	}
-	if (STRING_STARTS_WITH(line, "FG")) {
+	if (is_fg(line)) {
 		line += 2;
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy, variables);
@@ -93,7 +125,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		else printf("\033[3%ldm", temp);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "GOSUB")) {
+	if (is_gosub(line)) {
 		temp = atoi(line + 5);
 		if (temp < 0 || temp > PROGRAM_SIZE)
 			show_error("SYNTAX ERROR");
@@ -106,21 +138,24 @@ void run(Program program, VarList variables, Line line, bool running) {
 			subCounter++;
 			programCounter = temp - 1;
 			keepRunning = true;
-			if (!running) run_program(program, variables);
+			if (!running) run_program(program, aliases, variables);
 		}
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "GOTO")) {
+	if (is_goto(line)) {
 		temp = atoi(line + 4);
 		if (temp < 0 || temp > PROGRAM_SIZE)
 			show_error("SYNTAX ERROR");
 		else {
 			programCounter = temp - 1;
-			if (!running) run_program(program, variables);
+			if (!running) {
+				keepRunning = true;
+				run_program(program, aliases, variables);
+			}
 		}
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "HIDDEN")) {
+	if (is_hidden(line)) {
 		if (STRING_CONTAINS(line, "ON"))
 			printf("\033[8m");
 		else if (STRING_CONTAINS(line, "OFF"))
@@ -128,11 +163,11 @@ void run(Program program, VarList variables, Line line, bool running) {
 		else show_error("SYNTAX ERROR");
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "IF")) {
-		run_if(program, line, variables, running);
+	if (is_if(line)) {
+		run_if(program, aliases, line, variables, running);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "INPUT")) {
+	if (is_input(line)) {
 		if (!running) {
 			show_error("ILLEGAL DIRECT MODE ERROR");
 			return;
@@ -142,7 +177,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		SetBlocking(false);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "ITALIC")) {
+	if (is_italic(line)) {
 		if (STRING_CONTAINS(line, "ON"))
 			printf("\033[3m");
 		else if (STRING_CONTAINS(line, "OFF"))
@@ -156,15 +191,15 @@ void run(Program program, VarList variables, Line line, bool running) {
 		run_let(copy, variables);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "LIST")) {
+	if (is_list(line)) {
 		run_list(program, line + 4);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "LOAD")) {
-		run_load(program, variables, line + 4);
+	if (is_load(line)) {
+		run_load(program, aliases, variables, line + 4);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "MOVE")) {
+	if (is_move(line)) {
 		line += 4;
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy, variables);
@@ -176,11 +211,23 @@ void run(Program program, VarList variables, Line line, bool running) {
 		memset(variables, 0, 26);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "PRINT")) {
+	if (is_print(line)) {
 		line += 5;
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy, variables);
-		if (!thereWasAnError) run_print(program, copy);
+		if (!thereWasAnError) run_print(program, copy, false);
+		return;
+	}
+	if (is_prompt(line)) {
+		line += 6;
+		while(line[0] == ' ') line++;
+		strncpy(copy, line, LINE_SIZE);
+		replace_chr(copy);
+		combine_strings(copy);	/* We don't want to replace variables with values etc. */
+		tempChar = strchr(copy, '"');
+		tempChar2 = strchr(copy + 1, '"');
+		if (tempChar2 != NULL) tempChar2[0] = '\0';
+		strncpy(prompt, tempChar + 1, LINE_SIZE - 6);
 		return;
 	}
 	if (STRING_STARTS_WITH(line, "REM")) return;
@@ -188,7 +235,7 @@ void run(Program program, VarList variables, Line line, bool running) {
 		RESET();
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "REVERSE")) {
+	if (is_reverse(line)) {
 		if (STRING_CONTAINS(line, "ON"))
 			printf("\033[7m");
 		else if (STRING_CONTAINS(line, "OFF"))
@@ -199,27 +246,27 @@ void run(Program program, VarList variables, Line line, bool running) {
 	if (STRING_EQUALS(line, "RUN")) {
 		programCounter = 0;
 		keepRunning = true;
-		run_program(program, variables);
+		run_program(program, aliases, variables);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "RETURN")) {
+	if (STRING_EQUALS(line, "RETURN")) {
 		subCounter--;
 		if (subCounter < 0 || subCounter >= PROGRAM_SIZE)
 			show_error("RETURN WITHOUT GOSUB ERROR");
 		programCounter = subs[subCounter];
 		keepRunning = true;
-		if (!running) run_program(program, variables);
+		if (!running) run_program(program, aliases, variables);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "SAVE")) {
+	if (is_save(line)) {
 		run_save(program, line + 4);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "SYS")) {
-		run_sys(line + 3);
+	if (is_sys(line)) {
+		run_sys(line + 3, variables);
 		return;
 	}
-	if (STRING_STARTS_WITH(line, "UNDERLINE")) {
+	if (is_underline(line)) {
 		if (STRING_CONTAINS(line, "ON"))
 			printf("\033[4m");
 		else if (STRING_CONTAINS(line, "OFF"))
@@ -227,50 +274,101 @@ void run(Program program, VarList variables, Line line, bool running) {
 		else show_error("SYNTAX ERROR");
 		return;
 	}
-	
-	/* If it gets here, treat the instruction as a system command */
-	run_system(line);
-}
 
-void run_system(char* line) {
+	/* Check if it's LET without the keyword LET */
+	if (is_let(line)) {
+		strncpy(copy, line, LINE_SIZE);
+		run_let(copy, variables);
+		return;
+	}
+
+	/* Another scenario that can happen is if the user tries to
+	create an alias that is a Breakaway BASIC keyword.  So... */
+	if (STRING_STARTS_WITH(line, "ALIAS")) {
+		show_error("THAT'S A KEYWORD");
+		return;
+	}
+	
 	/* If the user typed cd wherver, like in DOS or Bash,
 		let it "just work".  It looks weird in BASIC, but
 		considering terminals have been doing it this way
 		for decades, it's the right thing to do.  :)  */
-	if (STRING_STARTS_WITH(line, "cd")) {
+	if (STRING_STARTS_WITH(line, "CD")) {
 		line += 2;
 		while(line[0] == ' ') line++;
 		if (!GoToFolder(line)) show_error("?DIRECTORY NOT FOUND ERROR");
 		return;
 	}
 
+	/* If the "command" name is a Breakaway BASIC keyword,
+	it's most likely a syntax error; on the off-chance it's not,
+	users could just run i.e. SYS "PRINT whatever" */
+	if (is_keyword(line)) {
+		show_error("SYNTAX ERROR");
+		return;
+	}
+	
 	/* Otherwise, run it */
 	rc = system(line);
 }
 
-void run_cd(char* line) {
-	/* Declare vars */
-	Line copy;
-	char* temp;
-	size_t i;
-	
-	/* Set default values */
-	memset(copy, 0, LINE_SIZE);
-	temp = line;
-	i = 0;
-	
-	/* Move past spaces and the first quote */
-	while (temp[0] == ' ' || temp[0] == '"') temp++;
-	
-	/* Copy up to the closing quote */
-	while(temp[0] != '"' && temp[0] != '\0') {
-		copy[i] = temp[0];
-		temp++;
-		i++;
+void set_alias(Line line, Program aliases) {
+	size_t i = 0;
+	for (; i<PROGRAM_SIZE; i++) {
+		if (aliases[i][0] != '\0') continue;
+		strncpy(aliases[i], line, LINE_SIZE);
+		return;
 	}
-	
-	/* And here we go... */
-	if (!GoToFolder(copy)) show_error("?DIRECTORY NOT FOUND ERROR");
+}
+
+void run_alias(Line line, Program aliases) {
+	Line left, right;
+	char* temp = line;
+	size_t i = 0, j = 0;
+
+	/* Loop through the list of aliases looking for one that matches
+	the instruction the user typed to do a find-&-replace */
+	for (i=0; i<PROGRAM_SIZE; i++) {
+
+		/* If we've reached an alias that isn't set yet,
+		at the end of the list, then exit the loop */
+		temp = aliases[i];
+		if (temp[0] == '\0') return;
+
+		/* Get the text between the first quotes (the name/key) */
+		memset(left, 0, LINE_SIZE);
+		while(temp[0] != '\0' && temp[0] != '"') temp++;
+		if (temp[0] != '"') return;
+		temp++;
+		j = 0;
+		while(temp[0] != '\0' && temp[0] != '"') {
+			left[j] = temp[0];
+			j++;
+			temp++;
+		}
+		if (temp[0] != '"') return;
+		temp++;	/* The closing quote on the name */
+
+		/* Move past the equals sign and get the right-hand string */
+		while(temp[0] != '\0' && temp[0] != '"') temp++;
+		if (temp[0] != '"') return;
+		temp++;
+		j = 0;
+		memset(right, 0, LINE_SIZE);
+		while(temp[0] != '\0' && temp[0] != '"') {
+			right[j] = temp[0];
+			j++;
+			temp++;
+		}
+
+		/* Now that we have our left and our right, do this:
+		IF instruction = an alias, THEN replace the alias with its value
+		and exit the loop */
+		if (STRING_STARTS_WITH(line, left)) {
+			replace_with_string(line, 0, strlen(left), right);
+			return;
+		}
+	}
 }
 
 void run_esc(char* line) {
@@ -298,7 +396,7 @@ void run_esc(char* line) {
 	printf("\033%s", copy);
 }
 
-void run_load(Program program, VarList variables, char* line) {
+void run_load(Program program, Program aliases, VarList variables, char* line) {
 	/* Declare vars */
 	Line copy, code;
 	char* temp;
@@ -336,7 +434,7 @@ void run_load(Program program, VarList variables, char* line) {
 			fclose(file);
 			return;
 		}
-		parse(program, variables, code);
+		run(program, aliases, variables, code, false);
 	}
 	fclose(file);
 }
@@ -378,7 +476,7 @@ void run_save(Program program, char* line) {
 	fclose(file);
 }
 
-void run_sys(char* line) {
+void run_sys(char* line, VarList variables) {
 	/* Declare vars */
 	Line copy;
 	char* temp;
@@ -398,6 +496,9 @@ void run_sys(char* line) {
 		temp++;
 		i++;
 	}
+
+	/* Do any string-joining that may be necessary */
+	eval_expr(copy, variables);
 	
 	/* And here we go... */
 	rc = system(copy);
@@ -426,7 +527,7 @@ void run_input(char* line, VarList variables) {
 	run_let(buffer2, variables);
 }
 
-void run_if(Program program, char* line, VarList variables, bool running) {
+void run_if(Program program, Program aliases, char* line, VarList variables, bool running) {
 	/* Declare vars */
 	size_t i, counter;
 	bool past_relop;
@@ -479,7 +580,7 @@ void run_if(Program program, char* line, VarList variables, bool running) {
 	while(then[0] == ' ') then++;
 	if (is_digit(then[0]))
 		programCounter = atol(then) - 1;
-	else run(program, variables, then, running);
+	else run(program, aliases, variables, then, running);
 }
 
 void run_let(char* line, VarList variables) {
@@ -553,7 +654,7 @@ void run_move(Line line) {
 	printf("\033[%d;%dH", y, x);
 }
 
-void run_print(Program program, Line line) {
+void run_print(Program program, Line line, bool centered) {
 	/* Declare vars */
 	size_t i, length;
 	char copy[LINE_SIZE], * temp;
@@ -584,11 +685,15 @@ void run_print(Program program, Line line) {
 	
 	/* And print away! */
 	temp = copy;
-	printf("%s", temp);
-	if (newline) printf("\n");
+	if (centered)
+		print_centered(temp);
+	else {
+		printf("%s", temp);
+		if (newline) printf("\n");
+	}
 }
 
-void run_program(Program program, VarList variables) {
+void run_program(Program program, Program aliases, VarList variables) {
 	char* currentLine, temp;
 	size_t lastLine;
 
@@ -599,11 +704,12 @@ void run_program(Program program, VarList variables) {
 			lastLine = programCounter;
 			while(program[lastLine][0] == '\0') lastLine--;
 			printf("\nBREAK IN %ld\n", lastLine);
+			printf("%s", prompt);
 			keepRunning = false;
 		}
 		if (!keepRunning || programCounter == PROGRAM_SIZE) {
 			SetBlocking(true);
-			printf("READY.\n");
+			printf("%s", prompt);
 			return;
 		}
 		currentLine = program[programCounter];
@@ -611,31 +717,21 @@ void run_program(Program program, VarList variables) {
 			programCounter++;
 			if (programCounter == PROGRAM_SIZE) {
 				SetBlocking(true);
-				printf("READY.\n");
+				printf("%s", prompt);
 				return;
 			}
 			continue;
 		}
-		if (!is_statement(currentLine)) {
-			if (STRING_STARTS_WITH(currentLine, "cd")) {
-				currentLine += 2;
-				while(currentLine[0] == ' ') currentLine++;
-				if (!GoToFolder(currentLine)) show_error("?DIRECTORY NOT FOUND ERROR");
-			}
-			else rc = system(currentLine);
-			SetBlocking(true);
-			return;
-		}
 		currentLine = program[programCounter];
-		run(program, variables, currentLine, true);
+		run(program, aliases, variables, currentLine, true);
 		programCounter++;
 		if (programCounter == PROGRAM_SIZE) {
-			printf("READY.\n");
+			printf("%s", prompt);
 			SetBlocking(true);
 			return;
 		}
 	}
-	printf("READY.\n");
+	printf("%s", prompt);
 	SetBlocking(true);
 }
 

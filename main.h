@@ -40,16 +40,22 @@
  * @param[in] The first string
  * @param[in] The second string
  * @returns True if they do, false if they don't
+ * @todo Make the function name lowercase; it's not a macro anymore.
  */
-#define STRING_EQUALS(a, b) (strcmp(a, b) == 0)
+bool STRING_EQUALS(char* a, const char* b);
 
 /**
- * Checks if the first string starts with the second string
+ * Checks if the first string starts with the second string,
+ * including case-insensitive comparison
  * @param[in] The first string
  * @param[in] The second string
  * @returns True if it does, false if it doesn't
+ * @todo Make the function name lowercase; it's not a macro anymore.
  */
-#define STRING_STARTS_WITH(a, b) (strstr(a, b) == a)
+bool STRING_STARTS_WITH(char* a, const char* b);
+
+/** Basically case-insensitive strstr */
+char* substring(char* a, const char* b);
 
 /**
  * Checks if the first string contains the second string
@@ -58,6 +64,8 @@
  * @returns True if it does, false if it doesn't
  */
 #define STRING_CONTAINS(a, b) (strstr(a, b) != NULL)
+
+void combine_strings(char* line);
 
 /**
  * Checks if blocking mode is on
@@ -88,6 +96,7 @@ typedef Variable VarList[26];	/* Again, that limit might not last long lol */
 	#include <termios.h>
 	#include <sys/resource.h>
 	#include <sys/ioctl.h>
+	#include <pwd.h>
 	#include <readline/readline.h>
 	#include <readline/history.h>
 #endif
@@ -130,6 +139,12 @@ void SetBlocking(bool setting);
  */
 void ReadLine(char* buffer);
 
+/**
+ * Gets the path where the program should look for an auto-run file
+ * @pparam[in, out] Path where the auto-run file will be, if there is one 
+ */
+void get_autorun_file(char* path);
+
 
 
 /************************************************************************/
@@ -157,10 +172,12 @@ bool is_statement(Line line);
  * @param[in] The line the user just typed
  * @returns True if it is, false if it isn't
  */
+bool is_alias(Line line);
 bool is_bg(Line line);
 bool is_blink(Line line);
 bool is_bold(Line line);
-bool is_cd(Line line);
+bool is_center(Line line);
+bool is_cursor(Line line);
 bool is_esc(Line line);
 bool is_fg(Line line);
 bool is_gosub(Line line);
@@ -168,11 +185,14 @@ bool is_goto(Line line);
 bool is_hidden(Line line);
 bool is_if(Line line);
 bool is_input(Line line);
+bool is_italic(Line line);
+bool is_keyword(Line line);
 bool is_let(Line line);
 bool is_list(Line line);
 bool is_load(Line line);
 bool is_move(Line line);
 bool is_print(Line line);
+bool is_prompt(Line line);
 bool is_reverse(Line line);
 bool is_save(Line line);
 bool is_sys(Line line);
@@ -217,6 +237,7 @@ static inline bool is_math_action(char ch) {
 bool is_string(Line line, char** position);
 bool is_relop(Line line, char** position);
 bool is_expr_list(Line line, char** position);
+bool is_string_function(Line line, char** position);
 bool is_function(Line line, char** position);
 bool is_var_list(Line line, char** position);
 
@@ -234,46 +255,43 @@ void show_error(const char* error);
 
 /**
  * Runs the line the user just typed
- * @param[in] The memory where the user's code is stores
- * @param[in] The memory where variable valeus are stores
+ * @param[in] The memory where the user's code is stored
+ * @param[in] The memory where aliases are stored
+ * @param[in] The memory where variable valeus are stored
  * @param[in] The line the user just typed
  * @param[in] true if in program mode, false if in direct mode
  */
-void run(Program program, VarList variables, Line line, bool running);
+void run(Program program, Program aliases, VarList variables, Line line, bool running);
 
 /**
  * Runs the user's program
  * @param[in] The memory where the user's code is stores
+ * @param[in] The memory where aliases are stores
  * @param[in] The memory where variable valeus are stores
  * @param[in] true if in program mode, false if in direct mode
  */
-void run_program(Program program, VarList variables) ;
-
-/**
- * When the user types something that isn't valid Breakaway BASIC,
- * it gets treated as a system command.  This runs it.
- * @param[in] The user's code
- */
-void run_system(char* line);
+void run_program(Program program, Program aliases, VarList variables);
 
 /**
  * These all run specific instructions
  * @param[in] The memory where the user's code is stored
+ * @param[in] The memory where the aliases are stored
  * @param[in] The memory where variable valeus are stored 
  * (for the ones with VarList parameters)
  * @param[in, out] The line the user just typed (this pointer moves)
  */
-void run_load(Program program, VarList variables, char* line);
+void run_load(Program program, Program aliases, VarList variables, char* line);
 void run_save(Program program, char* line);
 void run_list(Program program, Line line);
-void run_print(Program program, Line line);
-void run_cd(char* line);
+void run_print(Program program, Line line, bool centered);
+void set_alias(Line line, Program aliases);
+void run_alias(Line line, Program aliases);
 void run_esc(char* line);
 void run_let(char* line, VarList variables);
 void run_move(Line line);
-void run_if(Program program, char* line, VarList variables, bool running);
+void run_if(Program program, Program aliases, char* line, VarList variables, bool running);
 void run_input(char* line, VarList variables);
-void run_sys(char* line);
+void run_sys(char* line, VarList variables);
 
 
 
@@ -323,19 +341,14 @@ void replace_rc(Line line);
 /** Replaces ROWS() with the screen height, in characters */
 void replace_rows(Line line);
 
+/** Replaces TAB() with the Tab character */
+void replace_tab(Line line);
+
 
 
 /************************************************************************/
 /**** TO BE SORTED                                                   ****/
 /************************************************************************/
-
-/**
- * Parses a line of BASIC code
- * @param[in] The memory where the user's code is stores
- * @param[in] The memory where variables' values are stored
- * @param[in] The line the user just typed
- */
-void parse(Program program, VarList variables, Line line);
 
 /**
  * Adds a line of code to the program

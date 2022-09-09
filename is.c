@@ -1,5 +1,46 @@
 #include "main.h"
 
+bool is_alias(Line line) {
+	/* Declare vars */
+	char* temp = line, name[LINE_SIZE];
+	size_t i;
+
+	/* Skip spaces */
+	while(temp[0] == ' ') temp++;
+
+	/* If it doesn't start with ALIAS, then no */
+	if (!STRING_STARTS_WITH(temp, "ALIAS")) return false;
+	temp += 5;
+
+	/* Skip spaces again */
+	while(temp[0] == ' ') temp++;
+	
+	/* If the name of the alias is a keyword, then no */
+	memset(name, 0, LINE_SIZE);
+	if (temp[0] != '"') return false;
+	for (i=0; i<LINE_SIZE-1; i++) {
+		if (temp[i+1] == '"' || temp[i+1] == '\0') break;
+		name[i] = temp[i+1];
+	}
+	if (is_keyword(name)) return false;
+
+	/* Temp is still at the quote, so if it's not a string, then no */
+	if (!is_string(temp, &temp)) return false;
+	temp++;
+
+	/* Skip spaces again */
+	while(temp[0] == ' ') temp++;
+
+	/* If it's not an equals sign, then no */
+	if (temp[0] != '=') return false;
+	
+	/* Skip spaces for the last time :)  */
+	temp++;
+	while(temp[0] == ' ') temp++;
+		
+	return is_string(temp, &temp);
+}
+
 bool is_asc(Line line, char** position) {
 	char* temp = line;
 	while(temp[0] == ' ') temp++;
@@ -53,20 +94,11 @@ bool is_bold(Line line) {
 	return STRING_EQUALS(temp, "ON") || STRING_EQUALS(temp, "OFF");
 }
 
-bool is_cd(Line line) {
-	char* temp;
-
-	/* Most shells use this syntax: cd /path (Unix-y) or cd C:\path (DOS-like).
-	That's not particularly consistent with Breakaway BASIC (or any BASIC),
-	but it's a thing we've gotten so used to that it should "just work". */
-	if (STRING_STARTS_WITH(line, "cd")) return true;
-	
-	/* Otherwise, expect CD "string", which is different from most
-	shells but more consistent with thie BASIC's syntax */
-	if (!STRING_STARTS_WITH(line, "CD")) return false;
-	temp = line + 3;
-	while(temp[0] == ' ') temp++;
-	return is_string(temp, &temp);
+bool is_center(Line line) {
+	if (!STRING_STARTS_WITH(line, "CENTER")) return false;
+	line += 6;
+	while(line[0] == ' ') line++;
+	return is_expr_list(line, &line);
 }
 
 bool is_cursor(Line line) {
@@ -119,7 +151,7 @@ bool is_expr(Line line, char** position) {
 bool is_expr_list(Line line, char** position) {
 	/* Variables */
 	char* pos;
-	bool result = is_string(line, position) || is_expr(line, position);
+	bool result = is_string(line, position) || is_expr(line, position) || is_function(line, position);
 	
 	/* From here, we can have a comma, followed by another expression
 	(but trailing commas are not allowed).  Kind of like is_expr :) */
@@ -133,7 +165,7 @@ bool is_expr_list(Line line, char** position) {
 		pos++;
 		
 		/* No expression after the comma?  Syntax error. */
-		if (!is_string(pos, &pos) && !is_expr(pos, &pos)) {
+		if (!is_string(pos, &pos) && !is_expr(pos, &pos) && !is_function(pos, &pos)) {
 			*position = pos;
 			return false;
 		}
@@ -150,6 +182,16 @@ bool is_fg(Line line) {
 	temp = line + 2;
 	while(temp[0] == ' ') temp++;
 	return is_number(temp, &temp) || is_var(temp, &temp) || is_function(temp, &temp);
+}
+
+bool is_string_function(Line line, char** position) {
+	if (STRING_STARTS_WITH(line, "TAB()")) {
+		*position += 5;
+		return true;
+	}
+	if (is_chr(line, position))
+		return true;
+	return false;
 }
 
 bool is_function(Line line, char** position) {
@@ -173,9 +215,7 @@ bool is_function(Line line, char** position) {
 		*position += 6;
 		return true;
 	}
-	if (is_chr(line, position))
-		return true;
-	return false;
+	return is_string_function(line, position);
 }
 
 bool is_gosub(Line line) {
@@ -247,14 +287,58 @@ bool is_italic(Line line) {
 	return STRING_EQUALS(temp, "ON") || STRING_EQUALS(temp, "OFF");
 }
 
+bool is_keyword(Line line) {
+	if (line[0] == 'A') return STRING_STARTS_WITH(line, "ASC");
+	if (line[0] == 'B') return STRING_STARTS_WITH(line, "BG")
+		|| STRING_STARTS_WITH(line, "BLINK")
+		|| STRING_STARTS_WITH(line, "BOLD");
+	if (line[0] == 'C') return STRING_STARTS_WITH(line, "CD")
+		|| STRING_STARTS_WITH(line, "CLEAR")
+		|| STRING_STARTS_WITH(line, "COLUMNS")
+		|| STRING_STARTS_WITH(line, "CONT")
+		|| STRING_STARTS_WITH(line, "CURSOR");
+	if (line[0] == 'E') return STRING_STARTS_WITH(line, "END")
+		|| STRING_STARTS_WITH(line, "ESC")
+		|| STRING_STARTS_WITH(line, "EXIT");
+	if (line[0] == 'F') return STRING_STARTS_WITH(line, "FG")
+		|| STRING_STARTS_WITH(line, "FOR")
+		|| STRING_STARTS_WITH(line, "FRE");
+	if (line[0] == 'G') return STRING_STARTS_WITH(line, "GOSUB")
+		|| STRING_STARTS_WITH(line, "GOTO");
+	if (line[0] == 'H') return STRING_STARTS_WITH(line, "HIDDEN");
+	if (line[0] == 'I') return STRING_STARTS_WITH(line, "IF")
+		|| STRING_STARTS_WITH(line, "INPUT")
+		|| STRING_STARTS_WITH(line, "ITALIC");
+	if (line[0] == 'L') return STRING_STARTS_WITH(line, "LET")
+		|| STRING_STARTS_WITH(line, "LIST")
+		|| STRING_STARTS_WITH(line, "LOAD");
+	if (line[0] == 'M') return STRING_STARTS_WITH(line, "MOVE");
+	if (line[0] == 'N') return STRING_STARTS_WITH(line, "NEW");
+	if (line[0] == 'O') return STRING_STARTS_WITH(line, "ON")
+		|| STRING_STARTS_WITH(line, "OFF");
+	if (line[0] == 'P') return STRING_STARTS_WITH(line, "PI")
+		|| STRING_STARTS_WITH(line, "PRINT");
+	if (line[0] == 'R') return STRING_STARTS_WITH(line, "REM")
+		|| STRING_STARTS_WITH(line, "REVERSE")
+		|| STRING_STARTS_WITH(line, "RUN")
+		|| STRING_STARTS_WITH(line, "RETURN");
+	if (line[0] == 'S') return STRING_STARTS_WITH(line, "SAVE")
+		|| STRING_STARTS_WITH(line, "SYS");
+	if (line[0] == 'T') return STRING_STARTS_WITH(line, "TAB")
+		|| STRING_STARTS_WITH(line, "TAN")
+		|| STRING_STARTS_WITH(line, "TO");
+	if (line[0] == 'U') return STRING_STARTS_WITH(line, "UNDERLINE");
+	return false;
+}
+
 bool is_let(Line line) {
-	char* temp;
+	char* temp = line;
 	
 	/* If it doesn't start with LET, then no. */
-	if (!STRING_STARTS_WITH(line, "LET")) return false;
+	// if (!STRING_STARTS_WITH(line, "LET")) return false;
+	if (STRING_STARTS_WITH(line, "LET")) temp += 3;
 	
 	/* Skip spaces */
-	temp = line + 3;
 	while (temp[0] == ' ') temp++;
 	
 	/* If what follows is not a variable, then no. */
@@ -281,13 +365,13 @@ bool is_list(Line line) {
 	if (!STRING_STARTS_WITH(line, "LIST")) return false;
 	line += 4;
 	while(line[0] == ' ') line++;
+	if (line[0] == '\0') return true;	/* User just typed "LIST" */
 	if (!is_number(line, &line)) return false;
 	while(line[0] == ' ') line++;
-	if (line[0] == '-') {
-		line++;
-		while(line[0] == ' ') line++;
-		if (!is_number(line, &line)) return false;
-	}
+	if (line[0] != '-') return true;	/* User just i.e. "LIST 10" */
+	line++;
+	while(line[0] == ' ') line++;
+	if (!is_number(line, &line)) return false;
 	return line[0] == '\0';
 }
 
@@ -380,7 +464,7 @@ bool is_statement(Line line) {
 	/* The others have specific requirements, so check for each of those */
 	return is_bg(line)
 		|| is_blink(line)
-		|| is_cd(line)
+		|| is_center(line)
 		|| is_cursor(line)
 		|| is_esc(line)
 		|| is_fg(line)
@@ -395,6 +479,7 @@ bool is_statement(Line line) {
 		|| is_load(line)
 		|| is_move(line)
 		|| is_print(line)
+		|| is_prompt(line)
 		|| is_reverse(line)
 		|| is_save(line)
 		|| is_sys(line)
@@ -462,6 +547,14 @@ bool is_load(Line line) {
 	temp = line + 4;
 	while(temp[0] == ' ') temp++;
 	return is_string(temp, &temp);
+}
+
+bool is_prompt(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "PROMPT")) return false;
+	temp = line + 6;
+	while(temp[0] == ' ') temp++;
+	return is_string(temp, &temp) || is_string_function(temp, &temp);
 }
 
 bool is_reverse(Line line) {

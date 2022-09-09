@@ -7,9 +7,9 @@ void replace_asc(Line line) {
 	char* where = NULL, buffer[8];
 	size_t start = 0, end = 0;
 
-	/* And replace ROWS() with rows */
+	/* And replace ASC() with the ASCII (or Unicode) character */
 	while(true) {
-		where = strstr(line, "ASC(");
+		where = substring(line, "ASC(");
 		if (where == NULL) break;
 		start = where - line;
 		end = start + 4;
@@ -27,22 +27,26 @@ void replace_asc(Line line) {
 void replace_chr(Line line) {
 	/* Declare variables */
 	char* where = NULL, buffer[8];
-	size_t start = 0, end = 0;
-	size_t chr = 0;
+	size_t end = 0, chr = 0;
 
 	/* And replace ROWS() with rows */
 	while(true) {
-		where = strstr(line, "CHR$(");
+		/* Find the next one, or exit if not found */
+		where = substring(line, "CHR$(");
 		if (where == NULL) break;
-		start = where - line;
-		end = start + 4;
-		while(line[end] != ')' && end < LINE_SIZE) end++;
-		if (end + 1 < LINE_SIZE) end++;
-		chr = atol(where + start + 4);
-		/* LEFT OFF HERE */
+
+		/* Copy the character into a buffer */
+		chr = atol(where + 5);
 		memset(buffer, 0, 8);
-		snprintf(buffer, 8, "%lc", (wchar_t)chr);
-		replace_with_string(line, start, end, buffer);
+		snprintf(buffer, 8, "\"%lc\"", (wchar_t)chr);
+
+		/* Figure out the end point (to include the closing ")") */
+		end = 0;
+		while(where[end] != ')') end++;
+		if (end < LINE_SIZE) end++;
+
+		/* And replace the string */
+		replace_with_string(line, where - line, where - line + end, buffer);
 	}
 }
 
@@ -57,7 +61,7 @@ void replace_columns(Line line) {
 
 	/* And replace COLUMNS() with columns */
 	while(true) {
-		where = strstr(line, "COLUMNS()");
+		where = substring(line, "COLUMNS()");
 		if (where == NULL) break;
 		start = where - line;
 		end = start + 9;
@@ -79,7 +83,7 @@ void replace_fre(Line line) {
 	
 	/* And replace ROWS() with rows */
 	while(true) {
-		where = strstr(line, "FRE()");
+		where = substring(line, "FRE()");
 		if (where == NULL) break;
 		start = where - line;
 		end = start + 5;
@@ -91,7 +95,7 @@ void replace_rc(Line line) {
 	char* where;
 	size_t start, end;
 	while(true) {
-		where = strstr(line, "RC()");
+		where = substring(line, "RC()");
 		if (where == NULL) break;
 		start = where - line;
 		end = start + 4;
@@ -110,7 +114,7 @@ void replace_rows(Line line) {
 
 	/* And replace ROWS() with rows */
 	while(true) {
-		where = strstr(line, "ROWS()");
+		where = substring(line, "ROWS()");
 		if (where == NULL) break;
 		start = where - line;
 		end = start + 6;
@@ -118,3 +122,27 @@ void replace_rows(Line line) {
 		replace_with_float(line, start, end, (float)rows);
 	}
 }
+
+void replace_tab(Line line) {
+	/* Declare variables */
+	char* where = NULL, buffer[4];
+	size_t start = 0, end = 0;
+
+	/* Set up the "buffer" */
+	buffer[0] = '"';
+	buffer[1] = '\t';
+	buffer[2] = '"';
+	buffer[3] = '\0';
+
+	/* And replace ROWS() with rows */
+	while(true) {
+		where = substring(line, "TAB()");
+		if (where == NULL) break;
+		start = where - line;
+		end = start + 5;
+		if (end + 1 < LINE_SIZE) end++;
+		replace_with_string(line, start, end, buffer);
+	}
+}
+
+// End of "function-replacing functions" (lol)

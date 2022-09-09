@@ -2,11 +2,75 @@
 
 ## Overview
 
-Breakaway BASIC is a shell for Linux (and maybe someday, DOS and other systems) inspired by the 8-bit BASICs of the 1970s and 80s.  Its design was meant to be simpler than other shells (yes, I'm cmparing it to Bash again, lol), fully functional for scripting but also just fun to play with.  It could be used to create games, or it could be used to write scripts that actually do useful stuff.
+Breakaway BASIC is a shell for Linux (and maybe someday, DOS and other systems) inspired by the 8-bit BASICs of the 1970s and 80s.  Its design was meant to be easier than other shells for practical automation, but also just fun to play with.  It could be used to create games, or it could be used to write scripts that actually do useful stuff.
 
 It gets its name from hockey, of course (look at my nickname if you don't get why that's so obvious, lol).  A "breakaway" is one of the most exciting things you could see at a hockey game.  It's when a player manages to get past all the opposing team's defenders, so it's just him/her vs. the goalie.  Breakaways are rare, but they're always described as fast, cool, and sometimes game-changing - all things I would like this BASIC to be. :)
 
+## Quick Start
+
+If you're on an x86-based Linux distro, you don't need to build Breakaway BASIC (if you are on something else, please see "building" below).  There's an executable file already compiled; you might need to give it permission to run though:
+
+`sudo chmod +x ./breakaway-basic`
+
+When you run it, you'll see a title screen and a ridiculous number of "bytes free" (this is more a joke, a nod to Commodore BASIC, which has a tremendous influence on this BASIC).  From here you can type any of the commands below.  For example, one thing that was common in the 80s was to write something like this:
+
+```
+10 PRINT "BREAKAWAY! ";
+20 GOTO 10
+RUN
+```
+
+One important point worth noting: I use uppercase for instructions, but you don't have to.  Starting in version 0.3, `PRINT` and `print` and `Print` and `PrInT` are all the same thing.  But because 8-bit BASICs were mostly uppercase, and just to be extra-clear in this manual.
+
+Before we go any further, it's worth mentioning that this BASIC, like the ones that inspired it, have two "modes":
+1. "Program mode": If a line of code starts with a line number, that line is saved to your program.
+2. "Direct mode": If you don't start with a line number, the code runs immediately.
+
+If you type (or paste) this code into Breakaway BASIC, the word "BREAKAWAY!" will fill the screen, in a crazy wavy pattern, non-stop, until you press the Escape key.  This is the kind of goofy trick that makes BASIC fun.
+
+Now for what makes this BASIC practical: system commands.  So first off, there is an SYS command.  For example, to bring up a list of files (assuming you're on Linux), you can do:
+
+`SYS "ls -la"`
+
+But the SYS command isn't the only way.  Anything that is not recognized as a Breakaway BASIC instruction is interpreted as a system command.  For example, you can do:
+
+```
+10 REM This demonstrates automating a journal writing process
+20 cd /path/to/my/journal
+30 date > journal.md
+40 nano journal.md
+```
+
+You can save this code to a file, and then load it later.  If you use the extension ".bas" (which this BASIC doesn't require) you might also get some nice syntax highlighting in text editors, if you prefer to write your programs in that instead of entering the code into Breakaway BASIC directly.
+
+
+## The auto-run file
+
+If you want Breakaway BASIC to run certain instructions when it first starts, you can create a file in either your home folder or /etc called "breakaway.bas".  This file should use line numbers, like any other Breakaway BASIC file (no direct mode).  There is a sample breakaway.bas file included in this folder; it sets the background to blue and turns bold mode on (on my terminal), and then prints the title screen that used to be (before version 0.3) hard-coded into Breakaway BASIC itself.
+
+
+## Building
+
+For now, the only supported build target is Linux, and the only library I use is GNU readline.  To install it on Debian-based systems, run:
+
+```
+sudo apt-get install libreadline-dev
+```
+
+Alternatively, you can remove this dependency by going to os/Linux.c and getting rid of the readline stuff.  Delete the #includes and replace readline and add_history with fgets or something like that.
+
+
 ## Change log
+
+### 0.3
+
+* Made instructions case-insensitive, resolving issue #1 in GitHub
+* Added the `CHR$()` and `TAB()` function
+* Added the `ALIAS`, `CENTER` and `PROMPT` instructions
+* Added an optional auto-run file, to run a set of instructions on startup
+* Made the `LET` keyword optional (you can just do i.e. `X = 42` now).
+* Bugfixes in `LIST`, `GOTO`, and lowercase `CD`
+* Code changes "under the hood" that are different enough from 0.2 to mention.
 
 ### 0.2
 
@@ -34,6 +98,35 @@ The first release was just a superset of "Tiny BASIC", the main additions being 
 Gets the ASCII character code that corresponds to the character you typed.  For example, running `PRINT ASC("A")` would print 65 (the ASCII character code for the letter "A").
 
 **NOTE:** For now, it's just ASCII (no Unicode).  However, this is something I plan to fix in a future update.  And that's where things really get interesting (and helpful).  Try printing `CHR$(9604)` and seeing what happens. :)
+
+### ALIAS {string} = {string}
+
+Aliases are kind of like a "create-your-own instruction".  To keep Breakaway BASIC as portable as possible, there are somet hings it just shouldn't have to do.  For example, in my work on this project, I would find it very easy to do something like this:
+
+```
+ALIAS "FILES" = "ls -la"
+ALIAS "EDIT" = "nano"
+ALIAS "DELETE" = "rm"
+```
+
+But let's say we port Breakaway BASIC to Windows someday; rather than compiling a bunch of extra (not to mention OS-dependent) code, I can just do:
+
+```
+ALIAS "FILES" = "dir"
+ALIAS "EDIT" = "notepad"
+ALIAS "DELETE" = "del"
+```
+
+And now with a lot less work, you can do this:
+
+```
+10 EDIT TEMP.TXT
+20 FILES
+30 DEL TEMP.TXT
+40 FILES
+```
+
+When you `RUN` it, you will get more or less the same behavior (line 10 opens your text editor of choice, line 20 brings up a file listing, line 30 deletes the file you just wrote, and line 40 shows the updated file listing).
 
 ### BG {expression}
 
@@ -77,13 +170,36 @@ Turns bold text on or off.  For example:
 40 PRINT "THIS TEXT WILL NOT."
 ```
 
-### CD {string}
+### CD
 
-Changes the folder you're working in (most systems call this the "working directory").  Note that this is the _only_ way to change directory in Breakaway BASIC.  Here's how it works:
+Changes the folder you're working in (most systems call this the "working directory").  And it works exactly like the cd command in other systems.  Here are a few examples:
 
-`CD "wherever"`
+```
+CD /home/geek
+cd ./code/active
+CD breakaway-basic
+Cd ../
+cD folder name with spaces
+```
 
-**NOTE:** You might also be able to use CD like in other shells (i.e. `cd ./wherever` with no quotes), but this feature is still in development and has been known to not always behave correctly.
+There are, however, a few differences:
+
+* As of version 0.3, there is no "~" environment variable; that's a Bash thing.  If you really need/want a "home" variable like that, you can set it in your auto-run file.  If there's a massive demand for it at some point, it's not too hard to add.
+* Notice that unlike other shells, the "cd" part is case-insinsitive (`CD` and `cd` and `Cd` and `cD` all work).
+* Notice also that unlike other shells Breakaway Basic does **NOT** expect quotes to be on file paths, ever.  This behavior started in version 0.3.
+
+### CENTER
+
+Works like `PRINT` except that it prints text center-aligned.  For example, a nice way to add a "title" to a screen is to run something like this:
+
+```
+10 CLEAR
+20 REVERSE ON
+30 CENTER "YOUR TITLE HERE"
+40 REVERSE OFF
+```
+
+In fact, the example auto-run file in this folder ("breakaway.bas") uses a similar approach.
 
 ### CLEAR
 
@@ -239,7 +355,11 @@ Turns italics on or off on terminals that support it.  For example:
 Sets a variable.  Variables (as of version 0.1) can only be capital letters, just one character (longer names are not yet supported).  For example:
 
 ```
+10 LET X = 42
+20 PRINT X
 ```
+
+It will print 42.  Note that the `LET` keyword is optional (you can just do i.e. `10 X = 42`).
 
 ### LIST [{number}[ - {number}]]
 
@@ -272,6 +392,15 @@ Prints (displays) data on the screen.  I've used it all through this reference, 
 40 PRINT "ENTER A NUMBER:  ";
 50 INPUT N
 60 PRINT N,"SQUARED = ", N * N
+```
+
+### PROMPT {string}
+
+I'm a Commodore nut.  So when I built my own BASIC, I wanted that "READY." like Commodore machines had.  You might want something else, and this command allows you to change it.
+
+```
+10 REM THIS CHANGES THE PROMPT TO LOOK LIKE AN APPLE ][
+20 PROMPT "]"
 ```
 
 ### RC()
@@ -344,6 +473,17 @@ Runs a system command.  For example:
 ```
 
 The return value of the system call will be saved for later use by the `RC()` function.
+
+### TAB()
+
+Prints a Tab character (8 spaces in most terminals).  Note that unlike Commodore BASIC, this function doesn't take any parameters; this is because Tab characters behave differently on a modern terminal than they might on a C64.  I had thought of making the number inside be the number of Tab characters, but that would just be confusing to my fellow Commodore-lovers.  So mine is different enough to be not-confusing at least (lol).  This function is mainly useful for making text look like a table.  For example:
+
+```
+10 PRINT "COL 1",TAB(),"COL 2",TAB(),"COL 3"
+20 PRINT "A",TAB(),"B",TAB(),"C"
+30 PRINT "D",TAB(),"E",TAB(),"F"
+40 PRINT "etc.",TAB(),"etc.",TAB(),"etc."
+```
 
 ### UNDERLINE ON/OFF
 

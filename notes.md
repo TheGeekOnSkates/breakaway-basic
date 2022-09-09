@@ -1,35 +1,13 @@
-# To-do's for version 0.2
+# To-do's for version 0.3
 
-* Keep swatting at the buggz.  Eventually I'll catch one. :D
-* May as well keep adding fun features :)
-
+* Keep swatting at the buggz. :)
+* Once that's done, I'd say update the docs and call 0.3 done - it's already *way* better than 0.2!
 
 # Buggz! :D
 
+* Looking at other BASICs, I notice mine doesn't show the prompt nearly often enough; like if I do "10 PRINT whatever" I get no prompt, but anything else in direct mode gives me a prompt.  Maybe give that a closer look (take the prompts out of run_program and put them back in main or something)
+* Not a bug per se, but still a thing I'd like to change: CHR$ (and probably ASC) don't suport expressions, variables etc. - just numbers or strings.
 * See math.c on why I currently have to replace functions _after_ replacing variables.  Unlike the next one, this bug makes perfect sense (all variables are letters A-Z, all BASIC functions are made up of those letters, so ROWS() becomes 0000() if I call replace_vars first.)
-* And yes, the dreaded cd/system mystery-bug I've been struggleshooting for weeks now... When a system command runs in program mode, it seems to stop (see "TEST"); not to mention, look at run.c - there's a run_system, but also a run_sys - not sure if it should be that way.  I noticed too that lowercase cd doesn't seem to be working consistently - could be related to the previous issue.
-	**EDIT:** Pretty sure it is related; look at my "TEST" script.  If I comment out line 10, line 20 ("pwd") runs but then stops.  If I then comment out line 20, line 30 (cd ../) runs, and the program stops.  This doesn't make a whole lot of sense, but I'm sure it's a slight'n'stupid.  Gotta be some ridonkulously subtle son-of-a-bug hiding in plain site.  Someday I'll attack it with a fresh brain, lure it out of its tiny hidey-hold and squash the sucker. :D
-	**EDIT 2:** Extended notes below.  This nuisance is hands down one of the most slippery bugs I've ever fought.
-
-## Okay, it's tracy-trace time............... :P
-
-* So like all programs, it starts in main().
-* Main kicks it off to parse().
-* Parse can go to either:
-	- set_line (program mode, which is what "TEST" uses), or
-		But set_line just copies the program into memory; it doesn't actually run anything.
-	- run (both modes mode, if is_statement returns true), OR
-		This runs BASIC statements, which can include both run_sys and run_system.
-	- run_system (direct mode, if is_statement returns false)
-		Here, there is yet another problem: For {reasons}, just running cd ../ works from HERE (my project folder) but not when Breakaway BASIC is run from ./.bashrc; this stooooopid CD bug!  What the puck!  #pucksucker
-
-So I think we can rule out run_sys - it works fine.  Like, all the time.
-I think I can also count out run_cd; again, it seems rock-solid.
-The lowercase cd is flaky, unpredictable, being reliable when I need it to break and breaking when I think it's done.  So that is definitely one component of this particular gorilla-bug.
-The bigger issue seems to be with pwd though; it's like it hangs in program mode; I can run it by itself and it's fine; I can run SYS "pwd" and it's fine.  So this one will have to remain a mystery, possibly till my Lord comes back and shows me my ID10T error.  Then we can have a good laugh together and move on. :)
-
-
-
 
 
 
@@ -37,26 +15,33 @@ The bigger issue seems to be with pwd though; it's like it hangs in program mode
 
 # Road map to version 1.0
 
-## Stuff I'd like version 0.3 to add
+## Fun stuff I'll add when I get in the mood, just cuz it's awesome
 
-* MOVE UP/DOWN/LEFT/RIGHT, or CURSOR UP/DOWN/LEFT/RIGHT (I'm thinking MOVE)
-* Support for special characters like "▄" in ASC
-* Set up LET so I can just do i.e. X = 7 (make sure to call is_variable and all that first, to prevent the issue I described before [equals signs in commands])
-* Support for "string expressions" - what I mean is, "something like" + " this" + STR$(whatever the character code for "." is)
-* POKE X Y character (right now it takes 4 lines to do this - put CHARACTER at position X, Y)
-* PEEK(X, Y) - get character at that position.  On the other hand, what if I made the memory stack bigger?  Then we could do not only screen "RAM" but also color "RAM" and use the rest for storing data.  Might be nice to have an extra 64K (or 128K or whatever) just for extra data.
-* Aliases
-* Auto-run files
+* STR$/LEFT$/RIGHT$/MID$
+* SPC({number}) like the C64 has
+* I was researching the whole "get cursor position with termios" thing when I found this:
+	http://dtelnet.sourceforge.net/shkeys.c
+  Apparently, you can get (and even SET) *mouse support!*  If I can find out how that works; I could add instructions like MOUSE ON/OFF, MOUSEX() and MOUSEY() to get the position, CLICKX() and CLICKY() to get the last clicked position, ON CLICK GOTO... no, that's too far. :D
+* If I go there... and I might cuz it's awesome... why not use the Linux *joystick* library?!  There's a joystick.h I used years ago that would totally work for that.
 
-## Stuff I'll probably procrastinate longer - 0.4 (maybe), lol
 
-* GET (may need to add BLOCK ON/OFF to make that work tho)
-* Add support for parens again
-* And if I'm going _there_, may as well add in all my other mathing work - meaningless functions like ABS, ATN, COS, TAN, ETC, ETC, ETC, that some people will appreciate.
+## On the to-do list for 0.4
+
 * Variables with names longer than 1 character
 * Variables ending in $ being strings
+* MOVE UP/DOWN/LEFT/RIGHT/HOME/END - or maybe just MOVE X Y TRUE
+* I kinda like the idea of ROW() and COLUMN() to get cursor position
+* Support for special characters like "▄" in ASC
+* POKE X Y character (right now it takes 4 lines to do this - put CHARACTER at position X, Y)
+* PEEK(X, Y) - get character at that position.  On the other hand, what if I made the memory stack bigger?  Then we could do not only screen "RAM" but also color "RAM" and use the rest for storing data.  Might be nice to have an extra 64K (or 128K or whatever) just for extra data.
+	**EDIT:** The more I think about this, the more I'm thinking it should be more like other BASICs, POKE {address} {value} and PEEK({address}) - that way addresses > the total character cells can be used to set *colors* on specific cells rather than *characters* :)
+* Now that I'm using is_keyword in is_var, address that bug in math.c
+* GET (may need to add BLOCK ON/OFF to make that work tho)
+* Add support for parens again
+* And when I going *there*, may as well add in all my other mathing work - meaningless functions like ABS, ATN, COS, TAN, ETC, ETC, ETC, that some people will appreciate.
 * Something like my old CLEAR HISTORY
 * also, a way to not add repeats to history
+
 
 ## Giant leaps forward that will probably end up in me calling it a 1.0
 
@@ -64,7 +49,7 @@ The bigger issue seems to be with pwd though; it's like it hangs in program mode
 * NEXT (can't have FOR without it) :)
 * Arrays
 * _maybe_ WHILE / LOOP (not WEND or END WHILE like other BASICs)
-
+* Advanced file I/O (OPEN, CLOSE, PRINT#, INPUT# etc.)
 
 
 ------------------------------------------------------------------------------------------------------------
