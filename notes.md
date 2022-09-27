@@ -1,8 +1,7 @@
 # To-do's for version 0.4
 
-* Add a get_text_between_parens function
-* Use that to update CHR$ and ASC, so I can do things like CHR$(9600 + X)
-* Add it to eval_expr or something so nested parens work
+* Use get_text_between_parens to update CHR$ and ASC, so I can do things like CHR$(9600 + X)
+* Add get_text_between_parens to eval_expr or something so nested parens work
 * Add more math functions from my old calculator program - ATN, COS, FOO, BAR, BAZ, ETC. :D
 * STR$/LEFT$/RIGHT$/MID$
 * SPC({number}) like the C64 has

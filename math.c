@@ -5,6 +5,36 @@ extern size_t programCounter;
 extern bool thereWasAnError;
 extern bool keepRunning;
 
+char* get_text_between_parens(Line line) {
+	/* Variables */
+	char* result = calloc(LINE_SIZE, sizeof(char));
+	uint8_t i = 0, pos = 0, paren_count = 0;
+	bool past_opening = false;
+
+	/* If calloc failed, we're done */
+	if (result == NULL) {
+		show_error("MEMORY ERROR");
+		return NULL;
+	}
+
+	/* Copy everything between the outermost parens */
+	for (i=0; i<LINE_SIZE; i++) {
+		if (!past_opening && line[i] == '(') {
+			past_opening = true;
+			continue;
+		}
+		if (!past_opening) continue;
+		if (line[i] == ')') {
+			paren_count--;
+			if (paren_count == 0) break;
+		}
+		result[pos] = line[i];
+		pos++;
+		if (line[i] == '(') paren_count++;
+	}
+	return result;
+}
+
 size_t count_math_symbols(Line line, char symbol) {
 	bool in_quotes;
 	size_t i, length, total;

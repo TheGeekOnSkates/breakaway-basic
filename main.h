@@ -360,6 +360,7 @@ void replace_tab(Line line);
  */
 void set_line(Program program, Line line);
 
+char* get_text_between_parens(Line line);
 size_t get_start(char* line, size_t symbol);
 size_t get_end(char* line, size_t symbol);
 size_t count_math_symbols(Line line, char symbol);
