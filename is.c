@@ -541,6 +541,7 @@ bool is_string(Line line, char** position) {
 
 bool is_var(Line line, char** position) {
 	char* pos = *position;
+	if (is_keyword(line))return false;
 	bool result = line[0] >= 'A' && line[0] <= 'Z';
 	bool twoLetters = line[1] >= 'A' && line[1] <= 'Z';
 	pos++;

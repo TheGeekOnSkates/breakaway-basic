@@ -327,7 +327,7 @@ void strip_spaces(char* string);
 /************************************************************************/
 
 /** Replaces ASC("Some character") with the ASCII (or Unicode) value */
-void replace_asc(Line line);
+void replace_asc(Line line, VarList variables);
 
 /** Replaces CHR$(number) with the character represented by that number */
 void replace_chr(Line line);

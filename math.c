@@ -21,6 +21,7 @@ char* get_text_between_parens(Line line) {
 	for (i=0; i<LINE_SIZE; i++) {
 		if (!past_opening && line[i] == '(') {
 			past_opening = true;
+			paren_count++;
 			continue;
 		}
 		if (!past_opening) continue;
@@ -59,7 +60,7 @@ void eval_expr(Line line, VarList variables) {
 	combine_strings(line);
 	
 	/* Unfortunately, all this needs to be handled first (see below) */
-	replace_asc(line);
+	replace_asc(line, variables);
 	replace_columns(line);
 	replace_fre(line);
 	replace_pi(line);
