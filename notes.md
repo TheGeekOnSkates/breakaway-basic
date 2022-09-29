@@ -1,6 +1,11 @@
 # To-do's for version 0.4
 
-* Add get_text_between_parens to CHR$ (turns out I'm a bonehead - ASC expects a STRING, not a number!) :D
+* Finish updating CHR$ - almost there, I think (looks likt this might be a bug in is.c)
+	PRINT CHR$(9600)
+	▀   
+	PRINT CHR$(96 * 100)
+	?SYNTAX ERROR
+	REM Either is_print or is_chr is to blame here
 * Add get_text_between_parens to eval_expr or something so nested parens work
 * Add more math functions from my old calculator program - ATN, COS, FOO, BAR, BAZ, ETC. :D
 * STR$/LEFT$/RIGHT$/MID$

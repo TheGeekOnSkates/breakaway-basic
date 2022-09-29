@@ -330,7 +330,7 @@ void strip_spaces(char* string);
 void replace_asc(Line line);
 
 /** Replaces CHR$(number) with the character represented by that number */
-void replace_chr(Line line);
+void replace_chr(Line line, VarList variables);
 
 /** Replaces FRE() with the bytes free */
 void replace_fre(Line line);

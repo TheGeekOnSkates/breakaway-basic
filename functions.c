@@ -24,10 +24,10 @@ void replace_asc(Line line) {
 	}
 }
 
-void replace_chr(Line line) {
+void replace_chr(Line line, VarList variables) {
 	/* Declare variables */
-	char* where = NULL, buffer[8];
-	size_t end = 0, chr = 0;
+	char* where = NULL, buffer[LINE_SIZE], * temp = NULL;
+	size_t end = 0, chr = 0, parens = 0;
 
 	/* And replace ROWS() with rows */
 	while(true) {
@@ -36,13 +36,32 @@ void replace_chr(Line line) {
 		if (where == NULL) break;
 
 		/* Copy the character into a buffer */
-		chr = atol(where + 5);
-		memset(buffer, 0, 8);
-		snprintf(buffer, 8, "\"%lc\"", (wchar_t)chr);
+		temp = get_text_between_parens(where);
+		if (temp == NULL) {
+			show_error("MEMORY ERROR");
+			return;
+		}
+		memset(buffer, 0, LINE_SIZE);
+		snprintf(buffer, LINE_SIZE, "%s", temp);
+		eval_expr(buffer, variables);
+		free(temp);
+
+		/* Get the character value of that */
+		chr = atol(buffer);
+		memset(buffer, 0, LINE_SIZE);
+		snprintf(buffer, LINE_SIZE, "\"%lc\"", (wchar_t)chr);
 
 		/* Figure out the end point (to include the closing ")") */
 		end = 0;
-		while(where[end] != ')') end++;
+		while(where[end] != ')' && end < LINE_SIZE) {
+			end++;
+			if (where[end] == '(') parens++;
+			else if (where[end] == ')') {
+				parens--;
+				if (parens == 0) break;
+				end++;
+			}
+		}
 		if (end < LINE_SIZE) end++;
 
 		/* And replace the string */

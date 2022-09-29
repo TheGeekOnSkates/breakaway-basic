@@ -222,7 +222,7 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 		line += 6;
 		while(line[0] == ' ') line++;
 		strncpy(copy, line, LINE_SIZE);
-		replace_chr(copy);
+		replace_chr(copy, variables);
 		combine_strings(copy);	/* We don't want to replace variables with values etc. */
 		tempChar = strchr(copy, '"');
 		tempChar2 = strchr(copy + 1, '"');

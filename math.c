@@ -55,7 +55,7 @@ size_t count_math_symbols(Line line, char symbol) {
 
 void eval_expr(Line line, VarList variables) {
 	/* Handle string functions first */
-	replace_chr(line);
+	replace_chr(line, variables);
 	replace_tab(line);
 	combine_strings(line);
 	
