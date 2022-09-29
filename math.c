@@ -5,6 +5,73 @@ extern size_t programCounter;
 extern bool thereWasAnError;
 extern bool keepRunning;
 
+void eval_parens(Variable* first, char* string) {
+	size_t i = 0, left = 0, right = 0;
+	char* temp = calloc(LINE_SIZE, sizeof(char));
+	if (temp == NULL) {
+		show_error("MEMORY ERROR");
+		return;
+	}
+	char* temp2 = calloc(LINE_SIZE, sizeof(char));
+	if (temp == NULL) {
+		show_error("MEMORY ERROR");
+		free(temp);
+		return;
+	}
+	
+	// Find the last '(' character
+	for (i=LINE_SIZE-1; i>=0; i--) {
+		if (string[i] != '(') continue;
+		left = i;
+		#if DEBUG_MODE
+		printf("left ( is at position %ld\n", left);
+		#endif
+		break;
+	}
+	
+	// Find the first ')' character after that
+	for (i=left + 1; i<LINE_SIZE; i++) {
+		if (string[i] != ')') continue;
+		right = i;
+		#if DEBUG_MODE
+		printf("right ) is at position %ld\n", right);
+		#endif
+		break;
+	}
+	
+	// Fill our temp string everything between those two parens
+	for (i=left + 1; i<right; i++) {
+		temp[i - left - 1] = string[i];
+	}
+	
+	// Run eval on that
+	#if DEBUG_MODE
+	printf("Before strip_spaces: \"%s\"\n", temp);
+	#endif
+	strip_spaces(temp);
+	#if DEBUG_MODE
+	printf("Before eval: \"%s\"\n", temp);
+	#endif
+	// LEFT OFF HERE - Need to import this from calculator... I think
+	//eval(first, temp, temp2, NULL);	
+	#if DEBUG_MODE
+	printf("After eval: temp = \"%s\"\n", temp);
+	#endif
+	
+	// Update the first string so instead of the parens, we have the result.
+	for (i=0; i<left; i++) {
+		temp2[i] = string[i];
+	}
+	sprintf(temp2 + left, "%s%s", temp, string + right + 1);
+	#if DEBUG_MODE
+	printf("String from right to end =\"%s\"\n", string + right + 1);
+	printf("temp2 = \"%s\"\n", temp2);
+	#endif
+	strncpy(string, temp2, LINE_SIZE);
+	free(temp);
+	free(temp2);
+}
+
 char* get_text_between_parens(Line line) {
 	/* Variables */
 	char* result = calloc(LINE_SIZE, sizeof(char));

@@ -6,7 +6,24 @@
 	PRINT CHR$(96 * 100)
 	?SYNTAX ERROR
 	REM Either is_print or is_chr is to blame here
-* Add get_text_between_parens to eval_expr or something so nested parens work
+
+What I have is working... but I'm kinda re-thinking it.
+In my calculator program, which worked GREAT, I did this:
+	Assuming A = 100, B = 32, C = 64
+
+0. CHR$(A * (B + C)) - User's un-parsed code
+1. CHR$(100 * (32 + 64)) - Replace variables with values
+2. CHR$(100 * 96) - Handle first set of parens
+3. CHR$196 - Handle second set of parens
+4. "▀" - final result
+
+Surely, I can set up an eval_parens function or something like that, and use that here.  Then, it would be easy to add all those mathing functions - maybe copy/paste easy (lol yeah right).  Regardless, look at my calculator program before I go any further! :)
+
+
+----------------------------------------------------------------------------
+ONCE THE ABOVE IS FIGURED OUT
+----------------------------------------------------------------------------
+
 * Add more math functions from my old calculator program - ATN, COS, FOO, BAR, BAZ, ETC. :D
 * STR$/LEFT$/RIGHT$/MID$
 * SPC({number}) like the C64 has
