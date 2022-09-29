@@ -2,17 +2,15 @@
 
 extern int rc;
 
-void replace_asc(Line line, VarList variables) {
+void replace_asc(Line line) {
 	/* Declare variables */
-	char* where = NULL, *temp = NULL, buffer[8];
+	char* where = NULL, buffer[8];
 	size_t start = 0, end = 0;
 
 	/* And replace ASC() with the ASCII (or Unicode) character */
 	while(true) {
 		where = substring(line, "ASC(");
 		if (where == NULL) break;
-		temp = get_text_between_parens(line);
-		if (temp == NULL) return;	/* get_text_between_parens will have logged an error already */
 		start = where - line;
 		end = start + 4;
 		while(line[end] != ')' && line[end] != '\0' && end < LINE_SIZE) end++;
@@ -20,9 +18,8 @@ void replace_asc(Line line, VarList variables) {
 		where += 5;
 
 		/* And do the replacing */
-		eval_expr(temp, variables);
-		snprintf(buffer, 8, "%lc", atoi(temp));
-		free(temp);
+		memset(buffer, 0, 8);
+		snprintf(buffer, 8, "%d", where[0]);
 		replace_with_string(line, start, end, buffer);
 	}
 }

@@ -1,6 +1,6 @@
 # To-do's for version 0.4
 
-* Use get_text_between_parens to update CHR$ and ASC, so I can do things like CHR$(9600 + X)
+* Add get_text_between_parens to CHR$ (turns out I'm a bonehead - ASC expects a STRING, not a number!) :D
 * Add get_text_between_parens to eval_expr or something so nested parens work
 * Add more math functions from my old calculator program - ATN, COS, FOO, BAR, BAZ, ETC. :D
 * STR$/LEFT$/RIGHT$/MID$
@@ -24,6 +24,7 @@
 
 # Buggz! :D
 
+* Sometimes, running programs in program mode hangs Breakaway BASIC.  For example, in build.bas, if the build SUCCEEDS (not if it FAILS), it works as expected... and then freezes.  The program runs fine, but then Breakaway BASIC gets "stuck".  idk why, doesn't make sense, so there must be a bug... somewhere... somehow... stupid.  And yes, I realize I'm using Breakaway BASIC to *compile* Breakaway BASIC (which is both awesome and ridiculous) but I've seen it with other programs too.  I'm just mentioning it because it's an example I can reproduce. :D
 * Looking at other BASICs, I notice mine doesn't show the prompt nearly often enough; like if I do "10 PRINT whatever" I get no prompt, but anything else in direct mode gives me a prompt.  Maybe give that a closer look (take the prompts out of run_program and put them back in main or something)
 * Not a bug per se, but still a thing I'd like to change: CHR$ (and probably ASC) don't suport expressions, variables etc. - just numbers or strings.
 * See math.c on why I currently have to replace functions _after_ replacing variables.  Unlike the next one, this bug makes perfect sense (all variables are letters A-Z, all BASIC functions are made up of those letters, so ROWS() becomes 0000() if I call replace_vars first.)

@@ -60,7 +60,7 @@ void eval_expr(Line line, VarList variables) {
 	combine_strings(line);
 	
 	/* Unfortunately, all this needs to be handled first (see below) */
-	replace_asc(line, variables);
+	replace_asc(line);
 	replace_columns(line);
 	replace_fre(line);
 	replace_pi(line);
