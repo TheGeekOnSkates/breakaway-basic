@@ -184,6 +184,7 @@ bool is_gosub(Line line);
 bool is_goto(Line line);
 bool is_hidden(Line line);
 bool is_if(Line line);
+bool is_include(Line line);
 bool is_input(Line line);
 bool is_italic(Line line);
 bool is_keyword(Line line);

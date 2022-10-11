@@ -472,6 +472,7 @@ bool is_statement(Line line) {
 		|| is_goto(line)
 		|| is_hidden(line)
 		|| is_if(line)
+		|| is_include(line)
 		|| is_input(line)
 		|| is_italic(line)
 		|| is_let(line)
@@ -539,6 +540,14 @@ bool is_var_list(Line line, char** position) {
 	/* And we're done */
 	*position = pos;
 	return result;
+}
+
+bool is_include(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "INCLUDE")) return false;
+	temp = line + 7;
+	while(temp[0] == ' ') temp++;
+	return is_string(temp, &temp);
 }
 
 bool is_load(Line line) {

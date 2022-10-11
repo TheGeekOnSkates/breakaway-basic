@@ -57,7 +57,7 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy, variables);
 		temp = atoi(copy);
-		if (temp < 0 || temp > PROGRAM_SIZE)
+		if (temp > PROGRAM_SIZE)
 			show_error("SYNTAX ERROR");
 		else printf("\033[4%ldm", temp);
 		return;
@@ -120,14 +120,14 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 		strncpy(copy, line, LINE_SIZE);
 		eval_expr(copy, variables);
 		temp = atoi(copy);
-		if (temp < 0 || temp > PROGRAM_SIZE)
+		if (temp > PROGRAM_SIZE)
 			show_error("SYNTAX ERROR");
 		else printf("\033[3%ldm", temp);
 		return;
 	}
 	if (is_gosub(line)) {
 		temp = atoi(line + 5);
-		if (temp < 0 || temp > PROGRAM_SIZE)
+		if (temp > PROGRAM_SIZE)
 			show_error("SYNTAX ERROR");
 		else if (subCounter + 1 == PROGRAM_SIZE) {
 			/* Should never happen, but if so, handle it gracefully  :D */
@@ -144,7 +144,7 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 	}
 	if (is_goto(line)) {
 		temp = atoi(line + 4);
-		if (temp < 0 || temp > PROGRAM_SIZE)
+		if (temp > PROGRAM_SIZE)
 			show_error("SYNTAX ERROR");
 		else {
 			programCounter = temp - 1;
@@ -165,6 +165,10 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 	}
 	if (is_if(line)) {
 		run_if(program, aliases, line, variables, running);
+		return;
+	}
+	if (is_include(line)) {
+		run_load(program, aliases, variables, line + 4);
 		return;
 	}
 	if (is_input(line)) {
@@ -251,7 +255,7 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 	}
 	if (STRING_EQUALS(line, "RETURN")) {
 		subCounter--;
-		if (subCounter < 0 || subCounter >= PROGRAM_SIZE)
+		if (subCounter >= PROGRAM_SIZE)
 			show_error("RETURN WITHOUT GOSUB ERROR");
 		programCounter = subs[subCounter];
 		keepRunning = true;
@@ -409,7 +413,8 @@ void run_load(Program program, Program aliases, VarList variables, char* line) {
 	i = 0;
 	
 	/* Move past spaces and the first quote */
-	while (temp[0] == ' ' || temp[0] == '"') temp++;
+	while (temp[0] != '"') temp++;
+	temp++;
 	
 	/* Copy up to the closing quote */
 	while(temp[0] != '"' && temp[0] != '\0') {
@@ -618,7 +623,7 @@ void run_list(Program program, Line line) {
 	}
 	
 	/* Validate the numbers */
-	if (from < 0 || from > PROGRAM_SIZE || to < 0 || to > PROGRAM_SIZE) {
+	if (from > PROGRAM_SIZE || to > PROGRAM_SIZE) {
 		show_error("SYNTAX ERROR");
 		return;
 	}
