@@ -706,12 +706,17 @@ void run_print(Program program, Line line, bool centered) {
 }
 
 void run_program(Program program, Program aliases, VarList variables) {
+	/* Declare variables */
 	char* currentLine, temp;
-	size_t lastLine, i, nFor, nTo, nStep;
+	size_t lastLine, i, next;
+	int nFor, nTo, nStep;
 	char var;
+	Line tempLine;
 
 	SetBlocking(false);
 	while(true) {
+
+		/* Let the Escape key end the currently running program */
 		temp = getchar();
 		if (temp == 27) {
 			lastLine = programCounter;
@@ -719,10 +724,14 @@ void run_program(Program program, Program aliases, VarList variables) {
 			printf("\nBREAK IN %ld\n", lastLine);
 			keepRunning = false;
 		}
+
+		/* If the user pressed Escape, or we've reached last line, we're done. */
 		if (!keepRunning || programCounter == PROGRAM_SIZE) {
 			SetBlocking(true);
 			return;
 		}
+
+		/* Skip empty lines */
 		currentLine = program[programCounter];
 		if (currentLine[0] == '\0') {
 			programCounter++;
@@ -732,8 +741,13 @@ void run_program(Program program, Program aliases, VarList variables) {
 			}
 			continue;
 		}
+
+		/* Handle FOR */
 		currentLine = program[programCounter];
 		if (is_for(currentLine)) {
+
+			/* Step 1: Get the variable and the numbers */
+			
 			currentLine += 3;	/* Skip FOR */
 			while(currentLine[0] == ' ') currentLine++;
 			var = currentLine[0];
@@ -756,9 +770,58 @@ void run_program(Program program, Program aliases, VarList variables) {
 				currentLine += 4;	/* Skip "STEP" */
 				while(currentLine[0] == ' ') currentLine++;
 				nStep = atoi(currentLine);
-				printf("LEFT OFF HERE (nFor = %d, nTo = %d, nStep = %d)\n", nFor, nTo, nStep);
 			}
-			else printf("LEFT OFF HERE (nFor = %d, nTo = %d)\n", nFor, nTo);
+			else nStep = 1;
+
+			/* Step 2: Make sure there's a NEXT */
+			
+			for (next = programCounter; next<PROGRAM_SIZE; next++) {
+				if (!is_next(program[next])) continue;
+				currentLine = program[next] + 4;	/* Past "NEXT" */
+				while(currentLine[0] == ' ') currentLine++;
+				if (currentLine[0] == var) break;
+			}
+			if (next == PROGRAM_SIZE) {
+				show_error("FOR WITHOUT NEXT ERROR");
+				lastLine = programCounter;
+				keepRunning = false;
+				SetBlocking(true);
+				return;
+			}
+
+			/* Step 3: Run the loop! */
+
+			snprintf(tempLine, LINE_SIZE, "LET %c = %d", var, nFor);
+			//run(program, aliases, variables, tempLine, true);
+			for (; nFor<=nTo; nFor += nStep) {
+				/*
+				LEFT OFF HERE
+
+				This loop works with i.e. FOR I = 0 TO 10 
+				(with or without a STEP), but crashes on
+				things like FOR I = -3 TO 3 (which is kind
+				of weird considering it's not trying to access
+				program[negative] or currentLine[negative])...
+
+				My best guess: it's lines 794-795 (temporarily commented out)
+				EDIT: Yup, that was it - line 795. :)
+				Set the variable another way, rather than trying to RUN a line of BASIC :)
+
+				HOWEVER, there is definitely logic like that,
+				ID10T errors users can make like:
+					FOR I = 0 TO -10 STEP 10
+				That need error-checking.
+
+				Beyond that, what I need here is basically:
+					1. if we're at the corresponding NEXT line,
+						continue or exit the for-loop.
+					2. Run the current line
+					3. If there was an error, exit the program
+					4. Else, continue the loop
+				*/
+				printf("LEFT OFF HERE (%d)\n", nFor);
+			}
+			
 			programCounter++;
 			continue;
 		}
