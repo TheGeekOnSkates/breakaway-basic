@@ -194,6 +194,30 @@ bool is_string_function(Line line, char** position) {
 	return false;
 }
 
+bool is_for(Line line) {
+	bool result;
+	
+	if (!STRING_STARTS_WITH(line, "FOR")) return false;
+	line += 3;
+	while (line[0] == ' ') line++;
+	if (!is_var(line, &line)) return false;
+	while (line[0] == ' ') line++;
+	if (line[0] != '=') return false;
+	line++;
+	while (line[0] == ' ') line++;
+	if (!is_number(line, &line)) return false;
+	while (line[0] == ' ') line++;
+	if (!STRING_STARTS_WITH(line, "TO")) return false;
+	line += 2;
+	while (line[0] == ' ') line++;
+	result = is_number(line, &line);
+	while (line[0] == ' ') line++;
+	if (!STRING_STARTS_WITH(line, "STEP")) return result;
+	line += 4;
+	while (line[0] == ' ') line++;
+	return is_number(line, &line);
+}
+
 bool is_function(Line line, char** position) {
 	if (is_asc(line, position)) {
 		*position += 4;
@@ -382,6 +406,14 @@ bool is_move(Line line) {
 	while(temp[0] == ' ') temp++;
 	if (!is_number(temp, &temp) && !is_var(temp, &temp) && !is_function(temp, &temp))
 		return false;
+	while(temp[0] == ' ') temp++;
+	return is_number(temp, &temp) || is_var(temp, &temp) || is_function(temp, &temp);
+}
+
+bool is_next(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "NEXT")) return false;
+	temp = line + 4;
 	while(temp[0] == ' ') temp++;
 	return is_number(temp, &temp) || is_var(temp, &temp) || is_function(temp, &temp);
 }

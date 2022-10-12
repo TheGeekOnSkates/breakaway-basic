@@ -125,6 +125,14 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 		else printf("\033[3%ldm", temp);
 		return;
 	}
+	if (is_for(line) || is_next(line)) {
+		if (!running) {
+			show_error("ILLEGAL DIRECT MODE ERROR");
+			return;
+		}
+		printf("LEFT OFF HERE - evaluate \"%s\"\nI think it'll actually have to be evaluated in run_program, not here.\n", line);
+		return;
+	}
 	if (is_gosub(line)) {
 		temp = atoi(line + 5);
 		if (temp > PROGRAM_SIZE)
