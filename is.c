@@ -331,13 +331,15 @@ bool is_keyword(Line line) {
 		|| STRING_STARTS_WITH(line, "GOTO");
 	if (line[0] == 'H') return STRING_STARTS_WITH(line, "HIDDEN");
 	if (line[0] == 'I') return STRING_STARTS_WITH(line, "IF")
+		|| STRING_STARTS_WITH(line, "INCLUDE")
 		|| STRING_STARTS_WITH(line, "INPUT")
 		|| STRING_STARTS_WITH(line, "ITALIC");
 	if (line[0] == 'L') return STRING_STARTS_WITH(line, "LET")
 		|| STRING_STARTS_WITH(line, "LIST")
 		|| STRING_STARTS_WITH(line, "LOAD");
 	if (line[0] == 'M') return STRING_STARTS_WITH(line, "MOVE");
-	if (line[0] == 'N') return STRING_STARTS_WITH(line, "NEW");
+	if (line[0] == 'N') return STRING_STARTS_WITH(line, "NEW")
+		|| STRING_STARTS_WITH(line, "NEXT");
 	if (line[0] == 'O') return STRING_STARTS_WITH(line, "ON")
 		|| STRING_STARTS_WITH(line, "OFF");
 	if (line[0] == 'P') return STRING_STARTS_WITH(line, "PI")
@@ -347,6 +349,7 @@ bool is_keyword(Line line) {
 		|| STRING_STARTS_WITH(line, "RUN")
 		|| STRING_STARTS_WITH(line, "RETURN");
 	if (line[0] == 'S') return STRING_STARTS_WITH(line, "SAVE")
+		|| STRING_STARTS_WITH(line, "STEP")
 		|| STRING_STARTS_WITH(line, "SYS");
 	if (line[0] == 'T') return STRING_STARTS_WITH(line, "TAB")
 		|| STRING_STARTS_WITH(line, "TAN")

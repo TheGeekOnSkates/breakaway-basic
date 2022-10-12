@@ -55,6 +55,7 @@ int main() {
 	while(true) {
 		/* Get the user's input */
 		memset(line, 0, LINE_SIZE);
+		printf("%s", prompt);
 		ReadLine(line);
 		run(program, aliases, variables, line, false);
 	}

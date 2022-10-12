@@ -126,11 +126,8 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 		return;
 	}
 	if (is_for(line) || is_next(line)) {
-		if (!running) {
+		if (!running)
 			show_error("ILLEGAL DIRECT MODE ERROR");
-			return;
-		}
-		printf("LEFT OFF HERE - evaluate \"%s\"\nI think it'll actually have to be evaluated in run_program, not here.\n", line);
 		return;
 	}
 	if (is_gosub(line)) {
@@ -710,7 +707,8 @@ void run_print(Program program, Line line, bool centered) {
 
 void run_program(Program program, Program aliases, VarList variables) {
 	char* currentLine, temp;
-	size_t lastLine;
+	size_t lastLine, i, nFor, nTo, nStep;
+	char var;
 
 	SetBlocking(false);
 	while(true) {
@@ -719,12 +717,10 @@ void run_program(Program program, Program aliases, VarList variables) {
 			lastLine = programCounter;
 			while(program[lastLine][0] == '\0') lastLine--;
 			printf("\nBREAK IN %ld\n", lastLine);
-			printf("%s", prompt);
 			keepRunning = false;
 		}
 		if (!keepRunning || programCounter == PROGRAM_SIZE) {
 			SetBlocking(true);
-			printf("%s", prompt);
 			return;
 		}
 		currentLine = program[programCounter];
@@ -732,21 +728,47 @@ void run_program(Program program, Program aliases, VarList variables) {
 			programCounter++;
 			if (programCounter == PROGRAM_SIZE) {
 				SetBlocking(true);
-				printf("%s", prompt);
 				return;
 			}
 			continue;
 		}
 		currentLine = program[programCounter];
+		if (is_for(currentLine)) {
+			currentLine += 3;	/* Skip FOR */
+			while(currentLine[0] == ' ') currentLine++;
+			var = currentLine[0];
+			currentLine++;
+			while(currentLine[0] == ' ' || currentLine[0] == '=')
+				currentLine++;
+			nFor = atoi(currentLine);
+			if (currentLine[0] == '+' || currentLine[0] == '-')
+				currentLine++;
+			while(is_digit(currentLine[0]) || currentLine[0] == ' ')
+				currentLine++;
+			currentLine += 2;	/* Skip "TO" */
+			while(currentLine[0] == ' ') currentLine++;
+			nTo = atoi(currentLine);
+			if (currentLine[0] == '+' || currentLine[0] == '-')
+				currentLine++;
+			while(is_digit(currentLine[0]) || currentLine[0] == ' ')
+				currentLine++;
+			if (STRING_STARTS_WITH(currentLine, "STEP")) {
+				currentLine += 4;	/* Skip "STEP" */
+				while(currentLine[0] == ' ') currentLine++;
+				nStep = atoi(currentLine);
+				printf("LEFT OFF HERE (nFor = %d, nTo = %d, nStep = %d)\n", nFor, nTo, nStep);
+			}
+			else printf("LEFT OFF HERE (nFor = %d, nTo = %d)\n", nFor, nTo);
+			programCounter++;
+			continue;
+		}
 		run(program, aliases, variables, currentLine, true);
 		programCounter++;
 		if (programCounter == PROGRAM_SIZE) {
-			printf("%s", prompt);
 			SetBlocking(true);
 			return;
 		}
 	}
-	printf("%s", prompt);
 	SetBlocking(true);
 }
 
