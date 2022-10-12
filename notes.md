@@ -1,8 +1,7 @@
 # To-do's for version 0.4
 
-* Write the docs for INCLUDE
-* Move on from LOAD/INCLUDE - time for STR$/LEFT$/RIGHT$/MID$! :)
 * SPC({number}) like the C64 has
+* STR$/LEFT$/RIGHT$/MID$! :)
 * Once that's done, I'd say update the docs and call 0.3 done - it's already *way* better than 0.2!
 
 # Buggz! :D

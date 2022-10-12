@@ -62,6 +62,11 @@ Alternatively, you can remove this dependency by going to os/Linux.c and getting
 
 ## Change log
 
+### 0.4
+
+* Added an `INCLUDE` command (like `LOAD` except that it keeps whatever other code you have there).
+* Fixed a bug in `LOAD` (it wasn't getting rid of old code - so in versions > 0.4 you could use `LOAD` as if it were `INCLUDE`).
+
 ### 0.3
 
 * Made instructions case-insensitive, resolving issue #1 in GitHub
@@ -335,6 +340,38 @@ Checks if the condition is true, and if so, goes to the number or runs the state
 80 PRINT "PLEASE TRY AGAIN."
 ```
 
+### INCLUDE {string}
+
+Works similar to `LOAD` except that it doesn't erase your program.  This makes it possible to store code you want to reuse in separate "modules", like most modern languages can do.  For example:
+
+#### In file1.bas
+
+```
+1000 REM SOME CODE
+1010 PRINT "OKAY, THIS ";
+1020 RETURN
+```
+
+#### In file2.bas
+
+```
+2000 REM SOME MORE CODE
+2010 PRINT "TOTALLY WORKS!"
+2020 RETURN
+```
+
+#### Then in file3.bas (or just in the terminal)
+
+```
+10 INCLUDE "file1.bas"
+20 INCLUDE "file2.bas"
+30 GOSUB 1000
+40 GOSUB 2000
+50 END
+```
+
+**NOTE:** You don't have to call INCLUDE from program mode (you can do it in direct mode, without line numbers) too.
+
 ### INPUT {variable}
 
 Asks you to enter some information, and saves it to a variable.  For now (version 0.1), only numbers are supported.  For an example, see `IF` above.  For more info on variables, see `LET` below.
@@ -363,7 +400,28 @@ It will print 42.  Note that the `LET` keyword is optional (you can just do i.e.
 
 ### LIST [{number}[ - {number}]]
 
+Shows all or part of your BASIC program.  For example, let's say I have this:
+
+```
+10 PRINT "LINE 10"
+20 PRINT "LINE 20"
+30 PRINT "LINE 30"
+40 PRINT "LINE 40"
+```
+
+If I run `LIST` without anything after it, I'll see all four of the lines above.  If I do `LIST 10` I'll only get line 10.   If I run `LIST 20-40` I'll get lines 20 through 40.
+
 ### LOAD {string}
+
+Loads a BASIC file, erasing the current program's code and variables (kind of like calling `NEW` and then `INCLUDE`).  It doesn't have to have the extension ".bas", though I've done that in this manual just out of habit.  For example, you can do:
+
+```
+LOAD "SOME FILE"
+LOAD "SOME FILE.BAS"
+LOAD "/home/geek/breakaway.bas"
+```
+
+That last one is called automatically when Breakaway BASIC starts (see the section on auto-run files for more info) but it's still a thing you can do.
 
 ### MOVE {number or variable} {number or variable}
 
