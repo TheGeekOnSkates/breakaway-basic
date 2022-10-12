@@ -1,11 +1,14 @@
-# To-do's for version 0.3
+# To-do's for version 0.4
 
-* Keep swatting at the buggz. :)
+* Write the docs for INCLUDE
+* Move on from LOAD/INCLUDE - time for STR$/LEFT$/RIGHT$/MID$! :)
+* SPC({number}) like the C64 has
 * Once that's done, I'd say update the docs and call 0.3 done - it's already *way* better than 0.2!
 
 # Buggz! :D
 
-* Looking at other BASICs, I notice mine doesn't show the prompt nearly often enough; like if I do "10 PRINT whatever" I get no prompt, but anything else in direct mode gives me a prompt.  Maybe give that a closer look (take the prompts out of run_program and put them back in main or something)
+* Looking at other BASICs, I notice mine doesn't show the prompt nearly often enough; like if I do "10 PRINT whatever" I get no prompt, but anything else in direct mode gives me a prompt.  Maybe give that a closer look (take the prompts out of run_program and put them back in main or something).
+* On the other hand, using Breakaway BASIC as my daily driver shell at home, I've noticed times it shows two prompts.  Definitely gotta fix that. :)
 * Not a bug per se, but still a thing I'd like to change: CHR$ (and probably ASC) don't suport expressions, variables etc. - just numbers or strings.
 * See math.c on why I currently have to replace functions _after_ replacing variables.  Unlike the next one, this bug makes perfect sense (all variables are letters A-Z, all BASIC functions are made up of those letters, so ROWS() becomes 0000() if I call replace_vars first.)
 
@@ -15,18 +18,12 @@
 
 # Road map to version 1.0
 
-## Fun stuff I'll add when I get in the mood, just cuz it's awesome
+## On the to-do list for future 0.x releases
 
-* STR$/LEFT$/RIGHT$/MID$
-* SPC({number}) like the C64 has
 * I was researching the whole "get cursor position with termios" thing when I found this:
 	http://dtelnet.sourceforge.net/shkeys.c
   Apparently, you can get (and even SET) *mouse support!*  If I can find out how that works; I could add instructions like MOUSE ON/OFF, MOUSEX() and MOUSEY() to get the position, CLICKX() and CLICKY() to get the last clicked position, ON CLICK GOTO... no, that's too far. :D
 * If I go there... and I might cuz it's awesome... why not use the Linux *joystick* library?!  There's a joystick.h I used years ago that would totally work for that.
-
-
-## On the to-do list for 0.4
-
 * Variables with names longer than 1 character
 * Variables ending in $ being strings
 * MOVE UP/DOWN/LEFT/RIGHT/HOME/END - or maybe just MOVE X Y TRUE

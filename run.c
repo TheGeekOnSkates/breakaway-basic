@@ -200,6 +200,8 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 		return;
 	}
 	if (is_load(line)) {
+		memset(program, 0, PROGRAM_SIZE * LINE_SIZE);
+		memset(variables, 0, 26);
 		run_load(program, aliases, variables, line + 4);
 		return;
 	}
