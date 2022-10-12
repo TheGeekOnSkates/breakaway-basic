@@ -1,13 +1,11 @@
 # To-do's for version 0.4
 
-* FOR <expr> TO <expr> STEP <expression>
-* NEXT (can't have FOR without it) :)
+* Finish FOR loops
 * Once that's done, I'd say update the docs and call 0.3 done - it's already *way* better than 0.2!
 
 # Buggz! :D
 
-* Looking at other BASICs, I notice mine doesn't show the prompt nearly often enough; like if I do "10 PRINT whatever" I get no prompt, but anything else in direct mode gives me a prompt.  Maybe give that a closer look (take the prompts out of run_program and put them back in main or something).
-* On the other hand, using Breakaway BASIC as my daily driver shell at home, I've noticed times it shows two prompts.  Definitely gotta fix that. :)
+* I noticed that sometimes Breakaway BASIC crashes if system() returns a non-zero value.  For example, in my game, "The Great Gretscii", I use a build script instead of a Makefile.  If the build fails, BASIC crashes.  Ask around forums about this. :D
 
 
 
@@ -45,6 +43,58 @@
 * Arrays
 * _maybe_ WHILE / LOOP (not WEND or END WHILE like other BASICs)
 * Advanced file I/O (OPEN, CLOSE, PRINT#, INPUT# etc.)
+
+## Crazy awesome ideas that fal into the "maybe someday" category
+
+### Idea #1
+
+@Dreadful over on Lunduke did some "wishful thinking" and I like where s/he is going with this:
+FOR EACH fname IN DIR(somedir) : OPEN "I",#1,fname : DO LINE INPUT #1, S$ : IF INSTR(1,LCASE(S$),"error" ) > -1 THEN PRINT S$ : LOOP WHILE EOF(#1) > -1 : CLOSE #1 : NEXT fname
+
+To make this work, I would have to have:
+
+* Using colons as a delimiter, so I can have multiple instructions on one line (a thing I've been kinda wanting myself).  Commodore BASIC has that.  Most BASICs do.
+* A `DIR()` function
+* Some of the stuff I thought of as "advanced file I/O"
+* And a `FOR EACH` statement
+* Oh, and longer named variables (it would have to be fname$ but still, a thing I've been wanting to add myself)
+
+### Idea #2
+
+@Barry6502gs (also on Lunduke) said this:
+
+My version of "Import" for BASIC with Line Numbers would Insert at "Here-Line-Number", and in theory Re-Numbers appropriately. 🤔 I'd probably put my "INCLUDE" at the bottom. Line numbers should not become a problem (because Auto-Re-Number)
+
+in File "HappyHappy.BAS"
+1001 REM Subroutine to Print "Happy"
+1002 PRINT "Happy Happy Happy"
+1003 RETURN
+
+in File "FooBarBaz.BAS"
+1001 REM Subroutine to Print "FooBar"
+1002 PRINT "Foo Bar Baz"
+1003 RETURN
+
+in Main File
+10 REM This is my Main File
+20 GOSUB 1000
+30 GOSUB 2000
+40 END
+50 REM Subroutine Modules Included Below
+1000 INCLUDE "HappyHappy.BAS"
+1010 REM Maybe Explain Something Here
+2000 INCLUDE "FooBarBaz.BAS"
+2010 REM Probably Need Warning Message If This Line Executes
+
+PS: Are you giving yourself an "Auto-Number" or "Re-Number" Utility? (I think the TRS-80 had that capability.)
+Afterthought: "LIST" Command - When "INCLUDE" exists, have a "Verbose" option which Expands the "Included Modules"
+
+Wow, just... wow.  So much cool stuff to unpack here...
+
+* Renumber is a thing I've been thinking about (he's right the M-100 has it)
+* His idea of INCLUDE is more lika my INCLUDE and RUN. Totally doable and very cool.  Eliminates the risk of overwriting line numbers
+	Thought: What if I do an INCLUDE that doesn't have line numbers?  Wouldn't that work like his?
+	Idea: what about a RUN "file" - separate thing from INCLUDE... answer my first question first.
 
 
 ------------------------------------------------------------------------------------------------------------
