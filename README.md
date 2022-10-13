@@ -64,6 +64,7 @@ Alternatively, you can remove this dependency by going to os/Linux.c and getting
 
 ### 0.4
 
+* Added a `CLEAR HISTORY` command (like `history -c` in Bash)
 * Added an `INCLUDE` command (like `LOAD` except that it keeps whatever other code you have there).
 * Fixed a bug in `LOAD` (it wasn't getting rid of old code - so in versions > 0.4 you could use `LOAD` as if it were `INCLUDE`).
 
@@ -209,6 +210,10 @@ In fact, the example auto-run file in this folder ("breakaway.bas") uses a simil
 ### CLEAR
 
 Clears the screen.  This is used by a bunch of other examples (for instance, `BG`) so there's no need to repeat it here.
+
+### CLEAR HISTORY
+
+Clears the command history.  Unlike the 8-bit BASICs that inspired its design, Breakaway BASIC has that nice up-arrow feature other modern shells have.  This can be helpful, but it does save what you typed.  I'm not exactly sure where this is saved, since I didn't create the library that makes it possible (GNU Readline), but whether it's in memory or in a file, you might want to clear this history.  This command does that.
 
 ### CONT
 

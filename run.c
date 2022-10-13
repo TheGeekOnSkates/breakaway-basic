@@ -89,6 +89,10 @@ void run(Program program, Program aliases, VarList variables, Line line, bool ru
 		CLEAR_SCREEN();
 		return;
 	}
+	if (STRING_EQUALS(line, "CLEAR HISTORY")) {
+		clear_history();
+		return;
+	}
 	if (STRING_EQUALS(line, "CONT")) {
 		keepRunning = true;
 		run_program(program, aliases, variables);
