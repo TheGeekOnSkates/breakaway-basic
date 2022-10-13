@@ -194,6 +194,30 @@ bool is_string_function(Line line, char** position) {
 	return false;
 }
 
+bool is_for(Line line) {
+	bool result;
+	
+	if (!STRING_STARTS_WITH(line, "FOR")) return false;
+	line += 3;
+	while (line[0] == ' ') line++;
+	if (!is_var(line, &line)) return false;
+	while (line[0] == ' ') line++;
+	if (line[0] != '=') return false;
+	line++;
+	while (line[0] == ' ') line++;
+	if (!is_number(line, &line)) return false;
+	while (line[0] == ' ') line++;
+	if (!STRING_STARTS_WITH(line, "TO")) return false;
+	line += 2;
+	while (line[0] == ' ') line++;
+	result = is_number(line, &line);
+	while (line[0] == ' ') line++;
+	if (!STRING_STARTS_WITH(line, "STEP")) return result;
+	line += 4;
+	while (line[0] == ' ') line++;
+	return is_number(line, &line);
+}
+
 bool is_function(Line line, char** position) {
 	if (is_asc(line, position)) {
 		*position += 4;
@@ -307,13 +331,15 @@ bool is_keyword(Line line) {
 		|| STRING_STARTS_WITH(line, "GOTO");
 	if (line[0] == 'H') return STRING_STARTS_WITH(line, "HIDDEN");
 	if (line[0] == 'I') return STRING_STARTS_WITH(line, "IF")
+		|| STRING_STARTS_WITH(line, "INCLUDE")
 		|| STRING_STARTS_WITH(line, "INPUT")
 		|| STRING_STARTS_WITH(line, "ITALIC");
 	if (line[0] == 'L') return STRING_STARTS_WITH(line, "LET")
 		|| STRING_STARTS_WITH(line, "LIST")
 		|| STRING_STARTS_WITH(line, "LOAD");
 	if (line[0] == 'M') return STRING_STARTS_WITH(line, "MOVE");
-	if (line[0] == 'N') return STRING_STARTS_WITH(line, "NEW");
+	if (line[0] == 'N') return STRING_STARTS_WITH(line, "NEW")
+		|| STRING_STARTS_WITH(line, "NEXT");
 	if (line[0] == 'O') return STRING_STARTS_WITH(line, "ON")
 		|| STRING_STARTS_WITH(line, "OFF");
 	if (line[0] == 'P') return STRING_STARTS_WITH(line, "PI")
@@ -323,6 +349,7 @@ bool is_keyword(Line line) {
 		|| STRING_STARTS_WITH(line, "RUN")
 		|| STRING_STARTS_WITH(line, "RETURN");
 	if (line[0] == 'S') return STRING_STARTS_WITH(line, "SAVE")
+		|| STRING_STARTS_WITH(line, "STEP")
 		|| STRING_STARTS_WITH(line, "SYS");
 	if (line[0] == 'T') return STRING_STARTS_WITH(line, "TAB")
 		|| STRING_STARTS_WITH(line, "TAN")
@@ -382,6 +409,14 @@ bool is_move(Line line) {
 	while(temp[0] == ' ') temp++;
 	if (!is_number(temp, &temp) && !is_var(temp, &temp) && !is_function(temp, &temp))
 		return false;
+	while(temp[0] == ' ') temp++;
+	return is_number(temp, &temp) || is_var(temp, &temp) || is_function(temp, &temp);
+}
+
+bool is_next(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "NEXT")) return false;
+	temp = line + 4;
 	while(temp[0] == ' ') temp++;
 	return is_number(temp, &temp) || is_var(temp, &temp) || is_function(temp, &temp);
 }
@@ -472,6 +507,7 @@ bool is_statement(Line line) {
 		|| is_goto(line)
 		|| is_hidden(line)
 		|| is_if(line)
+		|| is_include(line)
 		|| is_input(line)
 		|| is_italic(line)
 		|| is_let(line)
@@ -539,6 +575,14 @@ bool is_var_list(Line line, char** position) {
 	/* And we're done */
 	*position = pos;
 	return result;
+}
+
+bool is_include(Line line) {
+	char* temp;
+	if (!STRING_STARTS_WITH(line, "INCLUDE")) return false;
+	temp = line + 7;
+	while(temp[0] == ' ') temp++;
+	return is_string(temp, &temp);
 }
 
 bool is_load(Line line) {

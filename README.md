@@ -62,6 +62,13 @@ Alternatively, you can remove this dependency by going to os/Linux.c and getting
 
 ## Change log
 
+### 0.4
+
+* Added `FOR ... NEXT` loops
+* Added a `CLEAR HISTORY` command (like `history -c` in Bash)
+* Added an `INCLUDE` command (like `LOAD` except that it keeps whatever other code you have there).
+* Fixed a bug in `LOAD` (it wasn't getting rid of old code - so in versions > 0.4 you could use `LOAD` as if it were `INCLUDE`).
+
 ### 0.3
 
 * Made instructions case-insensitive, resolving issue #1 in GitHub
@@ -205,6 +212,10 @@ In fact, the example auto-run file in this folder ("breakaway.bas") uses a simil
 
 Clears the screen.  This is used by a bunch of other examples (for instance, `BG`) so there's no need to repeat it here.
 
+### CLEAR HISTORY
+
+Clears the command history.  Unlike the 8-bit BASICs that inspired its design, Breakaway BASIC has that nice up-arrow feature other modern shells have.  This can be helpful, but it does save what you typed.  I'm not exactly sure where this is saved, since I didn't create the library that makes it possible (GNU Readline), but whether it's in memory or in a file, you might want to clear this history.  This command does that.
+
 ### CONT
 
 Continues the program from where it left off.  So for example, if you have the program:
@@ -266,6 +277,34 @@ Prints an ANSI escape code followed by whatever text you put in the string.  In 
 ### EXIT
 
 Exits Breakaway BASIC.
+
+### FOR {variable} = {number} TO {number} (STEP {number})
+
+A for-loop is a way to run the same instructions a bunch of times.  They're better than `GOTO` when you know how many times you want to run the code.  For example:
+
+```
+10 CLEAR
+20 REVERSE ON
+30 FOR I = 0 TO 7
+40 FG I
+50 PRINT "AWESOME!  ";
+60 NEXT I
+70 RESET
+```
+
+Note that like other BASICs, this will run 8 times (not 7).  This is *very* different from other languages where the top number is not included in the loop.  Here's a similar example, this time using the STEP keyword:
+
+```
+10 CLEAR
+20 REVERSE ON
+30 FOR I = 5 TO 40 STEP 5
+40 LET X = I - 5
+50 X = X / 5
+50 FG X
+60 PRINT "AWESOME!  ";
+70 NEXT I
+80 RESET
+```
 
 ### FG {expression}
 
@@ -335,6 +374,38 @@ Checks if the condition is true, and if so, goes to the number or runs the state
 80 PRINT "PLEASE TRY AGAIN."
 ```
 
+### INCLUDE {string}
+
+Works similar to `LOAD` except that it doesn't erase your program.  This makes it possible to store code you want to reuse in separate "modules", like most modern languages can do.  For example:
+
+#### In file1.bas
+
+```
+1000 REM SOME CODE
+1010 PRINT "OKAY, THIS ";
+1020 RETURN
+```
+
+#### In file2.bas
+
+```
+2000 REM SOME MORE CODE
+2010 PRINT "TOTALLY WORKS!"
+2020 RETURN
+```
+
+#### Then in file3.bas (or just in the terminal)
+
+```
+10 INCLUDE "file1.bas"
+20 INCLUDE "file2.bas"
+30 GOSUB 1000
+40 GOSUB 2000
+50 END
+```
+
+**NOTE:** You don't have to call INCLUDE from program mode (you can do it in direct mode, without line numbers) too.
+
 ### INPUT {variable}
 
 Asks you to enter some information, and saves it to a variable.  For now (version 0.1), only numbers are supported.  For an example, see `IF` above.  For more info on variables, see `LET` below.
@@ -363,7 +434,28 @@ It will print 42.  Note that the `LET` keyword is optional (you can just do i.e.
 
 ### LIST [{number}[ - {number}]]
 
+Shows all or part of your BASIC program.  For example, let's say I have this:
+
+```
+10 PRINT "LINE 10"
+20 PRINT "LINE 20"
+30 PRINT "LINE 30"
+40 PRINT "LINE 40"
+```
+
+If I run `LIST` without anything after it, I'll see all four of the lines above.  If I do `LIST 10` I'll only get line 10.   If I run `LIST 20-40` I'll get lines 20 through 40.
+
 ### LOAD {string}
+
+Loads a BASIC file, erasing the current program's code and variables (kind of like calling `NEW` and then `INCLUDE`).  It doesn't have to have the extension ".bas", though I've done that in this manual just out of habit.  For example, you can do:
+
+```
+LOAD "SOME FILE"
+LOAD "SOME FILE.BAS"
+LOAD "/home/geek/breakaway.bas"
+```
+
+That last one is called automatically when Breakaway BASIC starts (see the section on auto-run files for more info) but it's still a thing you can do.
 
 ### MOVE {number or variable} {number or variable}
 
@@ -380,6 +472,10 @@ Moves the cursor to the given coordinates.  The first number is the horizontal (
 ### NEW
 
 Clears the program memory and any variables you may have set, so you are left with a clean slate (a "new" program).
+
+### NEXT {variable}
+
+See `FOR`.  This ends a for-loop.
 
 ### PRINT {expression}[, {expression}...]
 

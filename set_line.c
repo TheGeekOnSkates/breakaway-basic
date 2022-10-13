@@ -12,7 +12,7 @@ void set_line(Program program, Line line) {
 	
 	/* Get the line number */
 	lineNumber = atoi(line);
-	if (lineNumber < 0 || lineNumber >= PROGRAM_SIZE) {
+	if (lineNumber >= PROGRAM_SIZE) {
 		show_error("SYNTAX ERROR");
 		return;
 	}
