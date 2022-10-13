@@ -1,11 +1,13 @@
 # To-do's for version 0.4
 
-* Finish FOR loops
+* Finish FOR loops - they basically work, but fix bug #1 below
+* Maybe play with that `COLOR` instruction idea (see below)
 * Once that's done, I'd say update the docs and call 0.3 done - it's already *way* better than 0.2!
 
 # Buggz! :D
 
-* I noticed that sometimes Breakaway BASIC crashes if system() returns a non-zero value.  For example, in my game, "The Great Gretscii", I use a build script instead of a Makefile.  If the build fails, BASIC crashes.  Ask around forums about this. :D
+1. I can't actually do LET I = -3; at first I thought this was a problem with my FOR/NEXT changes, but nope - even in old versions, negative variables crash the program.
+2. I noticed that sometimes Breakaway BASIC crashes if system() returns a non-zero value.  For example, in my game, "The Great Gretscii", I use a build script instead of a Makefile.  If the build fails, BASIC crashes.  Ask around forums about this. :D
 
 
 
@@ -15,6 +17,7 @@
 
 ## On the to-do list for future 0.x releases
 
+* I just saw an awesome idea from the 8-Bit Guy: His BASIC for the Commander X16 has `COLOR FG, BG` - like a 2-in-1.  Breakaway BASIC _needs_ that.  Saves a line of code. :D
 * Add support for nested parens, variable-replacing etc.  It's a rabbit-hole that nearly brought this project to a halt, so no hurry.  See math.c on why I currently have to replace functions _after_ replacing variables.  Unlike the next one, this bug makes perfect sense (all variables are letters A-Z, all BASIC functions are made up of those letters, so ROWS() becomes 0000() if I call replace_vars first.)
 * SPC({number}) like the C64 has
 * STR$/LEFT$/RIGHT$/MID$! :)

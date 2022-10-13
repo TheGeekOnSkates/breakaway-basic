@@ -712,7 +712,7 @@ void run_print(Program program, Line line, bool centered) {
 void run_program(Program program, Program aliases, VarList variables) {
 	/* Declare variables */
 	char* currentLine, temp;
-	size_t lastLine, i, next;
+	size_t lastLine, i, forStart, next;
 	int nFor, nTo, nStep;
 	char var;
 	Line tempLine;
@@ -751,7 +751,8 @@ void run_program(Program program, Program aliases, VarList variables) {
 		if (is_for(currentLine)) {
 
 			/* Step 1: Get the variable and the numbers */
-			
+
+			forStart = programCounter;
 			currentLine += 3;	/* Skip FOR */
 			while(currentLine[0] == ' ') currentLine++;
 			var = currentLine[0];
@@ -794,36 +795,37 @@ void run_program(Program program, Program aliases, VarList variables) {
 			}
 
 			/* Step 3: Run the loop! */
+			
+			programCounter = forStart;
+			i = nFor;
+			snprintf(tempLine, LINE_SIZE, "LET %c = %d", var, i);
+			run_let(tempLine, variables);
+			while(true) {
 
-			snprintf(tempLine, LINE_SIZE, "LET %c = %d", var, nFor);
-			//run(program, aliases, variables, tempLine, true);
-			for (; nFor<=nTo; nFor += nStep) {
-				/*
-				LEFT OFF HERE
+				// Update the program counter
+				programCounter++;
+				if (programCounter == PROGRAM_SIZE) {
+					SetBlocking(true);
+					return;
+				}
 
-				This loop works with i.e. FOR I = 0 TO 10 
-				(with or without a STEP), but crashes on
-				things like FOR I = -3 TO 3 (which is kind
-				of weird considering it's not trying to access
-				program[negative] or currentLine[negative])...
+				// If it hits NEXT, go back to line forStart
+				// NOTE: I'll also want it to make sure the
+				// NEXT line is the same variable (so nested
+				// loops will work - it won't break on NEXT J
+				// when what it should be looking for is NEXT I)
+				currentLine = program[programCounter];
+				if (is_next(currentLine)) {
+					programCounter = forStart;
+					i += nStep;
+					snprintf(tempLine, LINE_SIZE, "%c = %d", var, i);
+					run_let(tempLine, variables);
+					if (i >= nTo) break;
+					continue;
+				}
 
-				My best guess: it's lines 794-795 (temporarily commented out)
-				EDIT: Yup, that was it - line 795. :)
-				Set the variable another way, rather than trying to RUN a line of BASIC :)
-
-				HOWEVER, there is definitely logic like that,
-				ID10T errors users can make like:
-					FOR I = 0 TO -10 STEP 10
-				That need error-checking.
-
-				Beyond that, what I need here is basically:
-					1. if we're at the corresponding NEXT line,
-						continue or exit the for-loop.
-					2. Run the current line
-					3. If there was an error, exit the program
-					4. Else, continue the loop
-				*/
-				printf("LEFT OFF HERE (%d)\n", nFor);
+				// Otherwise, run it
+				run(program, aliases, variables, currentLine, true);
 			}
 			
 			programCounter++;

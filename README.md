@@ -64,6 +64,7 @@ Alternatively, you can remove this dependency by going to os/Linux.c and getting
 
 ### 0.4
 
+* Added `FOR ... NEXT` loops
 * Added a `CLEAR HISTORY` command (like `history -c` in Bash)
 * Added an `INCLUDE` command (like `LOAD` except that it keeps whatever other code you have there).
 * Fixed a bug in `LOAD` (it wasn't getting rid of old code - so in versions > 0.4 you could use `LOAD` as if it were `INCLUDE`).
@@ -277,6 +278,34 @@ Prints an ANSI escape code followed by whatever text you put in the string.  In 
 
 Exits Breakaway BASIC.
 
+### FOR {variable} = {number} TO {number} (STEP {number})
+
+A for-loop is a way to run the same instructions a bunch of times.  They're better than `GOTO` when you know how many times you want to run the code.  For example:
+
+```
+10 CLEAR
+20 REVERSE ON
+30 FOR I = 0 TO 7
+40 FG I
+50 PRINT "AWESOME!  ";
+60 NEXT I
+70 RESET
+```
+
+Note that like other BASICs, this will run 8 times (not 7).  This is *very* different from other languages where the top number is not included in the loop.  Here's a similar example, this time using the STEP keyword:
+
+```
+10 CLEAR
+20 REVERSE ON
+30 FOR I = 5 TO 40 STEP 5
+40 LET X = I - 5
+50 X = X / 5
+50 FG X
+60 PRINT "AWESOME!  ";
+70 NEXT I
+80 RESET
+```
+
 ### FG {expression}
 
 Sets the foreground color (text color).  See the `BG` instruction for more info (a list of colors, and also how to use it).  Here's another example:
@@ -443,6 +472,10 @@ Moves the cursor to the given coordinates.  The first number is the horizontal (
 ### NEW
 
 Clears the program memory and any variables you may have set, so you are left with a clean slate (a "new" program).
+
+### NEXT {variable}
+
+See `FOR`.  This ends a for-loop.
 
 ### PRINT {expression}[, {expression}...]
 
