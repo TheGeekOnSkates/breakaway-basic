@@ -1,6 +1,5 @@
 # To-do's for version 0.4
 
-* Finish FOR loops - they basically work, but fix bug #1 below
 * Maybe play with that `COLOR` instruction idea (see below)
 * Once that's done, I'd say update the docs and call 0.3 done - it's already *way* better than 0.2!
 
@@ -9,6 +8,14 @@
 1. I can't actually do LET I = -3; at first I thought this was a problem with my FOR/NEXT changes, but nope - even in old versions, negative variables crash the program.
 2. I noticed that sometimes Breakaway BASIC crashes if system() returns a non-zero value.  For example, in my game, "The Great Gretscii", I use a build script instead of a Makefile.  If the build fails, BASIC crashes.  Ask around forums about this. :D
 
+-----------------------------------------------------------------------------------------------------------------------
+
+# Notes on the buggz
+
+## LET X = -3 crashes
+
+I've narrowed it down to line 612, eval_expr.  Not surprised there.  Advanced mathing is something I plan to address in the next update (something I tried to do in a different 0.4 branch, lol).  I think the solution will involve merging a lot of code from my old calculator app - which, in addition to fixing the bug, should also introduct a boatload of functions for math lovers - `COS` and `ATN` and all those other random ones that I have no idea how to use for any practical purpose whatso-flipping-ever. :D
+But for now, I'm gonna let it go and just roll out 0.4 as-is.  It's a zero-point release, so it's "good enough".  And it has a bunch of fun features so why not? :)
 
 
 -----------------------------------------------------------------------------------------------------------------------
