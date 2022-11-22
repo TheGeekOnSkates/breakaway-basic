@@ -157,10 +157,10 @@ enum Tokens {
 	MERGE,                 /**  */
 	MID,                   /** Function: "MID$(" (like on several BASICs; gets the middle part of a string) */
 	MKD,                   /**  */
-	MKDIR,                 /**  */
-	MKI,                   /**  */
-	MKS,                   /**  */
-	MKL,                   /**  */
+	MKDIR,                 /** Instruction: "MKDIR" (like in DOS and other shells; creates a folder) */
+	MKI,                   /** Function: "MKI$(" (meaning unknown) */
+	MKL,                   /** Function: "MKL$(" (meaning unknown) */
+	MKS,                   /** Function: "MKS$(" (meaning unknown) */
 	MOD,                   /**  */
 	NAME,                  /**  */
 	NEW,                   /** Instruction: "NEW" (same in all but "visual" BASICs - clears program memory) */
@@ -172,10 +172,10 @@ enum Tokens {
 	OCT,                   /**  */
 	OFF,                   /**  */
 	ON,                    /**  */
-	OR,                    /**  */
 	OUT,                   /**  */
 	OPEN,                  /**  */
 	OPTION,                /**  */
+	OR,                    /**  */
 	PEEK,                  /**  */
 	PLUS,                  /**  */
 	POKE,                  /**  */
@@ -213,6 +213,7 @@ enum Tokens {
 	STOP,                  /**  */
 	STR,                   /**  */
 	STRING,                /**  */
+	STRINGF,               /**  */
 	STRING_LITERAL,        /**  */
 	SWAP,                  /**  */
 	SYSTEM,                /**  */
@@ -224,18 +225,19 @@ enum Tokens {
 	TO,                    /**  */
 	TROFF,                 /**  */
 	TRON,                  /**  */
-	UCASE,                 /**  */
+	UCASE,                 /** Function: "UCASE$(" (like in some BASICs, converts a string to uppercase) */
+	UNKNOWN,               /** A token not defined in the language, probably invalid */
 	USING,                 /**  */
 	VAL,                   /**  */
 	VARIABLE,              /**  */
 	VARS,                  /**  */
 	VARPTR,                /**  */
-	WAIT,                  /**  */
-	WEND,                  /**  */
-	WHILE,                 /**  */
+	WAIT,                  /** Instruction: "WAIT" (like on the C64?  Actual meaning unknown) */
+	WEND,                  /** Instruction: "WEND" (some BASICs have this; ends a while-loop) */
+	WHILE,                 /** Instruction: "WHILE" (some BASICs have this; starts a while-loop) */
 	WIDTH,                 /**  */
 	WRITE,                 /**  */
-	XOR                    /**  */
+	XOR                    /** Instruction: "XOR" (XOR is a thing in bitwise math) */
 };
 
 

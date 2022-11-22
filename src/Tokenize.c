@@ -14,12 +14,12 @@ void Tokenize(char* source, unsigned char* tokens) {
 	*/
 	if (upper[0] == '\'') {
 		tokens[0] = REM;
-		memcpy(tokens, source + 1, length - 1);
+		for (i=1; i<length; i++) tokens[i] = source[i];
 		return;
 	}
 	if (STRING_STARTS_WITH(upper, "REM")) {
 		tokens[0] = REM;
-		memcpy(tokens, source + 3, length - 1);
+		for (i=3; i<length; i++) tokens[i - 2] = source[i];
 		return;
 	}
 	
@@ -888,7 +888,7 @@ void Tokenize(char* source, unsigned char* tokens) {
 			if (STRING_STARTS_WITH(&upper[i], "READ")) {
 				tokens[current] = READ;
 				current++;
-				i += 4;
+				i += 3;
 				continue;
 			}
 			if (STRING_STARTS_WITH(&upper[i], "RESTORE")) {
@@ -928,7 +928,7 @@ void Tokenize(char* source, unsigned char* tokens) {
 				continue;
 			}
 			if (STRING_STARTS_WITH(&upper[i], "RUN")) {
-				tokens[current] = RANDOMIZE;
+				tokens[current] = RUN;
 				current++;
 				i += 2;
 				continue;
@@ -954,7 +954,7 @@ void Tokenize(char* source, unsigned char* tokens) {
 		}
 		else if (upper[i] == 'S') {	/* TO-DO: Add "STRING$(" and "STR" once I understand how they are not the same as "STR$(" */
 			if (STRING_STARTS_WITH(&upper[i], "SAVE")) {
-				tokens[current] = RTRIM;
+				tokens[current] = SAVE;
 				current++;
 				i += 3;
 				continue;
@@ -1023,6 +1023,12 @@ void Tokenize(char* source, unsigned char* tokens) {
 				tokens[current] = STR;
 				current++;
 				i += 4;
+				continue;
+			}
+			if (STRING_STARTS_WITH(&upper[i], "STRING$(")) {
+				tokens[current] = STRINGF;
+				current++;
+				i += 7;
 				continue;
 			}
 			if (STRING_STARTS_WITH(&upper[i], "SWAP")) {
@@ -1096,7 +1102,7 @@ void Tokenize(char* source, unsigned char* tokens) {
 				continue;
 			}
 			if (STRING_STARTS_WITH(&upper[i], "UCASE$(")) {
-				tokens[current] = RTRIM;
+				tokens[current] = UCASE;
 				current++;
 				i += 6;
 				continue;

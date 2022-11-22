@@ -107,21 +107,88 @@ void UnTokenize(unsigned char* tokens, FILE* where) {
 			case MID: fprintf(where, " MID$("); break;
 			case MKD: fprintf(where, " MKD$("); break;
 			case MKDIR: fprintf(where, " MKDIR"); break;
-			/*
-			LEFT OFF HERE
-			
-			All of the above are working, both on the Tokenize side and here.
-			Keep testing the others, checking to make sure all tokens in the
-			Tokens enum are accounted for and work correctly.
-			*/
-			case NUMBER: fprintf(where, "{number}"); break;
+			case MKI: fprintf(where, " MKI$("); break;
+			case MKL: fprintf(where, " MKL$("); break;
+			case MKS: fprintf(where, " MKS$("); break;
+			case MOD: fprintf(where, " MOD"); break;
+			case NAME: fprintf(where, " NAME"); break;
+			case NEW: fprintf(where, " NEW"); break;
+			case NEXT: fprintf(where, " NEXT"); break;
+			case NOT: fprintf(where, " NOT"); break;
+			case NOT_EQUAL: fprintf(where, " ><"); break;
+			case BASIC_NULL: fprintf(where, " NULL"); break;
+			case OCT: fprintf(where, " OCT$("); break;
+			case OFF: fprintf(where, " OFF"); break;
+			case ON: fprintf(where, " ON"); break;
+			case OUT: fprintf(where, " OUT"); break;
+			case OPEN: fprintf(where, " OPEN"); break;
+			case OPTION: fprintf(where, " OPTION"); break;
+			case OR: fprintf(where, " OR"); break;
+			case PEEK: fprintf(where, " PEEK("); break;
 			case PLUS: fprintf(where, "+"); break;
+			case POKE: fprintf(where, " POKE"); break;
+			case POS: fprintf(where, " POS"); break;
 			case PRINT: fprintf(where, " PRINT"); break;
+			case PUT: fprintf(where, " PUT"); break;
+			case RANDOMIZE: fprintf(where, " RANDOMIZE"); break;
+			case READ: fprintf(where, " READ"); break;
+			case RENUMBER: fprintf(where, " RENUMBER"); break;
+			case RESTORE: fprintf(where, " RESTORE"); break;
+			case RESUME: fprintf(where, " RESUME"); break;
+			case RETURN: fprintf(where, " RETURN"); break;
 			case REM: fprintf(where, " REM%s", (char*)&tokens[1]); return;
+			case RIGHT: fprintf(where, " RIGHT$("); break;
 			case RIGHT_BRACKET: fprintf(where, "]"); break;
 			case RIGHT_PAREN: fprintf(where, ")"); break;
+			case RMDIR: fprintf(where, " RMDIR"); break;
+			case RND: fprintf(where, " RND("); break;
+			case RSET: fprintf(where, " RSET"); break;
+			case RTRIM: fprintf(where, " RTRIM$("); break;
+			case RUN: fprintf(where, " RUN"); break;
+			case SAVE: fprintf(where, " SAVE"); break;
+			case SEG: fprintf(where, " SEG"); break;
+			case SEMICOLON: fprintf(where, ";"); break;
+			case SGN: fprintf(where, " SGN("); break;
+			case SIN: fprintf(where, " SIN("); break;
 			case SLASH: printf("/"); break;
+			case SLEEP: printf(" SLEEP"); break;
+			case SNG: fprintf(where, " SNG"); break;
+			case SPACE: fprintf(where, " SPACE$("); break;
+			case SPC: fprintf(where, " SPC("); break;
+			case SQR: fprintf(where, " SQR("); break;
 			case STAR: fprintf(where, "*"); break;
+			case STEP: printf(" STEP"); break;
+			case STOP: printf(" STOP"); break;
+			case STR: printf(" STR$("); break;
+			case STRINGF: printf(" STRING$("); break;
+			case SWAP: printf(" SWAP"); break;
+			case SYSTEM: printf(" SYSTEM"); break;
+			case TAB: printf(" TAB("); break;
+			case TAN: printf(" TAN("); break;
+			case THEN: printf(" THEN"); break;
+			case TIME: printf(" TIME$"); break;
+			case TIMER: printf(" TIMER"); break;
+			case TO: printf(" TO"); break;
+			case TROFF: printf(" TROFF"); break;
+			case TRON: printf(" TRON"); break;
+			case UCASE: printf(" UCASE"); break;
+			case USING: printf(" USING"); break;
+			case VAL: printf(" VAL("); break;
+			case VARPTR: printf(" VARPTR("); break;
+			case VARS: printf(" VARS"); break;
+			case WAIT: printf(" WAIT"); break;
+			case WEND: printf(" WEND"); break;
+			case WHILE: printf(" WHILE"); break;
+			case WIDTH: printf(" WIDTH"); break;
+			case WRITE: printf(" WRITE"); break;
+			case XOR: printf(" XOR"); break;
+			
+			case NUMBER:
+			case VARIABLE:
+			case UNKNOWN:
+			case STRING_LITERAL:
+				/* These are weirdos - handle these later :) */
+				fprintf(where, "{weirdo}"); break;
 			case NONE:
 				/* 0, like a NULL terminator, end of line */
 				return;

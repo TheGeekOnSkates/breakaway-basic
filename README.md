@@ -11,6 +11,13 @@ I'm also changing licenses, cuz I've heard there's a sneaky-twist in the UNLICEN
 I'm sure they'll get A LOT lower-level than this, but for now the general game plan is:
 
 * Finish the Tokenize and UnTokenize functions
+		- Get UnTokenize to print string literals
+		- Get UnTokenize to print numbers (including decimal points, but watch out for trailing ones, like "3.0.")
+		- For UNKNOWN, have UnTokenize just print the unknown character
 * Look at how fbasic actually _interprets_ those tokens and do what makes sense. :)
+* Figure out how fbasic does variables and arrays.  To truly finish UnTokenize, I'll need to print the variables' names (not values)
 * Go through the list of instructions, documenting each one and writing examples when they're done.  Those examples will play an important part in both my docs and my pre-release testing.
+* Figure out another way to handle errors; right now just printing "SYNTAX ERROR" or whatever gets the job done... but fbasic did something different
 * Once all commands work correctly in isolation, get program mode working.
+* At that point, try and add some more of the other nice features I had before (ALIAS, BG, FG, auto-run files, ITALIC, UNDERLINE etc.)
+* If (and Lord willing, _when_) I get to this point, set up a wiki, port it like crazy, and call it done!  :)
