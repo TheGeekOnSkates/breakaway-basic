@@ -5,3 +5,12 @@ Breakaway BASIC has kinda plateaued recently; all the things I wanted to add wer
 But the thing is, fbasic was (by the original programmer's own admission) a "quick and dirty hack", and it shows.  It depended on some kind of crazy garbage collection library that looks like a bear to build, and it also uses (what I think is) the original "curses" library (not the same thing as ncurses).  The guy did include plenty of comments, and I know C well enough to where I can figure out most of what he is doing... but trying to hack his code into something that compiles today has been kinda tricky.  Not to mention, the compiler complains "{something he did that I don't understand} is DANGEROUS.  Use {something else} instead."  lol yikes!  My current fork of fbasic leaks memory (despite a friend's attempt at re-adding the GC) and I'm kinda thinking a fresh start is the way to go.  I'm not going to copy/paste fbasic's code, but rather study it line-by-line to see how he did it, and try to reproduce the good parts without the bad.  What I'm trying to build is gonna be written in standard C, to make it as portable as possible.  I'm targeting DOS for now, cuz all my devices have a DOSBox-like app on them, but of course I also plan to build for Linux (x86, Termux and the Raspberry Pi) and keep it portable with other OSes.  Maybe even get it working on "Mobile C" on iOS lol...
 
 I'm also changing licenses, cuz I've heard there's a sneaky-twist in the UNLICENSE that makes it not as freed as I'd like.  MIT license, based on my not-a-legal-beagle perspective, just translates to "keep the license in the source and don't sue me if it doesn't work or breaks something" which I can live with.  Also, fbasic is MIT licensed, and since my code will be _heavily_ inspired by ratboy's (lol) I figure better to keep it consistent with what he wanted.
+
+## To-Do's
+
+I'm sure they'll get A LOT lower-level than this, but for now the general game plan is:
+
+* Finish the Tokenize and UnTokenize functions
+* Look at how fbasic actually _interprets_ those tokens and do what makes sense. :)
+* Go through the list of instructions, documenting each one and writing examples when they're done.  Those examples will play an important part in both my docs and my pre-release testing.
+* Once all commands work correctly in isolation, get program mode working.
