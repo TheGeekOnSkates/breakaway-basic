@@ -85,8 +85,6 @@ enum Tokens {
 	CSRLIN,                /**  */
 	CONT,                  /** Instruction: "CONT" (continues the program, like on the C64) */
 	CURSES,                /** Meaning unknown */
-	EQUALS,                /** Character: "=" */
-	NUMBER,                /** Digit 0-9 or a decimal point */
 	DASH,                  /** Character: "-" */
 	DATA,                  /** Instruction: "DATA" (possibly like on the C64) */
 	DATE,                  /**  */
@@ -102,6 +100,7 @@ enum Tokens {
 	ENVIRONS,              /**  */
 	ENVIRON,               /**  */
 	BASIC_EOF,             /**  */
+	EQUALS,                /** Character: "=" */
 	ERASE,                 /**  */
 	EQV,                   /**  */
 	ERL,                   /**  */
@@ -111,7 +110,7 @@ enum Tokens {
 	EXP,                   /**  */
 	FREEFILE,              /**  */
 	FREE,                  /** Instruction: "FREE" (similar to on the C64 - prints free memory) */
-	FIX,                   /**  */
+	FIX,                   /** Function: "FIX(" (meaning unknown) */
 	FIELD,                 /**  */
 	FILES,                 /** Instruction: "FILES" (lists files in the current folder) */
 	FN,                    /**  */
@@ -125,18 +124,18 @@ enum Tokens {
 	HAT,                   /** Character: "^" */
 	HEX,                   /** Function: HEX$(number); converts decimal numbers to a string showing what it looks like in hexadecimal (i.e. pass it 65535, get "FFFF") */
 	IF,                    /** Instruction: "IF" (the same across all LANGUAGES that support it, lol... tells the program we're gonna do some comparison) */
-	INP,                   /**  */
+	INKEY,                 /** Instruction: "INKEY$" (meaning unknown) */
+	INP,                   /** Function: "INP(" (meaning unknown) */
 	INPUT,                 /** Instruction: "INPUT" (like on the C64 and most others - prompts the user for input) */
-	INSTR,                 /**  */
-	INT,                   /**  */
-	INKEY,                 /**  */
-	INPUTS,                /**  */
-	INTERPRET,             /** Meaning unknown */
-	IMP,                   /**  */
+	INSTR,                 /** Function: "INSTR(" (like in some BASICs and others); checks if a string contains a substring */
+	INT,                   /** Function: "INT(" (converts a float to an int) */
+	INPUTS,                /** Function: "INPUT$(" (meaning unknown) */
+	INTERPRET,             /** Instruction: "INTERPRET" (meaning unknown) */
+	IMP,                   /** Instruction: "IMP" (meaning unknown) */
 	INT2,                  /** Meaning unknown (there was an INT without a "("... so not the C64-like INT("5") lol */
 	KILL,                  /** Instruction: "KILL" (like on the TRS-80 Model 100, deletes a file) */
 	LCASE,                 /**  */
-	LEFT,                  /**  */
+	LEFT,                  /** Function: "LEFT$(" (like in most BASICs) get left-most data in string */
 	LEFT_BRACKET,          /** Character: "[" */
 	LEFT_PAREN,            /** Character: "(" */
 	LEN,                   /** Function: "LEN(" (like on the C64, get a string's length) */
@@ -156,7 +155,7 @@ enum Tokens {
 	LSET,                  /**  */
 	LTRIM,                 /**  */
 	MERGE,                 /**  */
-	MID,                   /**  */
+	MID,                   /** Function: "MID$(" (like on several BASICs; gets the middle part of a string) */
 	MKD,                   /**  */
 	MKDIR,                 /**  */
 	MKI,                   /**  */
@@ -164,11 +163,12 @@ enum Tokens {
 	MKL,                   /**  */
 	MOD,                   /**  */
 	NAME,                  /**  */
-	NEW,                   /**  */
+	NEW,                   /** Instruction: "NEW" (same in all but "visual" BASICs - clears program memory) */
 	NEXT,                  /** Instruction: "NEXT" (like on the C64, used in loops) */
-	NOT,                   /**  */
-	NOT_EQUAL,             /**  */
-	BASIC_NULL,            /**  */
+	NOT,                   /** Instruction: "NOT" (same as in most basics - bitwise NOT) */
+	NOT_EQUAL,             /** Comparison: not equal ("<>" and apparently "><" works too) */
+	BASIC_NULL,            /** Value: NULL */
+	NUMBER,                /** Digit 0-9 or a decimal point */
 	OCT,                   /**  */
 	OFF,                   /**  */
 	ON,                    /**  */
@@ -193,7 +193,7 @@ enum Tokens {
 	RIGHT_BRACKET,         /** Character: "]" */
 	RIGHT_PAREN,           /** Character: ")" */
 	RMDIR,                 /** Instruction: "RMDIR" (like in DOS and other shells; deletes a folder) */
-	RND,                   /**  */
+	RND,                   /** Function: "RND(" (like on the C64 - random number) */
 	RSET,                  /**  */
 	RTRIM,                 /**  */
 	RUN,                   /**  */

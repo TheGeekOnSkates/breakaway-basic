@@ -135,7 +135,7 @@ void Tokenize(char* source, unsigned char* tokens) {
 				tokens[current] = LESS_THAN_OR_EQUAL;
 				i++;
 			}
-			else tokens[current] = NOT_EQUAL;
+			else tokens[current] = LESS_THAN;
 			current++;
 			continue;
 		}
@@ -472,7 +472,7 @@ void Tokenize(char* source, unsigned char* tokens) {
 				continue;
 			}
 			if (STRING_STARTS_WITH(&upper[i], "EQV")) {
-				tokens[current] = EDIT;
+				tokens[current] = EQV;
 				current++;
 				i += 2;
 				continue;
@@ -563,16 +563,16 @@ void Tokenize(char* source, unsigned char* tokens) {
 				i += 3;
 				continue;
 			}
-			if (STRING_STARTS_WITH(&upper[i], "INPUT")) {
-				tokens[current] = INPUT;
-				current++;
-				i += 4;
-				continue;
-			}
 			if (STRING_STARTS_WITH(&upper[i], "INPUT$(")) {
 				tokens[current] = INPUTS;
 				current++;
 				i += 6;
+				continue;
+			}
+			if (STRING_STARTS_WITH(&upper[i], "INPUT")) {
+				tokens[current] = INPUT;
+				current++;
+				i += 4;
 				continue;
 			}
 			if (STRING_STARTS_WITH(&upper[i], "INSTR(")) {
@@ -582,7 +582,7 @@ void Tokenize(char* source, unsigned char* tokens) {
 				continue;
 			}
 			if (STRING_STARTS_WITH(&upper[i], "INKEY$")) {
-				tokens[current] = INSTR;
+				tokens[current] = INKEY;
 				current++;
 				i += 5;
 				continue;
@@ -631,7 +631,7 @@ void Tokenize(char* source, unsigned char* tokens) {
 			if (STRING_STARTS_WITH(&upper[i], "LEFT$(")) {
 				tokens[current] = LEFT;
 				current++;
-				i += 6;
+				i += 5;
 				continue;
 			}
 			if (STRING_STARTS_WITH(&upper[i], "LEN(")) {
