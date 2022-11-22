@@ -712,8 +712,8 @@ void run_print(Program program, Line line, bool centered) {
 void run_program(Program program, Program aliases, VarList variables) {
 	/* Declare variables */
 	char* currentLine, temp;
-	size_t lastLine, i, forStart, next;
-	int nFor, nTo, nStep;
+	size_t lastLine, forStart, next;
+	int nFor, nTo, nStep, i;
 	char var;
 	Line tempLine;
 
@@ -798,7 +798,10 @@ void run_program(Program program, Program aliases, VarList variables) {
 			
 			programCounter = forStart;
 			i = nFor;
-			snprintf(tempLine, LINE_SIZE, "LET %c = %d", var, i);
+			/*
+				jp: removed "LET"
+			*/
+			snprintf(tempLine, LINE_SIZE, "%c = %d", var, i);
 			run_let(tempLine, variables);
 			while(true) {
 

@@ -12,8 +12,25 @@ size_t count_math_symbols(Line line, char symbol) {
 	in_quotes = false;
 	length = strlen(line);
 	total = 0;
+
+	/*
+		jp: I'm not sure that this is the right fix, but I think that
+		the problem with assigning negative numbers is because it's
+		treating "X = -1" as a math problem, the same way "X = 3 - 4"
+		wound me. I added this check so that it only starts couning symbols
+		after any initial spaces or initial symbols, so it should hopefully
+		treat "= -3" as an assignment rathen then a calculation 
+	*/
+	int temp = 0;
+
+	for(int x = 0; x<length; x++)
+	{
+		temp=x;
+		if(line[x] != ' ' && line[x] != symbol) 
+			break;
+	}
 	
-	for (i=0; i<length; i++) {
+	for (i=temp; i<length; i++) {
 		if (line[i] == '"')
 			in_quotes = !in_quotes;
 		if (in_quotes) continue;
