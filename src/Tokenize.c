@@ -97,9 +97,13 @@ void Tokenize(char* source, unsigned char* tokens) {
 		Cuz on un-tokenizing, I can say it's a number but nto WHICH number.
 		*/
 		if (source[i] >= '0' && source[i] <= '9') {
-			while (source[i] >= '0' && source[i] <= '9');
 			tokens[current] = NUMBER;
 			current++;
+			while(source[i] >= '0' && source[i] <= '9') {
+				tokens[current] = source[i];
+				current++;
+				i++;
+			}
 			continue;
 		}
 		

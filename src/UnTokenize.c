@@ -182,8 +182,15 @@ void UnTokenize(unsigned char* tokens, FILE* where) {
 			case WIDTH: printf(" WIDTH"); break;
 			case WRITE: printf(" WRITE"); break;
 			case XOR: printf(" XOR"); break;
-			
 			case NUMBER:
+				i++;
+				printf(" ");
+				while(tokens[i] >= '0' && tokens[i] <= '9') {
+					printf("%c", tokens[i]);
+					i++;
+				}
+				i--;
+				break;
 			case VARIABLE:
 			case UNKNOWN:
 			case STRING_LITERAL:

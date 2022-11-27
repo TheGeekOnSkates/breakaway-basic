@@ -11,8 +11,8 @@ I'm also changing licenses, cuz I've heard there's a sneaky-twist in the UNLICEN
 I'm sure they'll get A LOT lower-level than this, but for now the general game plan is:
 
 * Finish the Tokenize and UnTokenize functions
+		- Finish numbers (down to just dealing with decimal points - again, watch out for trailing ones, like "3.0.")
 		- Get UnTokenize to print string literals
-		- Get UnTokenize to print numbers (including decimal points, but watch out for trailing ones, like "3.0.")
 		- For UNKNOWN, have UnTokenize just print the unknown character
 * Look at how fbasic actually _interprets_ those tokens and do what makes sense. :)
 * Figure out how fbasic does variables and arrays.  To truly finish UnTokenize, I'll need to print the variables' names (not values)
