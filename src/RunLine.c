@@ -6,9 +6,20 @@ bool RunLine(unsigned char * tokens) {
 		
 		/*
 		Exit - the only situation where this function should return false,
-		to tell the program the user wants to exit Breakaway BASIC
+		to tell the program the user wants to exit Breakaway BASIC.
+		
+		NOTE: At one point I was tokenizing/un-tokenizing something and my program was "crashing".
+		* It wasn't actually crashing tho; I had hit an EXIT in my token list.  That's why i have
+		* the little message below (lol)
 		*/
-		if (tokens[i] == EXIT) return false;
+		if (tokens[i] == EXIT) {
+			NewLine();
+			printf("Found an EXIT instruction in RunLine.");
+			NewLine();
+			printf("Probably unrelated to whatever you're working on :)");
+			NewLine();
+			return false;
+		}
 		
 		/* BOLD ON/OFF */
 		if (tokens[i] == BOLD) {

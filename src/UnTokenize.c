@@ -11,7 +11,7 @@ void UnTokenize(unsigned char* tokens, FILE* where) {
 			case ASC: fprintf(where, " ASC("); break;
 			case ATN: fprintf(where, " ATN("); break;
 			case AUTO: fprintf(where, " AUTO"); break;
-			case BACKSLASH: printf("\\"); break;
+			case BACKSLASH: fprintf(where, "\\"); break;
 			case BEEP: fprintf(where, " BEEP"); break;
 			case BIN: fprintf(where, " BIN$("); break;
 			case BOLD: fprintf(where, " BOLD"); break;
@@ -150,46 +150,45 @@ void UnTokenize(unsigned char* tokens, FILE* where) {
 			case SEMICOLON: fprintf(where, ";"); break;
 			case SGN: fprintf(where, " SGN("); break;
 			case SIN: fprintf(where, " SIN("); break;
-			case SLASH: printf("/"); break;
-			case SLEEP: printf(" SLEEP"); break;
+			case SLASH: fprintf(where, "/"); break;
+			case SLEEP: fprintf(where, " SLEEP"); break;
 			case SNG: fprintf(where, " SNG"); break;
 			case SPACE: fprintf(where, " SPACE$("); break;
 			case SPC: fprintf(where, " SPC("); break;
 			case SQR: fprintf(where, " SQR("); break;
 			case STAR: fprintf(where, "*"); break;
-			case STEP: printf(" STEP"); break;
-			case STOP: printf(" STOP"); break;
-			case STR: printf(" STR$("); break;
-			case STRINGF: printf(" STRING$("); break;
-			case SWAP: printf(" SWAP"); break;
-			case SYSTEM: printf(" SYSTEM"); break;
-			case TAB: printf(" TAB("); break;
-			case TAN: printf(" TAN("); break;
-			case THEN: printf(" THEN"); break;
-			case TIME: printf(" TIME$"); break;
-			case TIMER: printf(" TIMER"); break;
-			case TO: printf(" TO"); break;
-			case TROFF: printf(" TROFF"); break;
-			case TRON: printf(" TRON"); break;
-			case UCASE: printf(" UCASE"); break;
-			case USING: printf(" USING"); break;
-			case VAL: printf(" VAL("); break;
-			case VARPTR: printf(" VARPTR("); break;
-			case VARS: printf(" VARS"); break;
-			case WAIT: printf(" WAIT"); break;
-			case WEND: printf(" WEND"); break;
-			case WHILE: printf(" WHILE"); break;
-			case WIDTH: printf(" WIDTH"); break;
-			case WRITE: printf(" WRITE"); break;
-			case XOR: printf(" XOR"); break;
+			case STEP: fprintf(where, " STEP"); break;
+			case STOP: fprintf(where, " STOP"); break;
+			case STR: fprintf(where, " STR$("); break;
+			case STRINGF: fprintf(where, " STRING$("); break;
+			case SWAP: fprintf(where, " SWAP"); break;
+			case SYSTEM: fprintf(where, " SYSTEM"); break;
+			case TAB: fprintf(where, " TAB("); break;
+			case TAN: fprintf(where, " TAN("); break;
+			case THEN: fprintf(where, " THEN"); break;
+			case TIME: fprintf(where, " TIME$"); break;
+			case TIMER: fprintf(where, " TIMER"); break;
+			case TO: fprintf(where, " TO"); break;
+			case TROFF: fprintf(where, " TROFF"); break;
+			case TRON: fprintf(where, " TRON"); break;
+			case UCASE: fprintf(where, " UCASE"); break;
+			case USING: fprintf(where, " USING"); break;
+			case VAL: fprintf(where, " VAL("); break;
+			case VARPTR: fprintf(where, " VARPTR("); break;
+			case VARS: fprintf(where, " VARS"); break;
+			case WAIT: fprintf(where, " WAIT"); break;
+			case WEND: fprintf(where, " WEND"); break;
+			case WHILE: fprintf(where, " WHILE"); break;
+			case WIDTH: fprintf(where, " WIDTH"); break;
+			case WRITE: fprintf(where, " WRITE"); break;
+			case XOR: fprintf(where, " XOR"); break;
 			case NUMBER:
 				i++;
-				printf(" ");
-				while(tokens[i] >= '0' && tokens[i] <= '9') {
-					printf("%c", tokens[i]);
+				fprintf(where, " ");
+				while(i < INPUT_BUFFER_SIZE && tokens[i] != NUMBER) {
+					fprintf(where, "%c", tokens[i]);
 					i++;
 				}
-				i--;
 				break;
 			case VARIABLE:
 			case UNKNOWN:

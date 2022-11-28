@@ -92,18 +92,28 @@ void Tokenize(char* source, unsigned char* tokens) {
 			continue;
 		}
 		
-		/* Another easy one is numbers... OR IS IT?  
-		I'm gonna have to see how fbasic does numbers.
-		Cuz on un-tokenizing, I can say it's a number but nto WHICH number.
-		*/
+		/* Handle numbers */
 		if (source[i] >= '0' && source[i] <= '9') {
 			tokens[current] = NUMBER;
 			current++;
-			while(source[i] >= '0' && source[i] <= '9') {
+			while(i < INPUT_BUFFER_SIZE && source[i] >= '0' && source[i] <= '9') {
 				tokens[current] = source[i];
 				current++;
 				i++;
 			}
+			if (i + 1 < INPUT_BUFFER_SIZE && source[i] == '.' && source[i+1] >= '0' && source[i+1] <= '9') {
+				tokens[current] = source[i];
+				current++;
+				i++;
+				while(i < INPUT_BUFFER_SIZE && source[i] >= '0' && source[i] <= '9') {
+					tokens[current] = source[i];
+					current++;
+					i++;
+				}
+				if (i == INPUT_BUFFER_SIZE) break;
+			}
+			tokens[current] = NUMBER;
+			current++;
 			continue;
 		}
 		
