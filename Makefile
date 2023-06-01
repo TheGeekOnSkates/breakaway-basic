@@ -1,6 +1,3 @@
-linux:
-	clear && gcc ./*.c ./os/*.c -obreakaway-basic -Wall -lm -lreadline || exit 1
-	./breakaway-basic
-
-debug:
-	clear && gcc ./*.c ./os/*.c -obreakaway-basic -Wall -Wextra -g -lm -lreadline || exit 1
+all:
+	clear && g++ ./*.cpp -obreakaway-basic -Wall -Wextra || exit 1
+	./breakaway-basic && clear
