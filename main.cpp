@@ -32,6 +32,7 @@ int main() {
 	printf("BREAKAWAY BASIC 1.0\n\n");
 	while(true) {
 		/* Read user input and strip out new lines */
+		printf("> ");
 		memset(buffer, 0, 80);
 		fgets(buffer, 80, stdin);
 		newline = strchr(buffer, '\n');
@@ -69,9 +70,17 @@ int main() {
 					}
 					
 					/* Otherwise, get the line number, subtract 1 (because
-					of the "i++") and set i to that (NOTE: add Check for -1
-					after work, lol */
+					of the "i++") and set i to that */
 					i = (size_t)atoi(currentLine) - 1;
+					
+					/* If users enter a number that is greater than the size
+					of the program, or atoi fails, don't crash :D */
+					if (i > programSize) {
+						printf("Line number out of bounds: %zd\n", i);
+						break;
+					}
+					
+					/* Otherwise, keep running */
 					continue;
 				}
 				
