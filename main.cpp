@@ -4,13 +4,8 @@
 #include <unistd.h>
 
 void RunLine(char* line) {
-	char* here = NULL;
+	char* here = line;
 
-	/* If we're in program mode, skip past the line number */
-	here = line;
-	while(here[0] >= '0' && here[0] <= '9') here++;
-	while(here[0] == ' ') here++;
-	
 	/* "rem" is a comment - do nothing */
 	if (StringStartsWith(here, "rem")) return;
 	
@@ -28,7 +23,7 @@ void RunLine(char* line) {
 }
 
 int main() {
-	char buffer[80], * newline;
+	char buffer[80], * newline = NULL, * currentLine = NULL;
 	bool isProgramMode = false;
 	std::vector<std::string> program;
 	int lineNumber = 0;
@@ -53,7 +48,35 @@ int main() {
 		if (StringEquals(buffer, "run")) {
 			programSize = program.size();
 			for (i=0; i<programSize; i++) {
-				RunLine((char*)program[i].c_str());
+				
+				/* Get the code after the line number */
+				currentLine = (char*)program[i].c_str();
+				while(currentLine[0] >= '0' && currentLine[0] <= '9')
+					currentLine++;
+				while(currentLine[0] == ' ') currentLine++;
+	
+				/* GOTO should change i, obviously :) */
+				if (StringStartsWith(currentLine, "goto")) {
+					/* Move past GOTO and any spaces */
+					currentLine += 4;
+					while(currentLine[0] == ' ') currentLine++;
+					
+					/* TO-DO: When I get variables set up, add support for
+					GOTO myVariable - but for now, that's an error */
+					if (currentLine[0] < '0' || currentLine[0] > '9') {
+						printf("Syntax error on line %zd\r\n", i);
+						break;
+					}
+					
+					/* Otherwise, get the line number, subtract 1 (because
+					of the "i++") and set i to that (NOTE: add Check for -1
+					after work, lol */
+					i = (size_t)atoi(currentLine) - 1;
+					continue;
+				}
+				
+				/* Otherwise, run the line */
+				RunLine(currentLine);
 			}
 			continue;
 		}
