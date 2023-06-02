@@ -24,15 +24,17 @@ void RunLine(char* line) {
 
 int main() {
 	char buffer[80], * newline = NULL, * currentLine = NULL;
-	bool isProgramMode = false;
 	std::vector<std::string> program;
 	int lineNumber = 0;
-	size_t i = 0, programSize = 0;
+	size_t i = 0, programSize = 0, listFrom = 0, listTo = 0;
 
+	/* This prevents crashes if you do a LIST before you add stuff :D */
+	program.push_back("");
+	
 	printf("BREAKAWAY BASIC 1.0\n\n");
 	while(true) {
 		/* Read user input and strip out new lines */
-		printf("> ");
+		printf("READY.\n");
 		memset(buffer, 0, 80);
 		fgets(buffer, 80, stdin);
 		newline = strchr(buffer, '\n');
@@ -44,6 +46,64 @@ int main() {
 			|| StringEquals(buffer, "quit")
 			|| StringEquals(buffer, "bye")
 		) break;
+		
+		/* LIST lists the program, obviously :) */
+		if (StringStartsWith(buffer, "list")) {
+			/* Start out covering the entire program */
+			listFrom = 0;
+			listTo = programSize = program.size() - 1;
+			
+			/* Move past the word LIST and any spaces */
+			currentLine = buffer + 4;
+			while (currentLine[0] == ' ') currentLine++;
+			
+			/* If there's a number there, we want something other than
+			the entire program.  So edit from/to based on those. */
+			if (currentLine[0] >= '0' && currentLine[0] <= '9') {
+				
+				/* Get the starting number */
+				listFrom = atoi(currentLine);
+				if (listFrom > programSize) {
+					printf("Error reading line number\n");
+					continue;
+				}
+				
+				/* In case there's no end number, make them the same */
+				listTo = listFrom;
+				
+				/* If there's a dash after that, we need to set the end
+				number too */
+				currentLine = strchr(currentLine, '-');
+				if (currentLine != NULL) {
+					/* Move past the dash and any spaces */
+					currentLine++;
+					while (currentLine[0] == ' ') currentLine++;
+					
+					/* And get the end number */
+					listTo = atoi(currentLine);
+					if (listTo > programSize) {
+						printf("Error reading line number\n");
+						continue;
+					}
+				}
+			}
+			
+			/* Now with our start and end numbers defined, list the code */
+			for (i=listFrom; i<=listTo; i++) {
+				if (program[i] == "") continue;
+				printf(" %s\n", program[i].c_str());
+			}
+			
+			/* And we're done with LIST */
+			continue;
+		}
+		
+		/* NEW clears the program, obviously :) */
+		if (StringEquals(buffer, "new")) {
+			program.clear();
+			program.push_back("");
+			continue;
+		}
 		
 		/* RUN runs the program, obviously :) */
 		if (StringEquals(buffer, "run")) {
@@ -92,8 +152,7 @@ int main() {
 		
 		/* If it's not one of those, the next thing we need to do is figure
 		out if we're in "direct mode" or "program mode". */
-		isProgramMode = buffer[0] >= '0' && buffer[0] < '9';
-		if (isProgramMode) {
+		if (buffer[0] >= '0' && buffer[0] <= '9') {
 			lineNumber = atoi(buffer);
 			if (lineNumber == 0) {
 				/* Note: This could also be caused by atoi failing, though
@@ -102,10 +161,12 @@ int main() {
 				continue;
 			}
 			if (program.size() < (size_t)lineNumber)
-				program.resize((size_t)lineNumber + 1);
+				for (i=0; i<(size_t)lineNumber + 10; i++)
+					program.push_back("");
 			program[lineNumber] = buffer;
 		}
 		else RunLine(buffer);
 	}
 	return 0;
 }
+
