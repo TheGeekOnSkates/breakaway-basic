@@ -17,9 +17,6 @@ Bottom line, there isn't really a BASIC that is well-suited to shell scripting. 
 
 I'm not going to both with implementing PRINT and INPUT and all those other things 8-bit BASICs have.  For now I'm just focusing on:
 
-* Program mode vs. direct mode
-* Branching words (GOTO, GOSUB, RETURN etc.)
-* Comments (REM)
 * A subset of IF ... THEN ... ELSE; every command has a return value (see the standard C "system" function).  This will be used for conditional branching.  For example:
 
 ```
@@ -46,13 +43,15 @@ Is it ideal?  Puck no!  Is it a fully functional shell that I could use as a dro
 
 ## To future 1.x releases
 
-* Add GNU Readline - maybe make it an optional thing for portability
 * Aliases.  Why reinvent PRINT when "echo" is so darn close? :)
-* Commands to make ASCII art easier (set colors, move the cursor, etc.)
-	Idea: These can be aliases; i.e. ALIAS RED_TEXT = printf "\e[31m"
-* Maybe a way to get a single key (might require ncurses, might not).
 * Commands like LOAD, SAVE and INCLUDE
-* For-loops
+* Add an auto-run file.
+	**NOTE:** This one is kinda huge.  Cuz even though version 1.0 is not yet out of alpha, I'm already liking it a lot more than Gforth as my daily driver shell.  This is a feat in and of itself cuz I love Forth!   But a huge part of that is I can't have it auto-include the zillions of words I wrote for it.  So once I can INCLUDE files, having it automatically include i.e. /home/geek/breakaway.bas or something like that would be suuuuuper nice!
+* Add a way to customize the prompt.  As a sometimes screen-reader user and a Commodore fanatic, "READY.\n" works for me.  But some people might prefer "Ok" like on the TRS-80 Model 100, or "]" like on the Apple ][, or > like in Bash or whatever.
+* Commands to make ASCII art easier (set colors, move the cursor, etc.)
+	**IDEA:**: These can be aliases; i.e. ALIAS RED_TEXT = printf "\e[31m"
+* Maybe a way to get a single key (might require ncurses, might not).
+* Add GNU Readline - maybe make it an optional thing for portability
 * Variables, math and INPUT.
 * IF I can get variables working, make my IF like IF in "real" BASICs.  This would be a huge step towards version 2.0...
 
