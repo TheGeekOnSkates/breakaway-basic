@@ -46,8 +46,10 @@ Is it ideal?  Puck no!  Is it a fully functional shell that I could use as a dro
 
 ## To future 1.x releases
 
+* Add GNU Readline - maybe make it an optional thing for portability
 * Aliases.  Why reinvent PRINT when "echo" is so darn close? :)
 * Commands to make ASCII art easier (set colors, move the cursor, etc.)
+	Idea: These can be aliases; i.e. ALIAS RED_TEXT = printf "\e[31m"
 * Maybe a way to get a single key (might require ncurses, might not).
 * Commands like LOAD, SAVE and INCLUDE
 * For-loops

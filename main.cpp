@@ -25,6 +25,7 @@ void RunLine(char* line) {
 int main() {
 	char buffer[80], * newline = NULL, * currentLine = NULL;
 	std::vector<std::string> program;
+	std::vector<size_t> gosubStack;
 	int lineNumber = 0;
 	size_t i = 0, programSize = 0, listFrom = 0, listTo = 0;
 
@@ -115,7 +116,7 @@ int main() {
 				while(currentLine[0] >= '0' && currentLine[0] <= '9')
 					currentLine++;
 				while(currentLine[0] == ' ') currentLine++;
-	
+				
 				/* GOTO should change i, obviously :) */
 				if (StringStartsWith(currentLine, "goto")) {
 					/* Move past GOTO and any spaces */
@@ -143,6 +144,49 @@ int main() {
 					/* Otherwise, keep running */
 					continue;
 				}
+				
+				/* GOSUB works kinda similar */
+				if (StringStartsWith(currentLine, "gosub")) {
+					/* Move past GOTO and any spaces */
+					currentLine += 5;
+					while(currentLine[0] == ' ') currentLine++;
+					
+					/* TO-DO: When I get variables set up, add support for
+					GOSUB myVariable - but for now, that's an error */
+					if (currentLine[0] < '0' || currentLine[0] > '9') {
+						printf("Syntax error on line %zd\r\n", i);
+						break;
+					}
+					
+					/* Otherwise, get the line number, subtract 1 (because
+					of the "i++") and set i to that */
+					gosubStack.push_back(i);
+					i = (size_t)atoi(currentLine) - 1;
+					
+					/* If users enter a number that is greater than the size
+					of the program, or atoi fails, don't crash :D */
+					if (i > programSize) {
+						printf("Line number out of bounds: %zd\n", i);
+						break;
+					}
+					
+					/* Otherwise, keep running */
+					continue;
+				}
+				
+				/* And here's its counterpart, RETURN */
+				if (StringEquals(currentLine, "return")) {
+					if (!gosubStack.size()) {
+						printf("RETURN WITHOUT GOSUB IN %zd\n", i);
+						break;
+					}
+					i = gosubStack.back();
+					gosubStack.pop_back();
+					continue;
+				}
+				
+				/* END ends the program, obviously :) */
+				if (StringEquals(currentLine, "end")) break;
 				
 				/* Otherwise, run the line */
 				RunLine(currentLine);

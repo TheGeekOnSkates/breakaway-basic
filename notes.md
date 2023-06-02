@@ -1,7 +1,8 @@
 # TO-DO
 
-* Add GOSUB and RETURN
+* Finish GOSUB and RETURN
+	- Add a test that has a RETURn without a GOSUB
+	- Add a test with 3-4 nested GOSUBs
 * Add IF and IF NOT (see the README for syntax)
-* MAYBE... add for-loops
-* MAYBE... add GNU Readline
+* Add for-loops
 * WTFM :)
