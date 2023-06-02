@@ -3,6 +3,8 @@
 #include <string>
 #include <unistd.h>
 
+int lastReturnCode = 0;
+
 void RunLine(char* line) {
 	char* here = line;
 
@@ -19,15 +21,20 @@ void RunLine(char* line) {
 	}
 	
 	/* And run it */
-	system((const char*)here);
+	lastReturnCode = system((const char*)here);
 }
 
 int main() {
-	char buffer[80], * newline = NULL, * currentLine = NULL;
+	char buffer[80], prompt[20],
+		* newline = NULL, * currentLine = NULL;
 	std::vector<std::string> program;
 	std::vector<size_t> gosubStack;
 	int lineNumber = 0;
 	size_t i = 0, programSize = 0, listFrom = 0, listTo = 0;
+	
+	/* For now, I want my prompt to be "READY." */
+	memset(prompt, 0, 20);
+	strcpy(prompt, "READY\n");
 
 	/* This prevents crashes if you do a LIST before you add stuff :D */
 	program.push_back("");
@@ -35,7 +42,6 @@ int main() {
 	printf("BREAKAWAY BASIC 1.0\n\n");
 	while(true) {
 		/* Read user input and strip out new lines */
-		printf("READY.\n");
 		memset(buffer, 0, 80);
 		fgets(buffer, 80, stdin);
 		newline = strchr(buffer, '\n');
@@ -126,7 +132,7 @@ int main() {
 					/* TO-DO: When I get variables set up, add support for
 					GOTO myVariable - but for now, that's an error */
 					if (currentLine[0] < '0' || currentLine[0] > '9') {
-						printf("Syntax error on line %zd\r\n", i);
+						printf("SYNTAX ERROR IN LINE %zd\r\n", i);
 						break;
 					}
 					
@@ -154,7 +160,7 @@ int main() {
 					/* TO-DO: When I get variables set up, add support for
 					GOSUB myVariable - but for now, that's an error */
 					if (currentLine[0] < '0' || currentLine[0] > '9') {
-						printf("Syntax error on line %zd\r\n", i);
+						printf("SYNTAX ERROR ON LINE %zd\r\n", i);
 						break;
 					}
 					
@@ -191,6 +197,7 @@ int main() {
 				/* Otherwise, run the line */
 				RunLine(currentLine);
 			}
+			printf("%s", prompt);
 			continue;
 		}
 		
@@ -209,7 +216,10 @@ int main() {
 					program.push_back("");
 			program[lineNumber] = buffer;
 		}
-		else RunLine(buffer);
+		else {
+			RunLine(buffer);
+			printf("%s", prompt);
+		}
 	}
 	return 0;
 }
