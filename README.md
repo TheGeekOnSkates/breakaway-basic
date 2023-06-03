@@ -15,8 +15,9 @@ Bottom line, there isn't really a BASIC that is well-suited to shell scripting. 
 
 ## To version 1.0
 
-I'm not going to both with implementing PRINT and INPUT and all those other things 8-bit BASICs have.  For now I'm just focusing on:
+At this point, all that's really left is:
 
+* For-loops
 * A subset of IF ... THEN ... ELSE; every command has a return value (see the standard C "system" function).  This will be used for conditional branching.  For example:
 
 ```

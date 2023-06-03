@@ -1,7 +1,7 @@
 # TO-DO
 
+* Finish for-loops
+* Found a bug: If I just type a line number, it doesn't actually erase the line
 * Add IF and IF NOT (see the README for syntax)
-* Add for-loops
-* Add GNU Readline.  All decent shells have it, and not having it is a pain :D
 * WTFM :D
 

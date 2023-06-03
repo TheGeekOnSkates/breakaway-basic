@@ -1,9 +1,74 @@
+/***********************************************************************/
+/* PRE-PROCESSOR MACROS                                                */
+/***********************************************************************/
+
+/* If defined, include Linux-specific dependencies */
+#define TARGET_LINUX 1
+
+/* If defined, include GNU Readling */
+#define USE_READLINE 1
+
+
+
+/***********************************************************************/
+/* DEPENDENCIES                                                        */
+/***********************************************************************/
+
 #include "strings.h"
 #include <vector>
 #include <string>
-#include <unistd.h>
+#ifdef TARGET_LINUX
+	#include <unistd.h>
+	#include <fcntl.h>
+	#include <termios.h>
+	#include <sys/resource.h>
+	#include <sys/ioctl.h>
+	#include <pwd.h>
+#endif
+#ifdef USE_READLINE
+	#include <readline/readline.h>
+	#include <readline/history.h>
+#endif
 
+/***********************************************************************/
+/* GLOBAL VARIABLES AND COMPILE-TIME CONSTANTS                         */
+/***********************************************************************/
+
+/* Stores the return value of the last call to system() */
 int lastReturnCode = 0;
+
+/* Used with and without Readline; this is the size of the input buffer */
+const int LINE_SIZE = 512;
+
+
+
+/***********************************************************************/
+/* CUSTOM DATA TYPE DEFINITIONS                                        */
+/***********************************************************************/
+
+/**
+ * Stores info about a for-loop in memory
+ * @remarks Eventually, this same structure can be used for other variables.
+ * That's why I'm calling it a Var even though in v1.0 it's just for loops.
+ * Yes it's 3 extra ints that per variable, but what's 12 bytes on a modern
+ * Linux or other OS?  This thing wouldn't even compile on retro stuff, so I
+ * think we can spare the RAM (especially since programs are not likely to
+ * use more than 20-30 variables tops). :D
+ */
+typedef struct _variable {
+	std::string name;	/** The name of the variable */
+	int start;			/** The initial value (for for-loops) */
+	int end;			/** The last/max value (for for-loops) */
+	int current;		/** The current value (for for-loops) */
+	int step;			/** The step to run in a for-loop */
+} Var;
+
+
+
+
+/***********************************************************************/
+/* FUNCTION DEFINITIONS                                                */
+/***********************************************************************/
 
 void RunLine(char* line) {
 	char* here = line;
@@ -25,27 +90,39 @@ void RunLine(char* line) {
 }
 
 int main() {
-	char buffer[80], prompt[20],
+	char buffer[LINE_SIZE], prompt[20],
 		* newline = NULL, * currentLine = NULL;
 	std::vector<std::string> program;
 	std::vector<size_t> gosubStack;
+	std::vector<Var> vars;
 	int lineNumber = 0;
 	size_t i = 0, programSize = 0, listFrom = 0, listTo = 0;
 	
 	/* For now, I want my prompt to be "READY." */
 	memset(prompt, 0, 20);
-	strcpy(prompt, "READY\n");
+	strcpy(prompt, "\nREADY\n");
 
 	/* This prevents crashes if you do a LIST before you add stuff :D */
 	program.push_back("");
 	
-	printf("BREAKAWAY BASIC 1.0\n\n");
+	printf("BREAKAWAY BASIC 1.0-alpha\n\n");
 	while(true) {
 		/* Read user input and strip out new lines */
-		memset(buffer, 0, 80);
-		fgets(buffer, 80, stdin);
+#ifdef USE_READLINE
+		char* temp = readline("");
+		if (temp == NULL) {
+			printf("?MEMORY ERROR\n");
+			return 0;
+		}
+		strncpy(buffer, temp, LINE_SIZE);
+		add_history(buffer);
+		free(temp);
+#else
+		memset(buffer, 0, LINE_SIZE);
+		fgets(buffer, LINE_SIZE, stdin);
 		newline = strchr(buffer, '\n');
 		if (newline != NULL) newline[0] = '\0';
+#endif
 		
 		/* EXIT, BYE, or QUIT exit the program. */
 		if (
@@ -122,6 +199,92 @@ int main() {
 				while(currentLine[0] >= '0' && currentLine[0] <= '9')
 					currentLine++;
 				while(currentLine[0] == ' ') currentLine++;
+				
+				// FOR starts a for-loop, obviously :) */
+				if (StringStartsWith(currentLine, "for")) {
+					
+					/* Move past FOR and any spaces */
+					currentLine += 3;
+					while(currentLine[0] == ' ') currentLine++;
+					
+					/* Get the name of the variable */
+					Var v;
+					while(currentLine[0] != ' ' && currentLine[0] != '='
+					&& currentLine[0] != '\0') {
+						v.name += currentLine[0];
+						currentLine++;
+					}
+					
+					/* Move past any spaces and past the equals sign */
+					while(currentLine[0] == ' ') currentLine++;
+					if (currentLine[0] != '=') {
+						printf("?SYNTAX ERROR IN %zd", i);
+						break;
+					}
+					currentLine++;
+					while(currentLine[0] == ' ') currentLine++;
+					
+					/* Get the start number */
+					if (currentLine[0] < '0' || currentLine[0] > '9') {
+						/*
+						NOTE: Eventually, I'll want to support variables
+						here (i.e. FOX X = Y TO Z) but not just yet.
+						*/
+						printf("?SYNTAX ERROR IN %zd", i);
+						break;
+					}
+					v.start = v.current = atoi(currentLine);
+
+					while(currentLine[0] >= '0' && currentLine[0] <= '9')
+						currentLine++;
+					while(currentLine[0] == ' ') currentLine++;
+					
+					/* Move past TO (or throw a syntax error if missing) */
+					if (!StringStartsWith(currentLine, "to")) {
+						printf("?SYNTAX ERROR IN %zd", i);
+						break;
+					}
+					currentLine += 2;
+					while(currentLine[0] == ' ') currentLine++;
+					
+					/* Get the end number */
+					if (currentLine[0] < '0' || currentLine[0] > '9') {
+						/*
+						NOTE: Eventually, I'll want to support variables
+						here (i.e. FOX X = Y TO Z) but not just yet.
+						*/
+						printf("?SYNTAX ERROR IN %zd", i);
+						break;
+					}
+					v.end = atoi(currentLine);
+
+					while(currentLine[0] >= '0' && currentLine[0] <= '9')
+						currentLine++;
+					while(currentLine[0] == ' ') currentLine++;
+					
+					/* If there is no STEP, we're done */
+					if (!StringStartsWith(currentLine, "step")) {
+						v.step = 1;
+						vars.push_back(v);
+						continue;
+					}
+					
+					/* Otherise, get it.  THEN we're done :) */
+					currentLine += 4;
+					while(currentLine[0] == ' ') currentLine++;
+					if (currentLine[0] < '0' || currentLine[0] > '9') {
+						/*
+						NOTE: Eventually, I'll want to support variables
+						here (i.e. FOX X = Y TO Z STEP Q) but not now :)
+						*/
+						printf("?SYNTAX ERROR IN %zd", i);
+						break;
+					}
+					v.step = atoi(currentLine);
+					v.step = 1;
+					vars.push_back(v);
+					continue;
+				}
 				
 				/* GOTO should change i, obviously :) */
 				if (StringStartsWith(currentLine, "goto")) {
