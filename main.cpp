@@ -210,7 +210,7 @@ int main() {
 					
 					/* Get the name of the variable */
 					Var v;
-					v.lineNumber = i;
+					v.lineNumber = i + 1;
 					while(currentLine[0] != ' ' && currentLine[0] != '='
 					&& currentLine[0] != '\0') {
 						v.name += currentLine[0];
@@ -295,7 +295,7 @@ int main() {
 					
 					/* Next, get the name of the variable */
 					std::string name = "";
-					while(currentLine[0] != ' '
+					while (currentLine[0] != ' '
 					&& currentLine[0] != '\0') {
 						name += currentLine[0];
 						currentLine++;
@@ -312,7 +312,10 @@ int main() {
 						most BASICs, the end number also gets included in
 						the loop (unlike in C), which is why the + 1 */
 						vars[j].current += vars[j].step;
-						if (vars[j].current == vars[j].end + 1) break;
+						if (vars[j].current == vars[j].end + 1) {
+							vars.erase(vars.begin() + j);
+							break;
+						}
 						i = vars[j].lineNumber;
 						break;
 					}

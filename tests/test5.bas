@@ -7,4 +7,4 @@
 60 printf " loop3"
 70 next loop3
 80 next loop2
-90 next loop
+90 next loop1

@@ -15,10 +15,7 @@ Bottom line, there isn't really a BASIC that is well-suited to shell scripting. 
 
 ## To version 1.0
 
-At this point, all that's really left is:
-
-* For-loops
-* A subset of IF ... THEN ... ELSE; every command has a return value (see the standard C "system" function).  This will be used for conditional branching.  For example:
+At this point, all that's really left is a subset of IF ... THEN ... ELSE; every command has a return value (see the standard C "system" function), and Breakaway BASIC saves this number in memory.  This will be used for conditional branching.  For example:
 
 ```
 10 some-command-that-fails --crash
