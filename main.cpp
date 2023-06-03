@@ -61,6 +61,7 @@ typedef struct _variable {
 	int end;			/** The last/max value (for for-loops) */
 	int current;		/** The current value (for for-loops) */
 	int step;			/** The step to run in a for-loop */
+	size_t lineNumber;	/** The line number to go back to (for-loops) */
 } Var;
 
 
@@ -96,7 +97,8 @@ int main() {
 	std::vector<size_t> gosubStack;
 	std::vector<Var> vars;
 	int lineNumber = 0;
-	size_t i = 0, programSize = 0, listFrom = 0, listTo = 0;
+	size_t i = 0, j = 0, programSize = 0, listFrom = 0, listTo = 0;
+	bool foundIt = false;
 	
 	/* For now, I want my prompt to be "READY." */
 	memset(prompt, 0, 20);
@@ -202,13 +204,13 @@ int main() {
 				
 				// FOR starts a for-loop, obviously :) */
 				if (StringStartsWith(currentLine, "for")) {
-					
 					/* Move past FOR and any spaces */
 					currentLine += 3;
 					while(currentLine[0] == ' ') currentLine++;
 					
 					/* Get the name of the variable */
 					Var v;
+					v.lineNumber = i;
 					while(currentLine[0] != ' ' && currentLine[0] != '='
 					&& currentLine[0] != '\0') {
 						v.name += currentLine[0];
@@ -284,6 +286,41 @@ int main() {
 					v.step = 1;
 					vars.push_back(v);
 					continue;
+				}
+				
+				/* NEXT is the other half of FOR, obviously :) */
+				if (StringStartsWith(currentLine, "next")) {
+					currentLine += 4;
+					while(currentLine[0] == ' ') currentLine++;
+					
+					/* Next, get the name of the variable */
+					std::string name = "";
+					while(currentLine[0] != ' '
+					&& currentLine[0] != '\0') {
+						name += currentLine[0];
+						currentLine++;
+					}
+					
+					/* Now look for a variable matching that name */
+					foundIt = false;
+					for (j=0; j<vars.size(); j++) {
+						if (vars[j].name != name) continue;
+						foundIt = true;
+						
+						/* We found it, so move the line number back to
+						Where it was right after the FOR.  Note that in
+						most BASICs, the end number also gets included in
+						the loop (unlike in C), which is why the + 1 */
+						vars[j].current += vars[j].step;
+						if (vars[j].current == vars[j].end + 1) break;
+						i = vars[j].lineNumber;
+						break;
+					}
+					
+					/* If found, we're done; if not, it's an error */
+					if (foundIt) continue;
+					printf("?NEXT WITHOUT FOR ERROR IN %zd", i);
+					break;
 				}
 				
 				/* GOTO should change i, obviously :) */
@@ -371,13 +408,19 @@ int main() {
 			if (lineNumber == 0) {
 				/* Note: This could also be caused by atoi failing, though
 				there's no reason if char 0 is between '0' and '9' */
-				printf("LINE NUMBERS START AT 1.\n");
+				printf("?LINE NUMBERS START AT 1");
 				continue;
 			}
 			if (program.size() < (size_t)lineNumber)
 				for (i=0; i<(size_t)lineNumber + 10; i++)
 					program.push_back("");
-			program[lineNumber] = buffer;
+			currentLine = buffer;
+			while(currentLine[0] >= '0' && currentLine[0] < '9')
+				currentLine++;
+			while(currentLine[0] == ' ') currentLine++;
+			if (strlen(currentLine) == 0)
+				program[lineNumber] = "";
+			else program[lineNumber] = buffer;
 		}
 		else {
 			RunLine(buffer);
