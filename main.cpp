@@ -24,6 +24,7 @@
 	#include <sys/resource.h>
 	#include <sys/ioctl.h>
 	#include <pwd.h>
+	#include <signal.h>
 #endif
 #ifdef USE_READLINE
 	#include <readline/readline.h>
@@ -36,6 +37,8 @@
 
 /* Stores the return value of the last call to system() */
 int lastReturnCode = 0;
+
+bool running = false;
 
 /* Used with and without Readline; this is the size of the input buffer */
 const int LINE_SIZE = 512;
@@ -71,6 +74,11 @@ typedef struct _variable {
 /* FUNCTION DEFINITIONS                                                */
 /***********************************************************************/
 
+void stopRunning(int signalNumber) {
+	running = false;
+	signal(signalNumber, stopRunning);
+}
+
 void RunLine(char* line) {
 	char* here = line;
 
@@ -86,13 +94,20 @@ void RunLine(char* line) {
 		return;
 	}
 	
-	/* And run it */
+	/* And run it
+	
+	EDIT: I think it might help someday, to fix that CTRL-C bug, to use
+	"popen" instead: https://stackoverflow.com/questions/4757512/execute-a-linux-command-in-the-c-program
+	 */
 	lastReturnCode = system((const char*)here);
 }
 
 int main() {
 	char buffer[LINE_SIZE], prompt[20],
-		* newline = NULL, * currentLine = NULL;
+		#ifndef USE_READLINE
+		* newline = NULL,
+		#endif
+		* currentLine = NULL;
 	std::vector<std::string> program;
 	std::vector<size_t> gosubStack;
 	std::vector<Var> vars;
@@ -106,6 +121,10 @@ int main() {
 
 	/* This prevents crashes if you do a LIST before you add stuff :D */
 	program.push_back("");
+
+	signal(SIGABRT, stopRunning);
+	//signal(SIGINT, stopRunning);
+	//signal(SIGTERM, stopRunning);
 	
 	printf("BREAKAWAY BASIC 1.0-alpha\n\n");
 	while(true) {
@@ -193,8 +212,12 @@ int main() {
 		
 		/* RUN runs the program, obviously :) */
 		if (StringEquals(buffer, "run")) {
+			running = true;
 			programSize = program.size();
 			for (i=0; i<programSize; i++) {
+				
+				/* If the user hit CTRL-C, exit the loop */
+				if (!running) break;
 				
 				/* Get the code after the line number */
 				currentLine = (char*)program[i].c_str();

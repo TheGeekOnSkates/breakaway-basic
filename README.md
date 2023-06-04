@@ -11,6 +11,17 @@ A year or two ago, I wanted something more human-readable and easy-to-follow tha
 
 Bottom line, there isn't really a BASIC that is well-suited to shell scripting.  All 4 of the above, and also NuShell and language REPLs and stuff are all awesome - and I've used them all as my default shell (still using Gforth) but I would still kinda like a BASIC that is made specifically with that purpose in mind.  So here we are, a year or two later, and I'm picking up _Breakaway BASIC_ one more time.
 
+# Known issues
+
+If you code an infinite loop, it can be very hard to exit.  For example:
+
+```
+10 printf "What the puck? "
+20 goto 10
+```
+
+If you hold down CTRL-C long enough, it will eventually exit the loop.  The problem has to do with the fact that it's running external programs, and those are receiving the CTRL-C signals... not sure what else I can do...
+
 # Roadmap
 
 ## To version 1.0
@@ -23,21 +34,6 @@ At this point, all that's really left is a subset of IF ... THEN ... ELSE; every
 ```
 
 Note that there's no actual condition there - the return value of the last command is that condition.
-
-And all other code will run system commands.  This would make it possible to do things like:
-
-```
-10 gcc ./someFile.c -otest || exit 1
-20 rem Or run a Makefile if line 10 would exit BASIC :D
-30 if not 0 then 70
-40 clear
-50 echo "It worked."
-60 end
-70 echo "It failed."
-80 aplay "./angry-beep.wav"
-```
-
-Is it ideal?  Puck no!  Is it a fully functional shell that I could use as a drop-in replacement for Bash?  Yup.
 
 ## To future 1.x releases
 
