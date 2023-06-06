@@ -74,6 +74,59 @@ typedef struct _variable {
 /* FUNCTION DEFINITIONS                                                */
 /***********************************************************************/
 
+void LoadFile(char* fileName, std::vector<std::string>& program) {
+	char line[1024], * temp = NULL;
+	size_t i, lineNumber;
+
+	/* Open the file */
+	FILE* file = fopen((const char*)fileName, "r");
+	if (file == NULL) {
+		perror("?ERROR OPENING FILE");
+		return;
+	}
+	
+	/* Clear the program memory */
+	program.clear();
+	program.push_back("");
+	
+	while(true) {
+		/* Break on file end / file error */
+		if (ferror(file)) {
+			perror("?ERROR REEADING FILE");
+			break;
+		}
+		if (feof(file)) break;
+		
+		/* Read the line */
+		memset(line, 0, 1024);
+		fgets(line, 1024, file);
+		char* newline = strchr(line, '\n');
+		if (newline != NULL) newline[0] = '\0';
+		
+		/* If it's empty, skip it */
+		if (strlen(line) == 0) continue;
+		
+		/* If it doesn't start with a number, it's an error */
+		temp = line;
+		while(temp[0] == ' ') temp++;
+		if (temp[0] < '0' || temp[0] > '9') {
+			printf("?ILLEGAL DIRECT ERROR");
+			break;
+		}
+		
+		/* If the line number is > program size, expand the program */
+		lineNumber = atoi(temp);
+		if (program.size() < (size_t)lineNumber)
+			for (i=0; i<(size_t)lineNumber + 10; i++)
+				program.push_back("");
+		
+		std::string nextLine = "";
+		nextLine.append(temp);
+		program[lineNumber] = nextLine;
+	}
+	fclose(file);
+}
+
 void stopRunning(int signalNumber) {
 	running = false;
 	signal(signalNumber, stopRunning);
@@ -126,7 +179,7 @@ int main() {
 	//signal(SIGINT, stopRunning);
 	//signal(SIGTERM, stopRunning);
 	
-	printf("BREAKAWAY BASIC 1.0-alpha\n\n");
+	printf("BREAKAWAY BASIC 1.0\n\n");
 	while(true) {
 		/* Read user input and strip out new lines */
 #ifdef USE_READLINE
@@ -151,6 +204,13 @@ int main() {
 			|| StringEquals(buffer, "quit")
 			|| StringEquals(buffer, "bye")
 		) break;
+		
+		if (StringStartsWith(buffer, "load")) {
+			currentLine = buffer + 4;
+			while (currentLine[0] == ' ') currentLine++;
+			LoadFile(currentLine, program);
+			continue;
+		}
 		
 		/* LIST lists the program, obviously :) */
 		if (StringStartsWith(buffer, "list")) {
@@ -403,6 +463,60 @@ int main() {
 					}
 					
 					/* Otherwise, keep running */
+					continue;
+				}
+				
+				/* For version 1.0, IF is only concerned with one variable:
+				he return value of the last command.  Eventually, I'll add
+				other variables, and IF can work with those too.  But for
+				now, all we need is, did the last command return a certain
+				number or not? the syntax is:
+				IF [not] int THEN uint [ ELSE uint ] */
+				if (StringStartsWith(currentLine, "if")) {
+					/* Move past IF and spaces after that */
+					currentLine += 2;
+					while(currentLine[0] == ' ') currentLine++;
+					
+					/* For the first number, negatives are okay, so... */
+					bool isNegative = currentLine[0] == '-';
+					if (isNegative) currentLine++;
+					if (currentLine[0] < '0' || currentLine[0] > '9') {
+						printf("?SYNTAX ERROR IN %zd", i);
+						break;
+					}
+					int value = atoi(currentLine);
+					if (isNegative) value *= -1;
+					while(currentLine[0] >= '0' && currentLine[0] <= '9')
+						currentLine++;
+					while(currentLine[0] == ' ') currentLine++;
+					
+					/* Now that we have our number we want to compare to,
+					the next thing is to get the THEN number and the ELSE
+					number (if there is one) */
+					if (!StringStartsWith(currentLine, "then")) {
+						printf("?SYNTAX ERROR IN %zd", i);
+						break;
+					}
+					currentLine += 4;
+					while(currentLine[0] == ' ') currentLine++;
+					if (currentLine[0] < '0' || currentLine[0] > '9') {
+						printf("?SYNTAX ERROR IN %zd", i);
+						break;
+					}
+					int THEN = atoi(currentLine);
+					if (THEN > program.size()){
+						printf("?ERROR READING LINE NUMBER IN %zd", i);
+						break;
+					}
+					
+					/* Now we have our value we're comparing, and the
+					number after THEN, so check if that condition is true */
+					if (lastReturnCode  == value) {
+						i = THEN - 1;
+						continue;
+					}
+					
+					/* LEFT OFF HERE */
 					continue;
 				}
 				

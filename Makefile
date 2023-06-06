@@ -6,3 +6,5 @@ no-readline:
 	clear && g++ ./*.cpp -obreakaway-basic -Wall -Wextra || exit 1
 	clear && ./breakaway-basic
 
+if-test:
+	exit 123

@@ -38,7 +38,8 @@ Note that there's no actual condition there - the return value of the last comma
 ## To future 1.x releases
 
 * Aliases.  Why reinvent PRINT when "echo" is so darn close? :)
-* Commands like LOAD, SAVE and INCLUDE
+* SAVE
+* INCLUDE (maybe) - not sure how that would be different from LOAD, but I remember it was a feature some people suggested. :D
 * Add an auto-run file.
 	**NOTE:** This one is kinda huge.  Cuz even though version 1.0 is not yet out of alpha, I'm already liking it a lot more than Gforth as my daily driver shell.  This is a feat in and of itself cuz I love Forth!   But a huge part of that is I can't have it auto-include the zillions of words I wrote for it.  So once I can INCLUDE files, having it automatically include i.e. /home/geek/breakaway.bas or something like that would be suuuuuper nice!
 * Add a way to customize the prompt.  As a sometimes screen-reader user and a Commodore fanatic, "READY.\n" works for me.  But some people might prefer "Ok" like on the TRS-80 Model 100, or "]" like on the Apple ][, or > like in Bash or whatever.
