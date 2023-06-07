@@ -69,6 +69,14 @@ typedef struct _variable {
 
 
 
+/***********************************************************************/
+/* GLOBAL VARIABLES                                                    */
+/***********************************************************************/
+
+const char* version = "BREAKAWAY BASIC 2023.06.07.3";
+char prompt[20];
+
+
 
 /***********************************************************************/
 /* FUNCTION DEFINITIONS                                                */
@@ -195,19 +203,291 @@ void RunLine(char* line) {
 	lastReturnCode = system((const char*)here);
 }
 
+void RunProgram(std::vector<std::string>& program) {
+	std::vector<Var> vars;
+	std::vector<size_t> gosubStack;
+	bool running = true, foundIt = false;
+	size_t i = 0, j = 0, programSize = program.size();
+	char* currentLine = NULL;
+	for (; i<programSize; i++) {
+		/* If the user hit CTRL-C, exit the loop */
+		if (!running) break;
+		
+		/* Get the code after the line number */
+		currentLine = (char*)program[i].c_str();
+		while(currentLine[0] >= '0' && currentLine[0] <= '9')
+			currentLine++;
+		while(currentLine[0] == ' ') currentLine++;
+		
+		// FOR starts a for-loop, obviously :) */
+		if (StringStartsWith(currentLine, "for")) {
+			/* Move past FOR and any spaces */
+			currentLine += 3;
+			while(currentLine[0] == ' ') currentLine++;
+			
+			/* Get the name of the variable */
+			Var v;
+			v.lineNumber = i + 1;
+			while(currentLine[0] != ' ' && currentLine[0] != '='
+			&& currentLine[0] != '\0') {
+				v.name += currentLine[0];
+				currentLine++;
+			}
+			
+			/* Move past any spaces and past the equals sign */
+			while(currentLine[0] == ' ') currentLine++;
+			if (currentLine[0] != '=') {
+				printf("?SYNTAX ERROR IN %zd", i);
+				break;
+			}
+			currentLine++;
+			while(currentLine[0] == ' ') currentLine++;
+			
+			/* Get the start number */
+			if (currentLine[0] < '0' || currentLine[0] > '9') {
+				/*
+				NOTE: Eventually, I'll want to support variables
+				here (i.e. FOX X = Y TO Z) but not just yet.
+				*/
+				printf("?SYNTAX ERROR IN %zd", i);
+				break;
+			}
+			v.start = v.current = atoi(currentLine);
+
+			while(currentLine[0] >= '0' && currentLine[0] <= '9')
+				currentLine++;
+			while(currentLine[0] == ' ') currentLine++;
+			
+			/* Move past TO (or throw a syntax error if missing) */
+			if (!StringStartsWith(currentLine, "to")) {
+				printf("?SYNTAX ERROR IN %zd", i);
+				break;
+			}
+			currentLine += 2;
+			while(currentLine[0] == ' ') currentLine++;
+			
+			/* Get the end number */
+			if (currentLine[0] < '0' || currentLine[0] > '9') {
+				/*
+				NOTE: Eventually, I'll want to support variables
+				here (i.e. FOX X = Y TO Z) but not just yet.
+				*/
+				printf("?SYNTAX ERROR IN %zd", i);
+				break;
+			}
+			v.end = atoi(currentLine);
+
+			while(currentLine[0] >= '0' && currentLine[0] <= '9')
+				currentLine++;
+			while(currentLine[0] == ' ') currentLine++;
+			
+			/* If there is no STEP, we're done */
+			if (!StringStartsWith(currentLine, "step")) {
+				v.step = 1;
+				vars.push_back(v);
+				continue;
+			}
+			
+			/* Otherise, get it.  THEN we're done :) */
+			currentLine += 4;
+			while(currentLine[0] == ' ') currentLine++;
+			if (currentLine[0] < '0' || currentLine[0] > '9') {
+				/*
+				NOTE: Eventually, I'll want to support variables
+				here (i.e. FOX X = Y TO Z STEP Q) but not now :)
+				*/
+				printf("?SYNTAX ERROR IN %zd", i);
+				break;
+			}
+			v.step = atoi(currentLine);
+			v.step = 1;
+			vars.push_back(v);
+			continue;
+		}
+		
+		/* NEXT is the other half of FOR, obviously :) */
+		if (StringStartsWith(currentLine, "next")) {
+			currentLine += 4;
+			while(currentLine[0] == ' ') currentLine++;
+			
+			/* Next, get the name of the variable */
+			std::string name = "";
+			while (currentLine[0] != ' '
+			&& currentLine[0] != '\0') {
+				name += currentLine[0];
+				currentLine++;
+			}
+			
+			/* Now look for a variable matching that name */
+			foundIt = false;
+			for (j=0; j<vars.size(); j++) {
+				if (vars[j].name != name) continue;
+				foundIt = true;
+				
+				/* We found it, so move the line number back to
+				Where it was right after the FOR.  Note that in
+				most BASICs, the end number also gets included in
+				the loop (unlike in C), which is why the + 1 */
+				vars[j].current += vars[j].step;
+				if (vars[j].current == vars[j].end + 1) {
+					vars.erase(vars.begin() + j);
+					break;
+				}
+				i = vars[j].lineNumber;
+				break;
+			}
+			
+			/* If found, we're done; if not, it's an error */
+			if (foundIt) continue;
+			printf("?NEXT WITHOUT FOR ERROR IN %zd", i);
+			break;
+		}
+		
+		/* GOTO should change i, obviously :) */
+		if (StringStartsWith(currentLine, "goto")) {
+			/* Move past GOTO and any spaces */
+			currentLine += 4;
+			while(currentLine[0] == ' ') currentLine++;
+			
+			/* TO-DO: When I get variables set up, add support for
+			GOTO myVariable - but for now, that's an error */
+			if (currentLine[0] < '0' || currentLine[0] > '9') {
+				printf("SYNTAX ERROR IN LINE %zd\r\n", i);
+				break;
+			}
+			
+			/* Otherwise, get the line number, subtract 1 (because
+			of the "i++") and set i to that */
+			i = (size_t)atoi(currentLine) - 1;
+			
+			/* If users enter a number that is greater than the size
+			of the program, or atoi fails, don't crash :D */
+			if (i > programSize) {
+				printf("Line number out of bounds: %zd\n", i);
+				break;
+			}
+			
+			/* Otherwise, keep running */
+			continue;
+		}
+		
+		/* GOSUB works kinda similar */
+		if (StringStartsWith(currentLine, "gosub")) {
+			/* Move past GOTO and any spaces */
+			currentLine += 5;
+			while(currentLine[0] == ' ') currentLine++;
+			
+			/* TO-DO: When I get variables set up, add support for
+			GOSUB myVariable - but for now, that's an error */
+			if (currentLine[0] < '0' || currentLine[0] > '9') {
+				printf("SYNTAX ERROR ON LINE %zd\r\n", i);
+				break;
+			}
+			
+			/* Otherwise, get the line number, subtract 1 (because
+			of the "i++") and set i to that */
+			gosubStack.push_back(i);
+			i = (size_t)atoi(currentLine) - 1;
+			
+			/* If users enter a number that is greater than the size
+			of the program, or atoi fails, don't crash :D */
+			if (i > programSize) {
+				printf("Line number out of bounds: %zd\n", i);
+				break;
+			}
+			
+			/* Otherwise, keep running */
+			continue;
+		}
+		
+		/* For version 1.0, IF is only concerned with one variable:
+		he return value of the last command.  Eventually, I'll add
+		other variables, and IF can work with those too.  But for
+		now, all we need is, did the last command return a certain
+		number or not? the syntax is:
+		IF [not] int THEN uint [ ELSE uint ] */
+		if (StringStartsWith(currentLine, "if")) {
+			/* Move past IF and spaces after that */
+			currentLine += 2;
+			while(currentLine[0] == ' ') currentLine++;
+			
+			/* For the first number, negatives are okay, so... */
+			bool isNegative = currentLine[0] == '-';
+			if (isNegative) currentLine++;
+			if (currentLine[0] < '0' || currentLine[0] > '9') {
+				printf("?SYNTAX ERROR IN %zd", i);
+				break;
+			}
+			int value = atoi(currentLine);
+			if (isNegative) value *= -1;
+			while(currentLine[0] >= '0' && currentLine[0] <= '9')
+				currentLine++;
+			while(currentLine[0] == ' ') currentLine++;
+			
+			/* Now that we have our number we want to compare to,
+			the next thing is to get the THEN number and the ELSE
+			number (if there is one) */
+			if (!StringStartsWith(currentLine, "then")) {
+				printf("?SYNTAX ERROR IN %zd", i);
+				break;
+			}
+			currentLine += 4;
+			while(currentLine[0] == ' ') currentLine++;
+			if (currentLine[0] < '0' || currentLine[0] > '9') {
+				printf("?SYNTAX ERROR IN %zd", i);
+				break;
+			}
+			int THEN = atoi(currentLine);
+			if ((size_t)THEN > program.size()) {
+				printf("?ERROR READING LINE NUMBER IN %zd", i);
+				break;
+			}
+			
+			/* Now we have our value we're comparing, and the
+			number after THEN, so check if that condition is true */
+			if (lastReturnCode  == value) {
+				i = THEN - 1;
+				continue;
+			}
+			/* LEFT OFF HERE - if I'm even gonna stick with this weird IF */
+			continue;
+		}
+		
+		/* And here's its counterpart, RETURN */
+		if (StringEquals(currentLine, "return")) {
+			if (!gosubStack.size()) {
+				printf("RETURN WITHOUT GOSUB IN %zd\n", i);
+				break;
+			}
+			i = gosubStack.back();
+			gosubStack.pop_back();
+			continue;
+		}
+		
+		/* END ends the program, obviously :) */
+		if (StringEquals(currentLine, "end")) break;
+		
+		/* VERSION prints the version info */
+		if (StringEquals(currentLine, "version")) {
+			printf("%s", version);
+			continue;
+		}
+		
+		/* Otherwise, run the line */
+		RunLine(currentLine);
+	}
+	printf("%s", prompt);
+}
+
 int main() {
-	const char* version = "BREAKAWAY BASIC 2023.06.07.2\n";
-	char buffer[LINE_SIZE], prompt[20],
+	char buffer[LINE_SIZE],
 		#ifndef USE_READLINE
 		* newline = NULL,
 		#endif
 		* currentLine = NULL;
 	std::vector<std::string> program;
-	std::vector<size_t> gosubStack;
-	std::vector<Var> vars;
 	int lineNumber = 0;
-	size_t i = 0, j = 0, programSize = 0, listFrom = 0, listTo = 0;
-	bool foundIt = false;
+	size_t i = 0, programSize = 0, listFrom = 0, listTo = 0;
 	
 	/* For now, I want my prompt to be "READY." */
 	memset(prompt, 0, 20);
@@ -225,16 +505,15 @@ int main() {
 	GetAutoRunFile(autorun);
 	FILE* file = fopen((const char*)autorun, "r");
 	if (file == NULL) {
-		// File doesn't exist - just print the default message
-		printf("%s\n%s", version, prompt);
+		/* File doesn't exist - just print the default message */
+		printf("%s\n%s\n", version, prompt);
 	} else {
+		/* Run, then clear the program */
 		fclose(file);
 		LoadFile(autorun, program);
-		/*
-		LEFT OFF HERE - It loads, but I need to RUN it :)
-		I'll probably end up wanting to put all my program-running code
-		somewhere else, outside of main(), to make this possible.
-		*/
+		RunProgram(program);
+		program.clear();
+		program.push_back("");
 	}
 	
 	while(true) {
@@ -344,278 +623,7 @@ int main() {
 				
 		/* RUN runs the program, obviously :) */
 		if (StringEquals(buffer, "run")) {
-			running = true;
-			programSize = program.size();
-			for (i=0; i<programSize; i++) {
-				
-				/* If the user hit CTRL-C, exit the loop */
-				if (!running) break;
-				
-				/* Get the code after the line number */
-				currentLine = (char*)program[i].c_str();
-				while(currentLine[0] >= '0' && currentLine[0] <= '9')
-					currentLine++;
-				while(currentLine[0] == ' ') currentLine++;
-				
-				// FOR starts a for-loop, obviously :) */
-				if (StringStartsWith(currentLine, "for")) {
-					/* Move past FOR and any spaces */
-					currentLine += 3;
-					while(currentLine[0] == ' ') currentLine++;
-					
-					/* Get the name of the variable */
-					Var v;
-					v.lineNumber = i + 1;
-					while(currentLine[0] != ' ' && currentLine[0] != '='
-					&& currentLine[0] != '\0') {
-						v.name += currentLine[0];
-						currentLine++;
-					}
-					
-					/* Move past any spaces and past the equals sign */
-					while(currentLine[0] == ' ') currentLine++;
-					if (currentLine[0] != '=') {
-						printf("?SYNTAX ERROR IN %zd", i);
-						break;
-					}
-					currentLine++;
-					while(currentLine[0] == ' ') currentLine++;
-					
-					/* Get the start number */
-					if (currentLine[0] < '0' || currentLine[0] > '9') {
-						/*
-						NOTE: Eventually, I'll want to support variables
-						here (i.e. FOX X = Y TO Z) but not just yet.
-						*/
-						printf("?SYNTAX ERROR IN %zd", i);
-						break;
-					}
-					v.start = v.current = atoi(currentLine);
-
-					while(currentLine[0] >= '0' && currentLine[0] <= '9')
-						currentLine++;
-					while(currentLine[0] == ' ') currentLine++;
-					
-					/* Move past TO (or throw a syntax error if missing) */
-					if (!StringStartsWith(currentLine, "to")) {
-						printf("?SYNTAX ERROR IN %zd", i);
-						break;
-					}
-					currentLine += 2;
-					while(currentLine[0] == ' ') currentLine++;
-					
-					/* Get the end number */
-					if (currentLine[0] < '0' || currentLine[0] > '9') {
-						/*
-						NOTE: Eventually, I'll want to support variables
-						here (i.e. FOX X = Y TO Z) but not just yet.
-						*/
-						printf("?SYNTAX ERROR IN %zd", i);
-						break;
-					}
-					v.end = atoi(currentLine);
-
-					while(currentLine[0] >= '0' && currentLine[0] <= '9')
-						currentLine++;
-					while(currentLine[0] == ' ') currentLine++;
-					
-					/* If there is no STEP, we're done */
-					if (!StringStartsWith(currentLine, "step")) {
-						v.step = 1;
-						vars.push_back(v);
-						continue;
-					}
-					
-					/* Otherise, get it.  THEN we're done :) */
-					currentLine += 4;
-					while(currentLine[0] == ' ') currentLine++;
-					if (currentLine[0] < '0' || currentLine[0] > '9') {
-						/*
-						NOTE: Eventually, I'll want to support variables
-						here (i.e. FOX X = Y TO Z STEP Q) but not now :)
-						*/
-						printf("?SYNTAX ERROR IN %zd", i);
-						break;
-					}
-					v.step = atoi(currentLine);
-					v.step = 1;
-					vars.push_back(v);
-					continue;
-				}
-				
-				/* NEXT is the other half of FOR, obviously :) */
-				if (StringStartsWith(currentLine, "next")) {
-					currentLine += 4;
-					while(currentLine[0] == ' ') currentLine++;
-					
-					/* Next, get the name of the variable */
-					std::string name = "";
-					while (currentLine[0] != ' '
-					&& currentLine[0] != '\0') {
-						name += currentLine[0];
-						currentLine++;
-					}
-					
-					/* Now look for a variable matching that name */
-					foundIt = false;
-					for (j=0; j<vars.size(); j++) {
-						if (vars[j].name != name) continue;
-						foundIt = true;
-						
-						/* We found it, so move the line number back to
-						Where it was right after the FOR.  Note that in
-						most BASICs, the end number also gets included in
-						the loop (unlike in C), which is why the + 1 */
-						vars[j].current += vars[j].step;
-						if (vars[j].current == vars[j].end + 1) {
-							vars.erase(vars.begin() + j);
-							break;
-						}
-						i = vars[j].lineNumber;
-						break;
-					}
-					
-					/* If found, we're done; if not, it's an error */
-					if (foundIt) continue;
-					printf("?NEXT WITHOUT FOR ERROR IN %zd", i);
-					break;
-				}
-				
-				/* GOTO should change i, obviously :) */
-				if (StringStartsWith(currentLine, "goto")) {
-					/* Move past GOTO and any spaces */
-					currentLine += 4;
-					while(currentLine[0] == ' ') currentLine++;
-					
-					/* TO-DO: When I get variables set up, add support for
-					GOTO myVariable - but for now, that's an error */
-					if (currentLine[0] < '0' || currentLine[0] > '9') {
-						printf("SYNTAX ERROR IN LINE %zd\r\n", i);
-						break;
-					}
-					
-					/* Otherwise, get the line number, subtract 1 (because
-					of the "i++") and set i to that */
-					i = (size_t)atoi(currentLine) - 1;
-					
-					/* If users enter a number that is greater than the size
-					of the program, or atoi fails, don't crash :D */
-					if (i > programSize) {
-						printf("Line number out of bounds: %zd\n", i);
-						break;
-					}
-					
-					/* Otherwise, keep running */
-					continue;
-				}
-				
-				/* GOSUB works kinda similar */
-				if (StringStartsWith(currentLine, "gosub")) {
-					/* Move past GOTO and any spaces */
-					currentLine += 5;
-					while(currentLine[0] == ' ') currentLine++;
-					
-					/* TO-DO: When I get variables set up, add support for
-					GOSUB myVariable - but for now, that's an error */
-					if (currentLine[0] < '0' || currentLine[0] > '9') {
-						printf("SYNTAX ERROR ON LINE %zd\r\n", i);
-						break;
-					}
-					
-					/* Otherwise, get the line number, subtract 1 (because
-					of the "i++") and set i to that */
-					gosubStack.push_back(i);
-					i = (size_t)atoi(currentLine) - 1;
-					
-					/* If users enter a number that is greater than the size
-					of the program, or atoi fails, don't crash :D */
-					if (i > programSize) {
-						printf("Line number out of bounds: %zd\n", i);
-						break;
-					}
-					
-					/* Otherwise, keep running */
-					continue;
-				}
-				
-				/* For version 1.0, IF is only concerned with one variable:
-				he return value of the last command.  Eventually, I'll add
-				other variables, and IF can work with those too.  But for
-				now, all we need is, did the last command return a certain
-				number or not? the syntax is:
-				IF [not] int THEN uint [ ELSE uint ] */
-				if (StringStartsWith(currentLine, "if")) {
-					/* Move past IF and spaces after that */
-					currentLine += 2;
-					while(currentLine[0] == ' ') currentLine++;
-					
-					/* For the first number, negatives are okay, so... */
-					bool isNegative = currentLine[0] == '-';
-					if (isNegative) currentLine++;
-					if (currentLine[0] < '0' || currentLine[0] > '9') {
-						printf("?SYNTAX ERROR IN %zd", i);
-						break;
-					}
-					int value = atoi(currentLine);
-					if (isNegative) value *= -1;
-					while(currentLine[0] >= '0' && currentLine[0] <= '9')
-						currentLine++;
-					while(currentLine[0] == ' ') currentLine++;
-					
-					/* Now that we have our number we want to compare to,
-					the next thing is to get the THEN number and the ELSE
-					number (if there is one) */
-					if (!StringStartsWith(currentLine, "then")) {
-						printf("?SYNTAX ERROR IN %zd", i);
-						break;
-					}
-					currentLine += 4;
-					while(currentLine[0] == ' ') currentLine++;
-					if (currentLine[0] < '0' || currentLine[0] > '9') {
-						printf("?SYNTAX ERROR IN %zd", i);
-						break;
-					}
-					int THEN = atoi(currentLine);
-					if ((size_t)THEN > program.size()) {
-						printf("?ERROR READING LINE NUMBER IN %zd", i);
-						break;
-					}
-					
-					/* Now we have our value we're comparing, and the
-					number after THEN, so check if that condition is true */
-					if (lastReturnCode  == value) {
-						i = THEN - 1;
-						continue;
-					}
-					
-					/* LEFT OFF HERE */
-					continue;
-				}
-				
-				/* And here's its counterpart, RETURN */
-				if (StringEquals(currentLine, "return")) {
-					if (!gosubStack.size()) {
-						printf("RETURN WITHOUT GOSUB IN %zd\n", i);
-						break;
-					}
-					i = gosubStack.back();
-					gosubStack.pop_back();
-					continue;
-				}
-				
-				/* END ends the program, obviously :) */
-				if (StringEquals(currentLine, "end")) break;
-				
-				/* VERSION prints the version info */
-				if (StringEquals(currentLine, "version")) {
-					printf("%s", version);
-					continue;
-				}
-				
-				/* Otherwise, run the line */
-				RunLine(currentLine);
-			}
-			printf("%s", prompt);
+			RunProgram(program);
 			continue;
 		}
 		
