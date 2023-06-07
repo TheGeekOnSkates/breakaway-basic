@@ -1,14 +1,16 @@
 # TO-DO
 
-* Maybe add aliases.  Why reinvent PRINT when printf is so darn close? :)
-* Maybe add INCLUDE - not sure how that would be different from LOAD, but I remember it was a feature some people suggested. :D
-* Maybe add an auto-run file.
-* Maybe add a way to customize the prompt.  As a sometimes screen-reader user and a Commodore fanatic, "READY.\n" works for me.  But some people might prefer "Ok" like on the TRS-80 Model 100, or "]" like on the Apple ][, or > like in Bash or whatever.
-* Maybe finish my weird twist on IF; it's not great, but it's better than nothing
+* Add aliases.  Why reinvent PRINT when printf is so darn close? :)
+* Add an auto-run file.
 * Maybe play with "popen" and see if using it fixes the CTRL-C bug
 * Finish the manual
 
 
+
+# STUFF I'M HOLDING OFF ON
+
+* IF - gonna wait on variables for that
+* PROMPT - Just cuz I what if someone wants non-printable chars (new lines, ANSI escape codes, etc.)?  I would need at least CHR$ to do that.
 
 
 
@@ -40,3 +42,4 @@ I've nearly finished 1.0, and next time I have a chance to update my "app passwo
 * And at that point I'll probably be thinking portability too (version 1.0 will just be for Linux)
 * If I do go the ncurses route, maybe commands for setting the "window" - i.e. 40 columns centered, 80 columns starting at the top left, etc... not sure if I'll even do that but I kinda like the idea of a Linux terminal that looks like a C64 or a VIC-20 or something. :D
 * Of course I'll want to update the manual too
+* Maybe add a way to customize the prompt.  As a sometimes screen-reader user and a Commodore fanatic, "READY.\n" works for me.  But some people might prefer "Ok" like on the TRS-80 Model 100, or "]" like on the Apple ][, or > like in Bash or whatever.

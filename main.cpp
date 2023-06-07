@@ -197,7 +197,7 @@ int main() {
 	//signal(SIGINT, stopRunning);
 	//signal(SIGTERM, stopRunning);
 	
-	printf("BREAKAWAY BASIC 1.0\n\n");
+	printf("BREAKAWAY BASIC 2023.06.07.1\n\n");
 	while(true) {
 		/* Read user input and strip out new lines */
 #ifdef USE_READLINE
