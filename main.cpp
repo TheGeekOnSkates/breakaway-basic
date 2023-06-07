@@ -41,7 +41,7 @@ int lastReturnCode = 0;
 bool running = false;
 
 /* Used with and without Readline; this is the size of the input buffer */
-const int LINE_SIZE = 512;
+const int LINE_SIZE = 1024;
 
 
 
@@ -74,8 +74,30 @@ typedef struct _variable {
 /* FUNCTION DEFINITIONS                                                */
 /***********************************************************************/
 
+void GetAutoRunFile(char* path) {
+	char home[512], username[80];
+	memset(home, 0, 512);
+	strncpy(home, "/home/", 512);
+	struct passwd *pwd = getpwuid(getuid());
+	if (getlogin_r(username, 80) == 0) {
+		strncat(home, username, 512 - strlen(home));
+		strncat(home, "/breakaway.bas", 512 - strlen(home));
+		if (access(home, F_OK) == 0) {
+			strncpy(path, home, 512);
+			return;
+		}
+	}
+	else if (pwd) {
+		strncat(home, pwd->pw_name, 512 - strlen(home));
+		strncat(home, "/breakaway.bas", 512 - strlen(home));
+		strncpy(path, home, 512);
+	}
+	else strncpy(path, "/etc/breakaway.bas", 512);
+}
+
+
 void LoadFile(char* fileName, std::vector<std::string>& program) {
-	char line[1024], * temp = NULL;
+	char line[LINE_SIZE], * temp = NULL;
 	size_t i, lineNumber;
 
 	/* Open the file */
@@ -98,8 +120,8 @@ void LoadFile(char* fileName, std::vector<std::string>& program) {
 		if (feof(file)) break;
 		
 		/* Read the line */
-		memset(line, 0, 1024);
-		fgets(line, 1024, file);
+		memset(line, 0, LINE_SIZE);
+		fgets(line, LINE_SIZE, file);
 		char* newline = strchr(line, '\n');
 		if (newline != NULL) newline[0] = '\0';
 		
@@ -174,6 +196,7 @@ void RunLine(char* line) {
 }
 
 int main() {
+	const char* version = "BREAKAWAY BASIC 2023.06.07.2\n";
 	char buffer[LINE_SIZE], prompt[20],
 		#ifndef USE_READLINE
 		* newline = NULL,
@@ -197,7 +220,23 @@ int main() {
 	//signal(SIGINT, stopRunning);
 	//signal(SIGTERM, stopRunning);
 	
-	printf("BREAKAWAY BASIC 2023.06.07.1\n\n");
+	/* Run the auto-run file, if it exists */
+	char autorun[512];
+	GetAutoRunFile(autorun);
+	FILE* file = fopen((const char*)autorun, "r");
+	if (file == NULL) {
+		// File doesn't exist - just print the default message
+		printf("%s\n%s", version, prompt);
+	} else {
+		fclose(file);
+		LoadFile(autorun, program);
+		/*
+		LEFT OFF HERE - It loads, but I need to RUN it :)
+		I'll probably end up wanting to put all my program-running code
+		somewhere else, outside of main(), to make this possible.
+		*/
+	}
+	
 	while(true) {
 		/* Read user input and strip out new lines */
 #ifdef USE_READLINE
@@ -223,6 +262,7 @@ int main() {
 			|| StringEquals(buffer, "bye")
 		) break;
 		
+		/* LOAD file */
 		if (StringStartsWith(buffer, "load")) {
 			currentLine = buffer + 4;
 			while (currentLine[0] == ' ') currentLine++;
@@ -230,6 +270,7 @@ int main() {
 			continue;
 		}
 		
+		/* SAVE file */
 		if (StringStartsWith(buffer, "save")) {
 			currentLine = buffer + 4;
 			while (currentLine[0] == ' ') currentLine++;
@@ -295,6 +336,12 @@ int main() {
 			continue;
 		}
 		
+		/* VERSION prints the version info */
+		if (StringEquals(buffer, "version")) {
+			printf("%s", version);
+			continue;
+		}
+				
 		/* RUN runs the program, obviously :) */
 		if (StringEquals(buffer, "run")) {
 			running = true;
@@ -529,7 +576,7 @@ int main() {
 						break;
 					}
 					int THEN = atoi(currentLine);
-					if (THEN > program.size()){
+					if ((size_t)THEN > program.size()) {
 						printf("?ERROR READING LINE NUMBER IN %zd", i);
 						break;
 					}
@@ -558,6 +605,12 @@ int main() {
 				
 				/* END ends the program, obviously :) */
 				if (StringEquals(currentLine, "end")) break;
+				
+				/* VERSION prints the version info */
+				if (StringEquals(currentLine, "version")) {
+					printf("%s", version);
+					continue;
+				}
 				
 				/* Otherwise, run the line */
 				RunLine(currentLine);
