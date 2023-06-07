@@ -127,6 +127,24 @@ void LoadFile(char* fileName, std::vector<std::string>& program) {
 	fclose(file);
 }
 
+void SaveFile(char* fileName, std::vector<std::string> program) {
+	size_t i = 0, size = program.size();
+	if (!size) {
+		printf("?NO PROGRAM\r\n");
+		return;
+	}
+	FILE* file = fopen((const char*) fileName, "w");
+	if (file == NULL) {
+		perror("?ERROR OPENING FILE");
+		return;
+	}
+	for (; i<size; i++) {
+		if (program[i] == "") continue;
+		fprintf(file, "%s\n", program[i].c_str());
+	}
+	fclose(file);
+}
+
 void stopRunning(int signalNumber) {
 	running = false;
 	signal(signalNumber, stopRunning);
@@ -209,6 +227,13 @@ int main() {
 			currentLine = buffer + 4;
 			while (currentLine[0] == ' ') currentLine++;
 			LoadFile(currentLine, program);
+			continue;
+		}
+		
+		if (StringStartsWith(buffer, "save")) {
+			currentLine = buffer + 4;
+			while (currentLine[0] == ' ') currentLine++;
+			SaveFile(currentLine, program);
 			continue;
 		}
 		

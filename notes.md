@@ -1,7 +1,6 @@
 # TO-DO
 
 * Maybe add aliases.  Why reinvent PRINT when printf is so darn close? :)
-* Maybe add SAVE
 * Maybe add INCLUDE - not sure how that would be different from LOAD, but I remember it was a feature some people suggested. :D
 * Maybe add an auto-run file.
 * Maybe add a way to customize the prompt.  As a sometimes screen-reader user and a Commodore fanatic, "READY.\n" works for me.  But some people might prefer "Ok" like on the TRS-80 Model 100, or "]" like on the Apple ][, or > like in Bash or whatever.
