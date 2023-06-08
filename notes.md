@@ -1,8 +1,6 @@
 # TO-DO
 
 * Add aliases.  Why reinvent PRINT when printf is so darn close? :)
-* Add an auto-run file.
-* Maybe play with "popen" and see if using it fixes the CTRL-C bug
 * Finish the manual
 
 

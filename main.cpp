@@ -73,7 +73,7 @@ typedef struct _variable {
 /* GLOBAL VARIABLES                                                    */
 /***********************************************************************/
 
-const char* version = "BREAKAWAY BASIC 2023.06.07.3";
+const char* version = "BREAKAWAY BASIC 2023.06.07.4";
 char prompt[20];
 
 
@@ -195,12 +195,29 @@ void RunLine(char* line) {
 		return;
 	}
 	
-	/* And run it
-	
-	EDIT: I think it might help someday, to fix that CTRL-C bug, to use
-	"popen" instead: https://stackoverflow.com/questions/4757512/execute-a-linux-command-in-the-c-program
-	 */
+	/*
+	And run it
+	This was the old way - it worked, and was CRAZY-FAST.
+	*/
 	lastReturnCode = system((const char*)here);
+
+	/*
+	This is another way I tried; supposedly better for a few reasons,
+	but it didn't fix the escape-from-infinite-loop bug.  Also, when
+	I did this, I had to do junk like "10 vim >/dev/tty"; there are a lot
+	of wobbles here, Sneaky-McGotchas buried deeeeep in man pages and
+	hidden on obscure Stack Overflow posts I don't have time to fish for.
+	So not only did it not solve the problem, but it caused some.  Maybe
+	revisit in version 2077.12.31.1000 when this project has nothing else
+	that can be more easily accomplished than hacking this nonsense. :D
+	std::string command = here;
+	FILE* fpipe = popen(command.c_str(), "r");
+	char output[1024];
+	while ( fgets(output, sizeof output, fpipe)) {
+		printf("%s", output);
+	}
+	pclose(fpipe);
+	*/
 }
 
 void RunProgram(std::vector<std::string>& program) {
@@ -469,7 +486,11 @@ void RunProgram(std::vector<std::string>& program) {
 		
 		/* VERSION prints the version info */
 		if (StringEquals(currentLine, "version")) {
+			#ifdef TARGET_LINUX
+			write(STDOUT_FILENO, version, strlen(version));
+			#else
 			printf("%s", version);
+			#endif
 			continue;
 		}
 		
@@ -496,9 +517,8 @@ int main() {
 	/* This prevents crashes if you do a LIST before you add stuff :D */
 	program.push_back("");
 
-	signal(SIGABRT, stopRunning);
-	//signal(SIGINT, stopRunning);
-	//signal(SIGTERM, stopRunning);
+	/* If the user presses CTRL-C ("interrupt"), top running */
+	signal(SIGINT, stopRunning);
 	
 	/* Run the auto-run file, if it exists */
 	char autorun[512];
@@ -506,7 +526,7 @@ int main() {
 	FILE* file = fopen((const char*)autorun, "r");
 	if (file == NULL) {
 		/* File doesn't exist - just print the default message */
-		printf("%s\n%s\n", version, prompt);
+		printf("%s\n%s", version, prompt);
 	} else {
 		/* Run, then clear the program */
 		fclose(file);
@@ -617,7 +637,11 @@ int main() {
 		
 		/* VERSION prints the version info */
 		if (StringEquals(buffer, "version")) {
+			#ifdef TARGET_LINUX
+			write(STDOUT_FILENO, version, strlen(version));
+			#else
 			printf("%s", version);
+			#endif
 			continue;
 		}
 				
